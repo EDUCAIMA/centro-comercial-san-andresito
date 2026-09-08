@@ -178,9 +178,7 @@
               <option value="nombre">Nombre (A - Z)</option>
               <option value="piso">Piso y local</option>
             </select>
-            <span class="text-xs text-[#5a534e] font-semibold whitespace-nowrap">
-              <span id="comercioCount" class="text-[#D97C2B] font-bold">0</span> comercios
-            </span>
+
           </div>
         </div>
 
@@ -672,7 +670,7 @@
       const lista = comerciosFiltrados();
 
       $('#comerciosGrid').innerHTML = lista.map(tarjetaComercio).join('');
-      $('#comercioCount').textContent = lista.length;
+
       $('#sinResultados').style.display = lista.length ? 'none' : 'flex';
 
       renderFiltrosLaterales();
