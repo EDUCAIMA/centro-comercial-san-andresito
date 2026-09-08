@@ -1755,6 +1755,9 @@
 <!-- Avisos flotantes -->
 <div id="toast-stack"></div>
 
+<!-- Puente de contenido con la web pública -->
+<script src="contenido.js"></script>
+
 <!-- ════════════════════════════════════════════════════════════════════════
      MODAL: DIAPOSITIVA DEL HERO
      ════════════════════════════════════════════════════════════════════════ -->
@@ -2257,13 +2260,90 @@ function confirmarAccion(titulo, texto, alConfirmar) {
   abrirModal('modal-confirm');
 }
 
-// Muestra la imagen elegida en el <img> indicado y guarda su dirección temporal.
+/* Imágenes de los formularios.
+   La foto se reduce de tamaño y se convierte en texto (data URL) para que
+   sobreviva al recargar la página y pueda publicarse en el sitio.        */
+const ANCHOS = { 'hero-imagen': 1400, 'com-imagen': 900, 'ev-imagen': 900 };
+
 function previsualizar(input, idImagen, idCampo) {
   const archivo = input.files && input.files[0];
   if (!archivo) return;
-  const url = URL.createObjectURL(archivo);
-  document.getElementById(idImagen).src = url;
-  if (idCampo) document.getElementById(idCampo).value = url;
+  const img = document.getElementById(idImagen);
+  img.src = URL.createObjectURL(archivo);          // vista inmediata mientras se procesa
+  Contenido.imagenADato(archivo, ANCHOS[idCampo] || 1000, 0.72)
+    .then((dato) => {
+      img.src = dato;
+      ponerImagen(idCampo, idImagen, dato, archivo.name);
+    })
+    .catch((e) => toast(e.message, 'del'));
+  input.value = '';
+}
+
+/* Coloca una imagen en un formulario. Si es un archivo subido muestra una
+   etiqueta con su nombre; si es una dirección web deja ver el campo de texto. */
+function ponerImagen(idCampo, idPreview, valor, nombreArchivo) {
+  const campo = document.getElementById(idCampo);
+  const img = document.getElementById(idPreview);
+  campo.value = valor || '';
+  if (img) img.src = valor || '';
+
+  let info = document.getElementById(idCampo + '-info');
+  const subida = valor && valor.slice(0, 5) === 'data:';
+
+  if (!subida) {
+    campo.hidden = false;
+    if (info) info.hidden = true;
+    return;
+  }
+
+  if (!info) {
+    info = document.createElement('div');
+    info.id = idCampo + '-info';
+    info.className = 'flex items-center gap-2 mt-2 px-2.5 py-1.5 rounded-lg bg-[#FFF9F4] border border-[#D97C2B]/25 text-[11px]';
+    campo.parentNode.insertBefore(info, campo.nextSibling);
+  }
+  info.dataset.preview = idPreview;
+  info.innerHTML =
+    '<span class="material-symbols-outlined text-[15px] text-[#D97C2B]">image</span>' +
+    '<span class="font-bold truncate flex-1">' + esc(nombreArchivo || 'Imagen subida') + '</span>' +
+    '<span class="text-[#8b837d] shrink-0">' + Contenido.pesoDato(valor) + ' KB</span>' +
+    '<button type="button" class="text-[#D97C2B] font-bold shrink-0" onclick="quitarImagen(\'' + idCampo + '\')">Quitar</button>';
+  info.hidden = false;
+  campo.hidden = true;
+}
+
+function quitarImagen(idCampo) {
+  const info = document.getElementById(idCampo + '-info');
+  const img = info && document.getElementById(info.dataset.preview);
+  document.getElementById(idCampo).value = '';
+  if (img) img.src = '';
+  ponerImagen(idCampo, info ? info.dataset.preview : '', '');
+}
+
+/* Guarda todo el contenido para que la web pública lo muestre. */
+function publicar(silencioso) {
+  const r = Contenido.guardar({
+    hero: db.hero,
+    categorias: db.categorias,
+    comercios: db.comercios,
+    eventos: db.eventos,
+    galeria: db.galeria,
+    horarios: db.horarios
+  });
+  if (!r.ok) { toast(r.mensaje, 'del'); return false; }
+  actualizarEstadoPublicacion();
+  if (!silencioso) toast('Cambios publicados en la web', 'ok');
+  return true;
+}
+
+function actualizarEstadoPublicacion() {
+  const el = document.getElementById('estado-publicacion');
+  if (el) el.textContent = Contenido.espacioUsado() + ' KB publicados';
+}
+
+function restablecerContenido() {
+  Contenido.borrar();
+  location.reload();
 }
 
 /* ── 3. HERO ─────────────────────────────────────────────────────────────── */

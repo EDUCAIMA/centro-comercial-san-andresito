@@ -147,21 +147,7 @@
             </p>
           </div>
 
-          <!-- Resumen del directorio -->
-          <div class="flex items-center gap-3 shrink-0">
-            <div class="px-4 py-3 rounded-xl bg-[#F2F2F2] border border-[#0D0D0D]/5 text-center min-w-[92px]">
-              <span class="block font-['Outfit',sans-serif] text-2xl font-extrabold text-[#D97C2B]" id="statComercios">0</span>
-              <span class="block text-[11px] font-semibold uppercase tracking-wider text-[#5a534e]">Comercios</span>
-            </div>
-            <div class="px-4 py-3 rounded-xl bg-[#F2F2F2] border border-[#0D0D0D]/5 text-center min-w-[92px]">
-              <span class="block font-['Outfit',sans-serif] text-2xl font-extrabold text-[#D97C2B]" id="statCategorias">0</span>
-              <span class="block text-[11px] font-semibold uppercase tracking-wider text-[#5a534e]">Categorías</span>
-            </div>
-            <div class="px-4 py-3 rounded-xl bg-[#F2F2F2] border border-[#0D0D0D]/5 text-center min-w-[92px]">
-              <span class="block font-['Outfit',sans-serif] text-2xl font-extrabold text-[#D97C2B]">3</span>
-              <span class="block text-[11px] font-semibold uppercase tracking-wider text-[#5a534e]">Pisos</span>
-            </div>
-          </div>
+
         </div>
 
         <!-- Accesos rápidos por categoría (mismo bloque visual del inicio) -->
@@ -745,8 +731,7 @@
     (function iniciar() {
       leerURL();
 
-      $('#statComercios').textContent = COMERCIOS.length;
-      $('#statCategorias').textContent = CATEGORIAS.length;
+
       $('#comercioSearch').value = estado.q;
       $('#soloDestacados').checked = estado.destacados;
 
