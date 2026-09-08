@@ -1,0 +1,550 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Quiénes Somos - Centro Comercial San Andresito del Eje</title>
+  <meta name="description" content="Conoce la historia, misión, visión y valores del Centro Comercial San Andresito del Eje en Pereira. Más de dos décadas impulsando el comercio y las familias del Eje Cafetero."/>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+  </style>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#D97C2B",
+            "primary-hover": "#bf681c",
+            "secondary": "#D99923",
+            "background": "#F2F2F2",
+            "surface": "#F2F2F2",
+            "onyx": "#0D0D0D",
+            "on-surface": "#0D0D0D"
+          },
+          fontFamily: {
+            "outfit": ["Outfit", "sans-serif"],
+            "grotesk": ["Hanken Grotesk", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-[#F2F2F2] font-['Hanken_Grotesk',sans-serif] text-[#0D0D0D] antialiased selection:bg-[#D97C2B] selection:text-white">
+
+  <!-- Header / Barra de Navegación -->
+  <header class="fixed top-0 left-0 right-0 w-full z-50 bg-[#FFFFFF]/95 backdrop-blur-xl border-b border-[#0D0D0D]/10 shadow-[0_2px_12px_rgba(13,13,13,0.04)]">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-10 flex items-center justify-between py-2 gap-4">
+      <a class="inline-flex items-center" href="inicio.html" aria-label="Inicio">
+        <img alt="Centro Comercial San Andresito del Eje" class="w-auto object-contain h-16 md:h-20 transition-transform hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBg3Vk1lACpJ0yJco0d649B4GyXaWZSXx_g7QYNMZap8QfHkSb93oGCQjJ-CLWsYg4KmEnOMLoAt8xczDOunhLmbjiBcXhusNTdB9OIaeTfRhn8XgGrgyqd59Fw3HR2T_4Rzz9u5rY8RnElvclkucg-HdS-GhsDVPwy_kSTFyZwMK-eGFqq5wr092RTmItbjk5BpM9wyalcTQjhPkBlHke3Xn2_r1gk4PTqk63ewXxxc2sWgnu0cCH-I4fQM59lZ53nRhg"/>
+      </a>
+
+      <div class="flex-1 flex flex-col items-end gap-2 max-w-full">
+        <!-- Barra superior: Dirección, Teléfono, Horario y Redes -->
+        <div class="w-full flex items-center justify-between gap-2 text-xs text-[#5a534e] pb-0.5 border-b border-[#0D0D0D]/5">
+          <a class="inline-flex items-center gap-1.5 hover:text-[#D97C2B] transition-colors truncate" href="inicio.html#mapa" title="Ver ubicación en mapa">
+            <span class="material-symbols-outlined text-[16px] text-[#D97C2B] shrink-0">location_on</span>
+            <span class="font-medium hidden sm:inline truncate">Cra. 8 entre Cll. 30 y 31, Pereira</span>
+            <span class="font-medium sm:hidden">Cra. 8, Pereira</span>
+          </a>
+
+          <a class="inline-flex items-center gap-1.5 hover:text-[#D97C2B] transition-colors font-medium shrink-0" href="tel:+5763350000" title="Llamar a recepción">
+            <span class="material-symbols-outlined text-[16px] text-[#D97C2B] shrink-0">call</span>
+            <span class="hidden md:inline text-neutral-400 font-normal">Recepción:</span>
+            <span>(606) 335-0000</span>
+          </a>
+
+          <div class="hidden lg:flex items-center gap-1.5 font-medium bg-[#F2F2F2] px-3 py-0.5 rounded-full border border-[#0D0D0D]/5 shrink-0">
+            <span class="material-symbols-outlined text-[14px] text-[#D97C2B]">schedule</span>
+            <span>Abierto hoy: 10:00 - 21:00</span>
+          </div>
+
+          <div class="flex items-center gap-1.5 shrink-0">
+            <a class="w-6 h-6 rounded-full bg-[#D97C2B]/10 text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors border border-[#D97C2B]/20" href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram" aria-label="Instagram">
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a class="w-6 h-6 rounded-full bg-[#D97C2B]/10 text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors border border-[#D97C2B]/20" href="https://facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook" aria-label="Facebook">
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.7 5H18V0h-3.808C10.595 0 9 1.583 9 4.615V8z"/></svg>
+            </a>
+            <a class="w-6 h-6 rounded-full bg-[#D97C2B]/10 text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors border border-[#D97C2B]/20" href="https://tiktok.com" target="_blank" rel="noopener noreferrer" title="TikTok" aria-label="TikTok">
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.47 6.27 6.27 0 0 0 1.95-4.52V8.04a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.95-.47z"/></svg>
+            </a>
+            <a class="w-6 h-6 rounded-full bg-[#D97C2B]/10 text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors border border-[#D97C2B]/20" href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp">
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Menú de Enlaces con "Quiénes Somos" activo -->
+        <nav class="w-full flex items-center justify-end gap-2 text-sm font-semibold overflow-x-auto py-0.5">
+          <a class="px-3.5 py-1.5 text-[#5a534e] hover:text-[#0D0D0D] hover:bg-[#F2F2F2] rounded-full transition-colors whitespace-nowrap text-center shrink-0" href="inicio.html">Inicio</a>
+          <a class="px-4 py-1.5 bg-[#D97C2B] text-white rounded-full shadow-sm text-center shrink-0 whitespace-nowrap" href="quienes-somos.html" aria-current="page">Quiénes Somos</a>
+          <a class="px-3.5 py-1.5 text-[#5a534e] hover:text-[#0D0D0D] hover:bg-[#F2F2F2] rounded-full transition-colors whitespace-nowrap text-center shrink-0" href="comercios.html">Comercios</a>
+          <a class="px-3.5 py-1.5 text-[#5a534e] hover:text-[#0D0D0D] hover:bg-[#F2F2F2] rounded-full transition-colors whitespace-nowrap text-center shrink-0" href="inicio.html#eventos">Eventos</a>
+          <a class="px-3.5 py-1.5 text-[#5a534e] hover:text-[#0D0D0D] hover:bg-[#F2F2F2] rounded-full transition-colors whitespace-nowrap text-center shrink-0" href="inicio.html#mapa">Ubicación &amp; Mapa</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <main class="w-full bg-[#F2F2F2] min-h-screen pt-28 pb-16">
+
+    <!-- ── 1. PORTADA HERO DE LA SECCIÓN ─────────────────────────────────── -->
+    <section class="w-full px-6 lg:px-10 mb-12">
+      <div class="max-w-[1440px] mx-auto">
+
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center gap-2 text-xs text-[#5a534e] mb-4" aria-label="Ruta de navegación">
+          <a class="hover:text-[#D97C2B] transition-colors" href="inicio.html">Inicio</a>
+          <span>/</span>
+          <span class="text-[#0D0D0D] font-semibold">Quiénes Somos</span>
+        </nav>
+
+        <div class="relative w-full rounded-2xl overflow-hidden shadow-lg bg-[#0D0D0D] border border-[#0D0D0D]/10 min-h-[380px] md:min-h-[460px] flex items-end">
+          <img alt="Fachada San Andresito del Eje Pereira" class="absolute inset-0 w-full h-full object-cover object-center opacity-75"
+               src="https://lh3.googleusercontent.com/aida-public/AB6AXuCg0QBksIf-t60frWJd-nO8ciWMsJQ1pz7wMKrQhgo9q-hCD1yecv09gcDtEvXVXt9e1_Gc525lw2R5wWGPhBzoImI5AJ82vTfaVVsyWjz4zX4079I5mlL_9AIAFIKLVOuDWMP3gasoPRWIF0DZTDB1Y-hAigK1sMid0YcfYXPGPUqrsVdggYN5H4d7pKZBwqCZak4c8_vfINcOV53BJX_KIj6fIOz5jJqMmQJMyoBjZtEwTzTC10p4Gg2IX-Sz8Aoc4pc"/>
+          <div class="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] via-[#0D0D0D]/60 to-black/30"></div>
+
+          <div class="relative z-10 p-6 md:p-12 max-w-3xl text-white">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D97C2B] text-white text-[11px] font-bold uppercase tracking-wider mb-3 shadow-sm">
+              <span class="material-symbols-outlined text-[15px]">storefront</span> Tradición Pereirana
+            </span>
+            <h1 class="font-['Outfit',sans-serif] text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight leading-tight mb-4 text-white drop-shadow-md">
+              El Corazón Comercial del Eje Cafetero
+            </h1>
+            <p class="text-neutral-200 text-sm sm:text-base md:text-lg leading-relaxed drop-shadow">
+              Más de 20 años siendo el punto de encuentro tradicional por excelencia en Pereira. Un espacio donde convergen la calidez humana, el emprendimiento y la mejor variedad de la región.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 2. CIFRAS Y DATOS DESTACADOS ──────────────────────────────────── -->
+    <section class="w-full px-6 lg:px-10 mb-14">
+      <div class="max-w-[1440px] mx-auto">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          <div class="bg-white p-6 rounded-2xl border border-[#0D0D0D]/10 shadow-xs text-center flex flex-col items-center justify-center">
+            <div class="w-12 h-12 rounded-xl bg-[#D97C2B]/10 text-[#D97C2B] flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-2xl">storefront</span>
+            </div>
+            <span class="font-['Outfit',sans-serif] text-3xl md:text-4xl font-extrabold text-[#D97C2B]">+140</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-[#5a534e] mt-1">Locales Comerciales</span>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-[#0D0D0D]/10 shadow-xs text-center flex flex-col items-center justify-center">
+            <div class="w-12 h-12 rounded-xl bg-[#D97C2B]/10 text-[#D97C2B] flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-2xl">layers</span>
+            </div>
+            <span class="font-['Outfit',sans-serif] text-3xl md:text-4xl font-extrabold text-[#D97C2B]">3</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-[#5a534e] mt-1">Pisos de Variedad</span>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-[#0D0D0D]/10 shadow-xs text-center flex flex-col items-center justify-center">
+            <div class="w-12 h-12 rounded-xl bg-[#D97C2B]/10 text-[#D97C2B] flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-2xl">history</span>
+            </div>
+            <span class="font-['Outfit',sans-serif] text-3xl md:text-4xl font-extrabold text-[#D97C2B]">+20</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-[#5a534e] mt-1">Años de Trayectoria</span>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-[#0D0D0D]/10 shadow-xs text-center flex flex-col items-center justify-center">
+            <div class="w-12 h-12 rounded-xl bg-[#D97C2B]/10 text-[#D97C2B] flex items-center justify-center mb-3">
+              <span class="material-symbols-outlined text-2xl">sentiment_satisfied</span>
+            </div>
+            <span class="font-['Outfit',sans-serif] text-3xl md:text-4xl font-extrabold text-[#D97C2B]">100%</span>
+            <span class="text-xs font-bold uppercase tracking-wider text-[#5a534e] mt-1">Atención Cercana</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 3. NUESTRA HISTORIA & PROPÓSITO ───────────────────────────────── -->
+    <section class="w-full px-6 lg:px-10 mb-14">
+      <div class="max-w-[1440px] mx-auto">
+        <div class="bg-white rounded-2xl border border-[#0D0D0D]/10 p-8 md:p-12 shadow-sm grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+          <div class="lg:col-span-7 space-y-4">
+            <span class="text-xs font-bold uppercase tracking-[.15em] text-[#D97C2B] block">Nuestra Trayectoria</span>
+            <h2 class="font-['Outfit',sans-serif] text-2xl md:text-3xl font-extrabold text-[#0D0D0D] tracking-tight">
+              Una historia tejida con el esfuerzo de comerciantes y familias del Eje
+            </h2>
+            <p class="text-sm md:text-base text-[#5a534e] leading-relaxed">
+              Ubicado estratégicamente sobre la tradicional <strong>Carrera 8 entre Calles 30 y 31</strong> en el centro de Pereira, el <strong>Centro Comercial San Andresito del Eje</strong> nació como un anhelo de brindar a la ciudad un lugar moderno, seguro y accesible donde los mejores comerciantes pudieran ofrecer sus productos de forma organizada y confiable.
+            </p>
+            <p class="text-sm md:text-base text-[#5a534e] leading-relaxed">
+              A lo largo de los años nos hemos consolidado como el referente por excelencia para quienes buscan lo último en telefonía, accesorios tecnológicos, calzado deportivo y casual, moda urbana, perfumería, óptica y servicios financieros, todo en un solo lugar con la amabilidad y el calor humano que caracteriza a nuestra tierra cafetera.
+            </p>
+            <div class="pt-2 flex flex-wrap items-center gap-3">
+              <a href="comercios.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#D97C2B] hover:bg-[#bf681c] text-white font-semibold text-xs md:text-sm transition-colors shadow-sm">
+                <span class="material-symbols-outlined text-[18px]">storefront</span> Explorar Nuestros Locales
+              </a>
+              <a href="inicio.html#mapa" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#F2F2F2] hover:bg-[#e6e1dd] text-[#0D0D0D] font-semibold text-xs md:text-sm transition-colors border border-[#0D0D0D]/5">
+                <span class="material-symbols-outlined text-[18px]">location_on</span> Cómo Llegar
+              </a>
+            </div>
+          </div>
+
+          <div class="lg:col-span-5 relative">
+            <div class="rounded-xl overflow-hidden shadow-md border border-[#0D0D0D]/10">
+              <img alt="Galería Comercial San Andresito del Eje" class="w-full h-80 object-cover"
+                   src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmWAb4GYZWhwhS2L4d_ZmpVxxvWHh595f0MB8E0Vpz25GKf6tZDOQzztAm7-DkLHsJtFBtMxJRiRXjCsKLZH08Fn4VcZJIM-HzFavlm3_s5-jHDT93tymZheTuZLT_VU0JsLpDOU4YEhdyoZevsPzWKGI2559HeaPyv5m0veQFvbCGVVY0oHAn2GODLSbN-Q8Zy2At9aIfsd6s-gSmVGFtQmwnqSUnRZHoVbPFZnVZdMU9h_STjORVnA"/>
+            </div>
+            <div class="absolute -bottom-4 -left-4 bg-[#D97C2B] text-white p-4 rounded-xl shadow-lg max-w-[200px] hidden sm:block">
+              <span class="block font-['Outfit',sans-serif] text-xl font-extrabold leading-none">+140</span>
+              <span class="text-[11px] font-medium leading-tight mt-1 block">Opciones comerciales en el centro de Pereira</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 4. MISIÓN Y VISIÓN ────────────────────────────────────────────── -->
+    <section class="w-full px-6 lg:px-10 mb-14">
+      <div class="max-w-[1440px] mx-auto">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+
+          <!-- Tarjeta Misión -->
+          <div class="bg-white rounded-2xl border border-[#0D0D0D]/10 p-8 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-[#D97C2B]/40 transition-colors">
+            <div class="w-2 h-full bg-[#D97C2B] absolute top-0 left-0"></div>
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-[#D97C2B]/10 text-[#D97C2B] flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-2xl">flag</span>
+              </div>
+              <span class="text-xs font-bold uppercase tracking-[.15em] text-[#D97C2B] block mb-1">Nuestra Razón de Ser</span>
+              <h3 class="font-['Outfit',sans-serif] text-2xl font-extrabold text-[#0D0D0D] mb-3">Misión</h3>
+              <p class="text-sm md:text-base text-[#5a534e] leading-relaxed">
+                Brindar a la comunidad de Pereira, Risaralda y los visitantes del Eje Cafetero una experiencia comercial diversa, accesible y segura, reuniendo en un solo espacio a más de 140 locales especializados que ofrecen calidad, excelentes precios y atención cálida, impulsando al mismo tiempo el desarrollo económico y el emprendimiento regional.
+              </p>
+            </div>
+          </div>
+
+          <!-- Tarjeta Visión -->
+          <div class="bg-white rounded-2xl border border-[#0D0D0D]/10 p-8 shadow-sm flex flex-col justify-between relative overflow-hidden group hover:border-[#D97C2B]/40 transition-colors">
+            <div class="w-2 h-full bg-[#D99923] absolute top-0 left-0"></div>
+            <div>
+              <div class="w-12 h-12 rounded-xl bg-[#D99923]/10 text-[#D99923] flex items-center justify-center mb-4">
+                <span class="material-symbols-outlined text-2xl">visibility</span>
+              </div>
+              <span class="text-xs font-bold uppercase tracking-[.15em] text-[#D99923] block mb-1">Hacia Dónde Vamos</span>
+              <h3 class="font-['Outfit',sans-serif] text-2xl font-extrabold text-[#0D0D0D] mb-3">Visión</h3>
+              <p class="text-sm md:text-base text-[#5a534e] leading-relaxed">
+                Consolidarnos como el centro comercial tradicional más innovador, organizado y confiable del Eje Cafetero, integrando tecnología en nuestros servicios, fortaleciendo la experiencia de compra de nuestros visitantes y posicionándonos como el destino predilecto para familias, turistas y comerciantes.
+              </p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 5. NUESTROS VALORES Y COMPROMISOS ─────────────────────────────── -->
+    <section class="w-full px-6 lg:px-10 mb-14">
+      <div class="max-w-[1440px] mx-auto">
+        <div class="text-center max-w-2xl mx-auto mb-8">
+          <span class="text-xs font-bold uppercase tracking-[.15em] text-[#D97C2B] block mb-1">Nuestros Principios</span>
+          <h2 class="font-['Outfit',sans-serif] text-2xl md:text-3xl font-extrabold text-[#0D0D0D]">
+            Lo que nos impulsa cada día
+          </h2>
+          <p class="text-sm text-[#5a534e] mt-2">
+            Principios fundamentales que guían a nuestra administración y a cada uno de nuestros locatarios.
+          </p>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+
+          <div class="bg-white p-6 rounded-2xl border border-[#0D0D0D]/10 shadow-xs hover:shadow-md transition-shadow">
+            <div class="w-10 h-10 rounded-lg bg-[#D97C2B]/10 text-[#D97C2B] flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-xl">verified</span>
+            </div>
+            <h4 class="font-['Outfit',sans-serif] text-lg font-bold text-[#0D0D0D] mb-2">Tradición y Confianza</h4>
+            <p class="text-xs text-[#5a534e] leading-relaxed">
+              Más de 20 años construyendo relaciones duraderas con clientes que nos eligen generación tras generación.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-[#0D0D0D]/10 shadow-xs hover:shadow-md transition-shadow">
+            <div class="w-10 h-10 rounded-lg bg-[#D97C2B]/10 text-[#D97C2B] flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-xl">price_check</span>
+            </div>
+            <h4 class="font-['Outfit',sans-serif] text-lg font-bold text-[#0D0D0D] mb-2">Precios Competitivos</h4>
+            <p class="text-xs text-[#5a534e] leading-relaxed">
+              Ofrecemos opciones para todos los presupuestos, con la mejor relación entre calidad y economía.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-[#0D0D0D]/10 shadow-xs hover:shadow-md transition-shadow">
+            <div class="w-10 h-10 rounded-lg bg-[#D97C2B]/10 text-[#D97C2B] flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-xl">shield_person</span>
+            </div>
+            <h4 class="font-['Outfit',sans-serif] text-lg font-bold text-[#0D0D0D] mb-2">Seguridad 24/7</h4>
+            <p class="text-xs text-[#5a534e] leading-relaxed">
+              Circuito cerrado de televisión, personal de vigilancia y parqueadero privado vigilado para tu total tranquilidad.
+            </p>
+          </div>
+
+          <div class="bg-white p-6 rounded-2xl border border-[#0D0D0D]/10 shadow-xs hover:shadow-md transition-shadow">
+            <div class="w-10 h-10 rounded-lg bg-[#D97C2B]/10 text-[#D97C2B] flex items-center justify-center mb-4">
+              <span class="material-symbols-outlined text-xl">diversity_3</span>
+            </div>
+            <h4 class="font-['Outfit',sans-serif] text-lg font-bold text-[#0D0D0D] mb-2">Apoyo al Emprendimiento</h4>
+            <p class="text-xs text-[#5a534e] leading-relaxed">
+              Somos el hogar de decenas de familias emprendedoras que dinamizan el tejido comercial de Risaralda.
+            </p>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 6. INSTALACIONES Y SERVICIOS ──────────────────────────────────── -->
+    <section class="w-full px-6 lg:px-10 mb-14">
+      <div class="max-w-[1440px] mx-auto bg-white rounded-2xl border border-[#0D0D0D]/10 p-8 md:p-12 shadow-sm">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-[.15em] text-[#D97C2B] block mb-1">Comodidad para Todos</span>
+            <h2 class="font-['Outfit',sans-serif] text-2xl md:text-3xl font-extrabold text-[#0D0D0D]">
+              Nuestras Instalaciones y Servicios
+            </h2>
+          </div>
+          <span class="text-xs text-[#5a534e] font-medium">Diseñado pensando en tu bienestar y comodidad</span>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+
+          <div class="flex items-start gap-4 p-4 rounded-xl bg-[#F2F2F2]/70 border border-[#0D0D0D]/5">
+            <span class="material-symbols-outlined text-[#D97C2B] text-2xl shrink-0 mt-0.5">local_parking</span>
+            <div>
+              <h5 class="text-sm font-bold text-[#0D0D0D]">Parqueadero Privado</h5>
+              <p class="text-xs text-[#5a534e] mt-1">Espacios amplios y seguros para carros y motocicletas con vigilancia constante.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-4 rounded-xl bg-[#F2F2F2]/70 border border-[#0D0D0D]/5">
+            <span class="material-symbols-outlined text-[#D97C2B] text-2xl shrink-0 mt-0.5">wifi</span>
+            <div>
+              <h5 class="text-sm font-bold text-[#0D0D0D]">Wi-Fi Gratuito</h5>
+              <p class="text-xs text-[#5a534e] mt-1">Conexión de alta velocidad en pasillos y zonas comunes para todos los visitantes.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-4 rounded-xl bg-[#F2F2F2]/70 border border-[#0D0D0D]/5">
+            <span class="material-symbols-outlined text-[#D97C2B] text-2xl shrink-0 mt-0.5">atm</span>
+            <div>
+              <h5 class="text-sm font-bold text-[#0D0D0D]">Cajeros Automáticos</h5>
+              <p class="text-xs text-[#5a534e] mt-1">Puntos de retiro y corresponsales bancarios ubicados estratégicamente en el Piso 1.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-4 rounded-xl bg-[#F2F2F2]/70 border border-[#0D0D0D]/5">
+            <span class="material-symbols-outlined text-[#D97C2B] text-2xl shrink-0 mt-0.5">coffee</span>
+            <div>
+              <h5 class="text-sm font-bold text-[#0D0D0D]">Zona de Café & Comidas</h5>
+              <p class="text-xs text-[#5a534e] mt-1">Disfruta del mejor café de origen, repostería y opciones gastronómicas para compartir.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-4 rounded-xl bg-[#F2F2F2]/70 border border-[#0D0D0D]/5">
+            <span class="material-symbols-outlined text-[#D97C2B] text-2xl shrink-0 mt-0.5">security</span>
+            <div>
+              <h5 class="text-sm font-bold text-[#0D0D0D]">Monitoreo 24/7</h5>
+              <p class="text-xs text-[#5a534e] mt-1">Circuito cerrado de televisión y brigadistas certificados para emergencias.</p>
+            </div>
+          </div>
+
+          <div class="flex items-start gap-4 p-4 rounded-xl bg-[#F2F2F2]/70 border border-[#0D0D0D]/5">
+            <span class="material-symbols-outlined text-[#D97C2B] text-2xl shrink-0 mt-0.5">info</span>
+            <div>
+              <h5 class="text-sm font-bold text-[#0D0D0D]">Punto de Información</h5>
+              <p class="text-xs text-[#5a534e] mt-1">Personal capacitado listo para orientarte y guiarte hacia el comercio que buscas.</p>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── 7. BANNER DE INVITACIÓN ───────────────────────────────────────── -->
+    <section class="w-full px-6 lg:px-10">
+      <div class="max-w-[1440px] mx-auto">
+        <div class="rounded-2xl bg-gradient-to-r from-[#D97C2B] to-[#D99923] p-8 md:p-12 text-white shadow-lg flex flex-col md:flex-row items-center justify-between gap-6">
+          <div class="max-w-2xl">
+            <h3 class="font-['Outfit',sans-serif] text-2xl md:text-3xl font-extrabold text-white mb-2">
+              ¡Te esperamos en San Andresito del Eje!
+            </h3>
+            <p class="text-white/90 text-sm md:text-base leading-relaxed">
+              Visítanos de lunes a domingo y descubre por qué somos el centro comercial tradicional más querido de Pereira.
+            </p>
+          </div>
+          <div class="flex items-center gap-3 shrink-0">
+            <a href="comercios.html" class="px-5 py-3 rounded-xl bg-white text-[#D97C2B] font-bold text-xs md:text-sm hover:bg-neutral-100 transition-colors shadow-sm">
+              Ver Todos los Comercios
+            </a>
+            <a href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer" class="px-5 py-3 rounded-xl bg-black/20 hover:bg-black/30 text-white font-bold text-xs md:text-sm transition-colors border border-white/30">
+              Contáctanos
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Footer con Transición Curva Suave e Información Completa -->
+  <footer class="w-full bg-[#D97C2B] text-white relative mt-6 overflow-hidden">
+    <div class="absolute -top-12 left-0 right-0 h-24 bg-[#F2F2F2]" style="border-radius: 0 0 50% 50%; pointer-events: none;"></div>
+
+    <div class="w-full border-b border-white/10 mt-16 pb-12 pt-6 relative z-10 px-6 lg:px-10 max-w-[1440px] mx-auto">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-10">
+        <div class="flex items-center gap-3 md:border-r md:border-white/20">
+          <span class="material-symbols-outlined text-white text-3xl opacity-90 shrink-0">local_parking</span>
+          <div>
+            <h5 class="text-xs font-bold uppercase tracking-wider text-white leading-tight">Parqueadero</h5>
+            <p class="text-[11px] text-white/80 mt-0.5">Seguro y amplio, 24/7</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 md:border-r md:border-white/20">
+          <span class="material-symbols-outlined text-white text-3xl opacity-90 shrink-0">wifi</span>
+          <div>
+            <h5 class="text-xs font-bold uppercase tracking-wider text-white leading-tight">Wi-Fi Gratis</h5>
+            <p class="text-[11px] text-white/80 mt-0.5">En zonas comunes</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 md:border-r md:border-white/20">
+          <span class="material-symbols-outlined text-white text-3xl opacity-90 shrink-0">family_restroom</span>
+          <div>
+            <h5 class="text-xs font-bold uppercase tracking-wider text-white leading-tight">Ambiente Familiar</h5>
+            <p class="text-[11px] text-white/80 mt-0.5">Espacios para todos</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-white text-3xl opacity-90 shrink-0">verified_user</span>
+          <div>
+            <h5 class="text-xs font-bold uppercase tracking-wider text-white leading-tight">Compra Segura</h5>
+            <p class="text-[11px] text-white/80 mt-0.5">Comercio 100% certificado</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contenido Principal Multicolumna del Footer -->
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-10 py-10 border-t border-white/20">
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+        <!-- Columna 1 & 2: Identidad & Descripción -->
+        <div class="lg:col-span-2 space-y-4">
+          <div class="inline-flex items-center bg-white p-3 rounded-xl shadow-md">
+            <img alt="San Andresito del Eje" class="h-12 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCy0L1kLrBICOrhVJ-sS-_hiPgGogyKQdWTFQRR9jaUvPLWn2CLbF6dfPjiLctJJVRhyqDWHat94yFFXytSqkW7THcgWGCPqqefcB77AV4pJZpmHH1j1ipxbD5LTWz5vXQ9f9GKy6i0DW6NEXHDz8ND3YohCzCOwR4r958HydxoJfnAu-tO3ohrZ2qJhAuHWRNZshJX-VkvR08WAbhJXOuLLnRZ9jXxcZA6r8B5p4GkmL4xcB0tQhRtLBUwYDPNenJbpko"/>
+          </div>
+          <p class="text-xs text-white/90 leading-relaxed max-w-sm">
+            El Centro Comercial San Andresito del Eje es el punto de encuentro comercial tradicional por excelencia en Pereira. Más de 140 locales dedicados a tecnología, calzado, moda, gastronomía y servicios financieros con la mejor calidez del Eje Cafetero.
+          </p>
+          <div class="flex items-center gap-2 pt-2">
+            <span class="text-xs font-bold uppercase tracking-wider text-white/80">Síguenos:</span>
+            <div class="flex items-center gap-1.5">
+              <a class="w-7 h-7 rounded-full bg-white/15 hover:bg-white hover:text-[#D97C2B] text-white flex items-center justify-center transition-colors shadow-sm" href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram">
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+              </a>
+              <a class="w-7 h-7 rounded-full bg-white/15 hover:bg-white hover:text-[#D97C2B] text-white flex items-center justify-center transition-colors shadow-sm" href="https://facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook">
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.7 5H18V0h-3.808C10.595 0 9 1.583 9 4.615V8z"/></svg>
+              </a>
+              <a class="w-7 h-7 rounded-full bg-white/15 hover:bg-white hover:text-[#D97C2B] text-white flex items-center justify-center transition-colors shadow-sm" href="https://tiktok.com" target="_blank" rel="noopener noreferrer" title="TikTok">
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.47 6.27 6.27 0 0 0 1.95-4.52V8.04a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.95-.47z"/></svg>
+              </a>
+              <a class="w-7 h-7 rounded-full bg-white/15 hover:bg-white hover:text-emerald-600 text-white flex items-center justify-center transition-colors shadow-sm" href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer" title="WhatsApp">
+                <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- Columna 3: Explorar Navegación -->
+        <div>
+          <h4 class="text-sm font-bold uppercase tracking-wider text-white mb-4 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-white"></span> Navegación
+          </h4>
+          <ul class="space-y-2 text-xs text-white/85">
+            <li><a class="hover:text-white hover:underline transition-colors" href="inicio.html">Inicio</a></li>
+            <li><a class="hover:text-white hover:underline transition-colors" href="quienes-somos.html">Quiénes Somos</a></li>
+            <li><a class="hover:text-white hover:underline transition-colors" href="comercios.html">Nuestros Comercios</a></li>
+            <li><a class="hover:text-white hover:underline transition-colors" href="inicio.html#eventos">Próximos Eventos</a></li>
+            <li><a class="hover:text-white hover:underline transition-colors" href="inicio.html#mapa">Ubicación & Google Maps</a></li>
+          </ul>
+        </div>
+
+        <!-- Columna 4: Servicios al Cliente -->
+        <div>
+          <h4 class="text-sm font-bold uppercase tracking-wider text-white mb-4 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-white"></span> Servicios
+          </h4>
+          <ul class="space-y-2 text-xs text-white/85">
+            <li><span class="text-white/70">Atención al Visitante</span></li>
+            <li><span class="text-white/70">Parqueadero de Carros y Motos</span></li>
+            <li><span class="text-white/70">Cajeros Automáticos (Piso 1)</span></li>
+            <li><span class="text-white/70">Punto de Información Central</span></li>
+            <li><span class="text-white/70">Zona de Comidas y Café</span></li>
+            <li><span class="text-white/70">Seguridad & Monitoreo 24/7</span></li>
+          </ul>
+        </div>
+
+        <!-- Columna 5: Contacto Directo -->
+        <div>
+          <h4 class="text-sm font-bold uppercase tracking-wider text-white mb-4 flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-white"></span> Contáctanos
+          </h4>
+          <div class="space-y-3 text-xs text-white/85">
+            <div class="flex items-start gap-2">
+              <span class="material-symbols-outlined text-white text-[18px] shrink-0 mt-0.5">location_on</span>
+              <span>Cra. 8 entre Cll. 30 y 31, Pereira, Risaralda</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-white text-[18px] shrink-0">call</span>
+              <a class="hover:underline font-semibold text-white" href="tel:+5763350000">(606) 335-0000</a>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="material-symbols-outlined text-white text-[18px] shrink-0">mail</span>
+              <span class="text-white/90">contacto@sanandresitoeje.com</span>
+            </div>
+            <div class="pt-2">
+              <a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-[#D97C2B] font-bold text-xs hover:bg-neutral-100 transition-colors shadow-sm" href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer">
+                <span class="material-symbols-outlined text-[16px]">chat</span> Chat de Atención
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Barra Inferior de Derechos y Créditos -->
+    <div class="w-full border-t border-white/20 bg-black/10 py-5">
+      <div class="max-w-[1440px] mx-auto px-6 lg:px-10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/80">
+        <p>© 2026 Centro Comercial San Andresito del Eje. Todos los derechos reservados.</p>
+        <div class="flex items-center gap-4 text-white/70">
+          <a class="hover:text-white transition-colors" href="terminos.html">Términos y Condiciones</a>
+          <span>•</span>
+          <a class="hover:text-white transition-colors" href="privacidad.html">Política de Privacidad</a>
+          <span>•</span>
+          <span class="text-white/90 font-medium">Pereira, Colombia</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>

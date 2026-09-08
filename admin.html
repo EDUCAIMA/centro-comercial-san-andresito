@@ -2343,7 +2343,9 @@ function publicar(silencioso) {
 
 function actualizarEstadoPublicacion() {
   const el = document.getElementById('estado-publicacion');
-  if (el) el.textContent = Contenido.espacioUsado() + ' KB publicados';
+  if (!el) return;
+  const kb = Contenido.espacioUsado();
+  el.textContent = kb ? ('Publicado · ' + kb + ' KB') : 'Sin cambios publicados';
 }
 
 function restablecerContenido() {
@@ -3028,8 +3030,12 @@ function medirPassword(valor) {
 
 /* ── 11. PUBLICACIÓN EN LA WEB ───────────────────────────────────────────── */
 // Se agrupan los cambios seguidos en una sola escritura.
+// Durante el arranque no se publica nada: solo abrir el panel no debe
+// sobrescribir lo que la web muestre por su cuenta.
 let tempPublicar = null;
+let arrancando = true;
 function programarPublicacion() {
+  if (arrancando) return;
   clearTimeout(tempPublicar);
   tempPublicar = setTimeout(() => publicar(true), 600);
 }
@@ -3052,6 +3058,9 @@ renderGaleria();
 renderHorarios();
 renderUsuarios();
 renderPermisos();
+
+arrancando = false;                 // a partir de aquí, cada cambio se publica
+actualizarEstadoPublicacion();
 
 // Permite abrir una sección directamente con admin.html#eventos
 const inicial = (location.hash || '').replace('#', '');
