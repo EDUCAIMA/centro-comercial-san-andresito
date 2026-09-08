@@ -1186,3 +1186,1301 @@
           </button>
         </div>
       </section>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           VISTA: USUARIOS
+           ════════════════════════════════════════════════════════════════ -->
+      <section class="admin-view" id="view-usuarios">
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-[#D97C2B]/12 text-[#D97C2B] flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined">group</span>
+            </div>
+            <div>
+              <h2 class="font-['Outfit',sans-serif] text-lg font-extrabold">Usuarios del panel</h2>
+              <p class="text-xs text-[#8b837d] mt-0.5">Quiénes pueden entrar al administrador y qué puede editar cada uno.</p>
+            </div>
+          </div>
+          <button class="btn-primary shrink-0" onclick="abrirFormUsuario()">
+            <span class="material-symbols-outlined">person_add</span> Invitar usuario
+          </button>
+        </div>
+
+        <div class="card overflow-hidden mb-5">
+          <div class="overflow-x-auto">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th style="width:34%">Usuario</th>
+                  <th>Rol</th>
+                  <th>Último acceso</th>
+                  <th class="text-center">Estado</th>
+                  <th class="text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="usuarios-tbody"><!-- render JS --></tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Matriz de permisos -->
+        <div class="card">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">Roles y permisos</h3>
+              <p class="text-xs text-[#8b837d] mt-0.5">Define qué secciones puede tocar cada rol</p>
+            </div>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th style="width:30%">Sección del panel</th>
+                  <th class="text-center">Super Admin</th>
+                  <th class="text-center">Editor</th>
+                  <th class="text-center">Gestor de comercios</th>
+                  <th class="text-center">Gestor de eventos</th>
+                </tr>
+              </thead>
+              <tbody id="permisos-tbody"><!-- render JS --></tbody>
+            </table>
+          </div>
+          <div class="p-4 border-t border-[#0D0D0D]/8 flex justify-end">
+            <button class="btn-primary" onclick="toast('Permisos actualizados','ok')">
+              <span class="material-symbols-outlined">save</span> Guardar permisos
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           VISTA: MI PERFIL
+           ════════════════════════════════════════════════════════════════ -->
+      <section class="admin-view" id="view-perfil">
+
+        <!-- Encabezado del perfil -->
+        <div class="card overflow-hidden mb-5">
+          <div class="h-32 md:h-40 relative bg-gradient-to-r from-[#D97C2B] to-[#D99923]">
+            <div class="absolute inset-0 opacity-25" style="background-image:radial-gradient(circle at 20% 30%, #fff 0, transparent 45%), radial-gradient(circle at 80% 20%, #fff 0, transparent 40%)"></div>
+            <button class="absolute top-4 right-4 px-3 py-1.5 rounded-lg bg-[#0D0D0D]/30 backdrop-blur-md border border-white/25 text-white text-[11px] font-bold flex items-center gap-1.5 hover:bg-[#0D0D0D]/50 transition-colors" onclick="toast('Selecciona una imagen de portada')">
+              <span class="material-symbols-outlined text-[16px]">image</span> Cambiar portada
+            </button>
+          </div>
+          <div class="px-5 md:px-7 pb-6">
+            <div class="flex flex-col md:flex-row md:items-end gap-4 -mt-12 md:-mt-14">
+              <div class="relative shrink-0">
+                <img alt="Eduardo Caicedo" class="w-24 h-24 md:w-28 md:h-28 rounded-2xl object-cover border-4 border-white shadow-lg bg-white" id="perfil-avatar" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80"/>
+                <label class="absolute -bottom-2 -right-2 w-9 h-9 rounded-xl bg-[#D97C2B] text-white flex items-center justify-center shadow-md cursor-pointer hover:brightness-110 transition-all" title="Cambiar foto de perfil">
+                  <span class="material-symbols-outlined text-[18px]">photo_camera</span>
+                  <input accept="image/*" class="hidden" type="file" onchange="cambiarAvatar(this)"/>
+                </label>
+              </div>
+              <div class="flex-1 min-w-0 md:pb-2">
+                <div class="flex flex-wrap items-center gap-2.5">
+                  <h2 class="font-['Outfit',sans-serif] text-xl md:text-2xl font-extrabold tracking-tight">Eduardo Caicedo</h2>
+                  <span class="chip chip-primary"><span class="material-symbols-outlined text-[13px]">verified</span> Super Administrador</span>
+                </div>
+                <p class="text-sm text-[#8b837d] mt-1">eduardo.caicedom@gmail.com · Gerencia de Mercadeo</p>
+              </div>
+              <div class="flex gap-2 md:pb-2">
+                <button class="btn-secondary" onclick="activarTab('seguridad')">
+                  <span class="material-symbols-outlined">lock</span> Seguridad
+                </button>
+                <button class="btn-primary" onclick="toast('Perfil actualizado','ok')">
+                  <span class="material-symbols-outlined">save</span> Guardar
+                </button>
+              </div>
+            </div>
+
+            <!-- Métricas del perfil -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-6">
+              <div class="p-3 rounded-xl bg-[#FAFAFA] border border-[#0D0D0D]/6">
+                <p class="text-[10px] uppercase tracking-wider text-[#8b837d] font-bold">Miembro desde</p>
+                <p class="font-bold text-sm mt-1">Enero 2024</p>
+              </div>
+              <div class="p-3 rounded-xl bg-[#FAFAFA] border border-[#0D0D0D]/6">
+                <p class="text-[10px] uppercase tracking-wider text-[#8b837d] font-bold">Cambios publicados</p>
+                <p class="font-bold text-sm mt-1">248</p>
+              </div>
+              <div class="p-3 rounded-xl bg-[#FAFAFA] border border-[#0D0D0D]/6">
+                <p class="text-[10px] uppercase tracking-wider text-[#8b837d] font-bold">Último acceso</p>
+                <p class="font-bold text-sm mt-1">Hoy · 08:12</p>
+              </div>
+              <div class="p-3 rounded-xl bg-[#FAFAFA] border border-[#0D0D0D]/6">
+                <p class="text-[10px] uppercase tracking-wider text-[#8b837d] font-bold">Verificación en 2 pasos</p>
+                <p class="font-bold text-sm mt-1 text-emerald-600">Activa</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pestañas -->
+        <div class="flex items-center gap-6 border-b border-[#0D0D0D]/10 mb-5 overflow-x-auto">
+          <button class="tab-btn active" data-tab="datos" onclick="activarTab('datos')">Datos personales</button>
+          <button class="tab-btn" data-tab="seguridad" onclick="activarTab('seguridad')">Seguridad</button>
+          <button class="tab-btn" data-tab="preferencias" onclick="activarTab('preferencias')">Preferencias</button>
+          <button class="tab-btn" data-tab="actividad" onclick="activarTab('actividad')">Mi actividad</button>
+        </div>
+
+        <!-- Pestaña: datos personales -->
+        <div class="tab-pane active" id="tab-datos">
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+            <div class="card lg:col-span-2">
+              <div class="card-head"><h3 class="card-title">Información de la cuenta</h3></div>
+              <div class="card-body">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="field"><label>Nombres</label><input class="inp" type="text" value="Eduardo"/></div>
+                  <div class="field"><label>Apellidos</label><input class="inp" type="text" value="Caicedo Marín"/></div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="field"><label>Correo electrónico</label><input class="inp" type="email" value="eduardo.caicedom@gmail.com"/></div>
+                  <div class="field"><label>Teléfono</label><input class="inp" type="tel" value="+57 310 555 4477"/></div>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div class="field"><label>Cargo</label><input class="inp" type="text" value="Gerente de Mercadeo"/></div>
+                  <div class="field">
+                    <label>Rol en el panel</label>
+                    <input class="inp bg-[#FAFAFA] text-[#8b837d]" disabled type="text" value="Super Administrador"/>
+                    <p class="hint">Solo otro Super Administrador puede cambiar este rol.</p>
+                  </div>
+                </div>
+                <div class="field !mb-0">
+                  <label>Nota interna / biografía</label>
+                  <textarea class="txt !min-h-[90px]">Responsable del contenido publicado en la web del centro comercial: agenda de eventos, directorio de comercios y campañas de temporada.</textarea>
+                </div>
+                <button class="btn-primary mt-5" onclick="toast('Datos personales guardados','ok')">
+                  <span class="material-symbols-outlined">save</span> Guardar cambios
+                </button>
+              </div>
+            </div>
+
+            <div class="space-y-5">
+              <div class="card">
+                <div class="card-head"><h3 class="card-title">Foto de perfil</h3></div>
+                <div class="card-body text-center">
+                  <img alt="Foto actual" class="w-24 h-24 rounded-2xl object-cover mx-auto mb-3 border border-[#0D0D0D]/10" id="perfil-avatar-mini" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80"/>
+                  <label class="dropzone !py-4">
+                    <input accept="image/*" type="file" onchange="cambiarAvatar(this)"/>
+                    <span class="material-symbols-outlined">add_a_photo</span>
+                    <p class="text-xs font-bold">Subir nueva foto</p>
+                    <p class="text-[11px] text-[#8b837d]">JPG o PNG · mínimo 300 × 300 px</p>
+                  </label>
+                  <button class="btn-danger w-full mt-3" onclick="toast('Foto eliminada','del')">
+                    <span class="material-symbols-outlined">delete</span> Quitar foto
+                  </button>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-head"><h3 class="card-title">Permisos asignados</h3></div>
+                <div class="card-body space-y-2 text-sm">
+                  <div class="flex items-center gap-2"><span class="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span> Hero y carrusel</div>
+                  <div class="flex items-center gap-2"><span class="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span> Comercios y categorías</div>
+                  <div class="flex items-center gap-2"><span class="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span> Eventos</div>
+                  <div class="flex items-center gap-2"><span class="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span> Galería de imágenes</div>
+                  <div class="flex items-center gap-2"><span class="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span> Textos, footer y ubicación</div>
+                  <div class="flex items-center gap-2"><span class="material-symbols-outlined text-emerald-600 text-[18px]">check_circle</span> Usuarios y ajustes</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pestaña: seguridad -->
+        <div class="tab-pane" id="tab-seguridad">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div class="card">
+              <div class="card-head"><h3 class="card-title">Cambiar contraseña</h3></div>
+              <div class="card-body">
+                <div class="field">
+                  <label>Contraseña actual</label>
+                  <input class="inp" placeholder="••••••••" type="password"/>
+                </div>
+                <div class="field">
+                  <label>Nueva contraseña</label>
+                  <input class="inp" id="pwd-nueva" placeholder="Mínimo 8 caracteres" type="password" oninput="medirPassword(this.value)"/>
+                  <div class="flex items-center gap-1.5 mt-2">
+                    <span class="h-1.5 flex-1 rounded-full bg-[#0D0D0D]/10" id="pwd-b1"></span>
+                    <span class="h-1.5 flex-1 rounded-full bg-[#0D0D0D]/10" id="pwd-b2"></span>
+                    <span class="h-1.5 flex-1 rounded-full bg-[#0D0D0D]/10" id="pwd-b3"></span>
+                    <span class="h-1.5 flex-1 rounded-full bg-[#0D0D0D]/10" id="pwd-b4"></span>
+                  </div>
+                  <p class="hint" id="pwd-texto">Usa mayúsculas, números y un símbolo para una contraseña segura.</p>
+                </div>
+                <div class="field">
+                  <label>Confirmar nueva contraseña</label>
+                  <input class="inp" placeholder="Repite la contraseña" type="password"/>
+                </div>
+                <button class="btn-primary" onclick="toast('Contraseña actualizada','ok')">
+                  <span class="material-symbols-outlined">lock_reset</span> Actualizar contraseña
+                </button>
+              </div>
+            </div>
+
+            <div class="space-y-5">
+              <div class="card">
+                <div class="card-head"><h3 class="card-title">Verificación en dos pasos</h3></div>
+                <div class="card-body">
+                  <div class="flex items-start gap-3 p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 mb-4">
+                    <span class="material-symbols-outlined text-emerald-600">shield_lock</span>
+                    <div class="flex-1">
+                      <p class="text-sm font-bold text-emerald-800">Protección activa</p>
+                      <p class="text-xs text-emerald-700 mt-0.5">Se pide un código de 6 dígitos al iniciar sesión desde un dispositivo nuevo.</p>
+                    </div>
+                    <span class="switch"><input checked type="checkbox"/><i></i></span>
+                  </div>
+                  <div class="space-y-3">
+                    <label class="flex items-center justify-between gap-3 cursor-pointer">
+                      <span class="text-sm">Enviar código por correo</span>
+                      <span class="switch"><input checked type="checkbox"/><i></i></span>
+                    </label>
+                    <label class="flex items-center justify-between gap-3 cursor-pointer">
+                      <span class="text-sm">Enviar código por SMS</span>
+                      <span class="switch"><input type="checkbox"/><i></i></span>
+                    </label>
+                    <label class="flex items-center justify-between gap-3 cursor-pointer">
+                      <span class="text-sm">Avisarme de accesos sospechosos</span>
+                      <span class="switch"><input checked type="checkbox"/><i></i></span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+
+              <div class="card">
+                <div class="card-head">
+                  <h3 class="card-title">Sesiones activas</h3>
+                  <button class="btn-danger !py-1.5 !px-3" onclick="toast('Se cerraron las demás sesiones','del')">Cerrar todas</button>
+                </div>
+                <div class="card-body pt-3 space-y-2">
+                  <div class="flex items-center gap-3 p-3 rounded-xl border border-emerald-200 bg-emerald-50/50">
+                    <span class="material-symbols-outlined text-emerald-600">computer</span>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-bold">MacBook Pro · Chrome</p>
+                      <p class="text-xs text-[#8b837d]">Pereira, Colombia · Sesión actual</p>
+                    </div>
+                    <span class="chip chip-ok">Activa</span>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 rounded-xl border border-[#0D0D0D]/8">
+                    <span class="material-symbols-outlined text-[#5a534e]">smartphone</span>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-bold">iPhone 14 · Safari</p>
+                      <p class="text-xs text-[#8b837d]">Pereira · hace 2 horas</p>
+                    </div>
+                    <button class="btn-icon danger" title="Cerrar sesión"><span class="material-symbols-outlined">logout</span></button>
+                  </div>
+                  <div class="flex items-center gap-3 p-3 rounded-xl border border-[#0D0D0D]/8">
+                    <span class="material-symbols-outlined text-[#5a534e]">desktop_windows</span>
+                    <div class="flex-1 min-w-0">
+                      <p class="text-sm font-bold">PC Oficina · Edge</p>
+                      <p class="text-xs text-[#8b837d]">Pereira · hace 3 días</p>
+                    </div>
+                    <button class="btn-icon danger" title="Cerrar sesión"><span class="material-symbols-outlined">logout</span></button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pestaña: preferencias -->
+        <div class="tab-pane" id="tab-preferencias">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+            <div class="card">
+              <div class="card-head"><h3 class="card-title">Preferencias del panel</h3></div>
+              <div class="card-body">
+                <div class="field">
+                  <label>Idioma</label>
+                  <select class="sel"><option>Español (Colombia)</option><option>English</option></select>
+                </div>
+                <div class="field">
+                  <label>Zona horaria</label>
+                  <select class="sel"><option>(GMT-5) Bogotá, Lima, Quito</option><option>(GMT-6) Ciudad de México</option></select>
+                </div>
+                <div class="field">
+                  <label>Formato de fecha</label>
+                  <select class="sel"><option>DD/MM/AAAA</option><option>MM/DD/AAAA</option></select>
+                </div>
+                <div class="field !mb-0">
+                  <label>Pantalla de inicio del panel</label>
+                  <select class="sel"><option>Resumen</option><option>Eventos</option><option>Comercios</option></select>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3 class="card-title">Notificaciones por correo</h3></div>
+              <div class="card-body space-y-3.5">
+                <label class="flex items-start justify-between gap-3 cursor-pointer">
+                  <span><span class="text-sm font-semibold block">Recordatorio de eventos</span><span class="text-xs text-[#8b837d]">Aviso 3 días antes de cada evento publicado</span></span>
+                  <span class="switch"><input checked type="checkbox"/><i></i></span>
+                </label>
+                <div class="divider !my-0"></div>
+                <label class="flex items-start justify-between gap-3 cursor-pointer">
+                  <span><span class="text-sm font-semibold block">Nuevos comercios</span><span class="text-xs text-[#8b837d]">Cuando otro usuario agrega un local al directorio</span></span>
+                  <span class="switch"><input checked type="checkbox"/><i></i></span>
+                </label>
+                <div class="divider !my-0"></div>
+                <label class="flex items-start justify-between gap-3 cursor-pointer">
+                  <span><span class="text-sm font-semibold block">Cambios en el hero</span><span class="text-xs text-[#8b837d]">Cuando se reemplaza una imagen principal</span></span>
+                  <span class="switch"><input type="checkbox"/><i></i></span>
+                </label>
+                <div class="divider !my-0"></div>
+                <label class="flex items-start justify-between gap-3 cursor-pointer">
+                  <span><span class="text-sm font-semibold block">Resumen semanal</span><span class="text-xs text-[#8b837d]">Todos los lunes con las visitas de la semana</span></span>
+                  <span class="switch"><input checked type="checkbox"/><i></i></span>
+                </label>
+                <button class="btn-primary w-full mt-2" onclick="toast('Preferencias guardadas','ok')">
+                  <span class="material-symbols-outlined">save</span> Guardar preferencias
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pestaña: actividad -->
+        <div class="tab-pane" id="tab-actividad">
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">Historial de mis cambios</h3>
+              <select class="sel !w-40 !py-1.5 text-xs"><option>Últimos 30 días</option><option>Últimos 7 días</option><option>Todo</option></select>
+            </div>
+            <div class="card-body">
+              <ol class="relative border-l border-[#0D0D0D]/10 ml-2 space-y-6">
+                <li class="pl-5 relative">
+                  <span class="absolute -left-[7px] top-1 w-3.5 h-3.5 rounded-full bg-[#D97C2B] border-2 border-white shadow"></span>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <p class="text-sm font-bold">Publicó el evento «Expo Tech &amp; Gadgets 2026»</p>
+                    <span class="chip chip-primary">Eventos</span>
+                  </div>
+                  <p class="text-xs text-[#8b837d] mt-1">Hoy · 09:42 · desde MacBook Pro (Pereira)</p>
+                </li>
+                <li class="pl-5 relative">
+                  <span class="absolute -left-[7px] top-1 w-3.5 h-3.5 rounded-full bg-[#D99923] border-2 border-white shadow"></span>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <p class="text-sm font-bold">Reemplazó la imagen de la diapositiva 2 del hero</p>
+                    <span class="chip chip-gold">Hero</span>
+                  </div>
+                  <p class="text-xs text-[#8b837d] mt-1">Ayer · 18:20 · desde MacBook Pro (Pereira)</p>
+                </li>
+                <li class="pl-5 relative">
+                  <span class="absolute -left-[7px] top-1 w-3.5 h-3.5 rounded-full bg-[#0D0D0D]/30 border-2 border-white shadow"></span>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <p class="text-sm font-bold">Actualizó el horario de domingos y festivos</p>
+                    <span class="chip chip-off">Ubicación</span>
+                  </div>
+                  <p class="text-xs text-[#8b837d] mt-1">1 sep · 08:15 · desde iPhone 14</p>
+                </li>
+                <li class="pl-5 relative">
+                  <span class="absolute -left-[7px] top-1 w-3.5 h-3.5 rounded-full bg-[#0D0D0D]/30 border-2 border-white shadow"></span>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <p class="text-sm font-bold">Editó la categoría «Ocio &amp; Cine»</p>
+                    <span class="chip chip-off">Categorías</span>
+                  </div>
+                  <p class="text-xs text-[#8b837d] mt-1">29 ago · 15:02 · desde MacBook Pro</p>
+                </li>
+                <li class="pl-5 relative">
+                  <span class="absolute -left-[7px] top-1 w-3.5 h-3.5 rounded-full bg-[#0D0D0D]/30 border-2 border-white shadow"></span>
+                  <div class="flex flex-wrap items-center gap-2">
+                    <p class="text-sm font-bold">Invitó a Marcela Ríos como Editora</p>
+                    <span class="chip chip-off">Usuarios</span>
+                  </div>
+                  <p class="text-xs text-[#8b837d] mt-1">25 ago · 10:31 · desde MacBook Pro</p>
+                </li>
+              </ol>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           VISTA: AJUSTES DEL SITIO
+           ════════════════════════════════════════════════════════════════ -->
+      <section class="admin-view" id="view-ajustes">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+
+          <!-- General -->
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">Datos generales</h3></div>
+            <div class="card-body">
+              <div class="field">
+                <label>Nombre del sitio</label>
+                <input class="inp" type="text" value="San Andresito del Eje - Centro Comercial"/>
+              </div>
+              <div class="field">
+                <label>Eslogan</label>
+                <input class="inp" type="text" value="Todo lo que buscas en un solo lugar"/>
+              </div>
+              <div class="field">
+                <label>Dominio</label>
+                <input class="inp" type="text" value="www.sanandresitoeje.com"/>
+              </div>
+              <div class="field !mb-0">
+                <label>Número de locales del directorio</label>
+                <input class="inp" type="number" value="140"/>
+                <p class="hint">Se muestra en el botón «Ver directorio completo (140)».</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Identidad visual -->
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">Identidad visual</h3></div>
+            <div class="card-body">
+              <p class="lbl">Logotipo</p>
+              <div class="flex items-center gap-4 mb-5">
+                <div class="w-24 h-16 rounded-xl border border-[#0D0D0D]/10 bg-white flex items-center justify-center p-2 shrink-0">
+                  <img alt="Logo actual" class="max-w-full max-h-full object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCy0L1kLrBICOrhVJ-sS-_hiPgGogyKQdWTFQRR9jaUvPLWn2CLbF6dfPjiLctJJVRhyqDWHat94yFFXytSqkW7THcgWGCPqqefcB77AV4pJZpmHH1j1ipxbD5LTWz5vXQ9f9GKy6i0DW6NEXHDz8ND3YohCzCOwR4r958HydxoJfnAu-tO3ohrZ2qJhAuHWRNZshJX-VkvR08WAbhJXOuLLnRZ9jXxcZA6r8B5p4GkmL4xcB0tQhRtLBUwYDPNenJbpko"/>
+                </div>
+                <label class="dropzone flex-1 !py-3">
+                  <input accept="image/*" type="file"/>
+                  <span class="material-symbols-outlined !text-[24px]">upload</span>
+                  <p class="text-xs font-bold">Reemplazar logotipo</p>
+                  <p class="text-[11px] text-[#8b837d]">PNG con fondo transparente</p>
+                </label>
+              </div>
+
+              <p class="lbl">Colores de la marca</p>
+              <div class="grid grid-cols-2 gap-3">
+                <div class="flex items-center gap-2.5 p-2.5 rounded-xl border border-[#0D0D0D]/8">
+                  <input class="w-9 h-9 rounded-lg border border-[#0D0D0D]/10 cursor-pointer bg-transparent" type="color" value="#D97C2B"/>
+                  <div class="min-w-0"><p class="text-xs font-bold">Primario</p><p class="text-[11px] text-[#8b837d]">#D97C2B</p></div>
+                </div>
+                <div class="flex items-center gap-2.5 p-2.5 rounded-xl border border-[#0D0D0D]/8">
+                  <input class="w-9 h-9 rounded-lg border border-[#0D0D0D]/10 cursor-pointer bg-transparent" type="color" value="#D99923"/>
+                  <div class="min-w-0"><p class="text-xs font-bold">Secundario</p><p class="text-[11px] text-[#8b837d]">#D99923</p></div>
+                </div>
+                <div class="flex items-center gap-2.5 p-2.5 rounded-xl border border-[#0D0D0D]/8">
+                  <input class="w-9 h-9 rounded-lg border border-[#0D0D0D]/10 cursor-pointer bg-transparent" type="color" value="#0D0D0D"/>
+                  <div class="min-w-0"><p class="text-xs font-bold">Texto</p><p class="text-[11px] text-[#8b837d]">#0D0D0D</p></div>
+                </div>
+                <div class="flex items-center gap-2.5 p-2.5 rounded-xl border border-[#0D0D0D]/8">
+                  <input class="w-9 h-9 rounded-lg border border-[#0D0D0D]/10 cursor-pointer bg-transparent" type="color" value="#F2F2F2"/>
+                  <div class="min-w-0"><p class="text-xs font-bold">Fondo</p><p class="text-[11px] text-[#8b837d]">#F2F2F2</p></div>
+                </div>
+              </div>
+              <p class="hint">Cambiar estos colores afecta a toda la web pública y al panel.</p>
+            </div>
+          </div>
+
+          <!-- SEO -->
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">SEO y redes</h3></div>
+            <div class="card-body">
+              <div class="field">
+                <label>Título para buscadores</label>
+                <input class="inp" type="text" value="San Andresito del Eje - Centro Comercial"/>
+                <p class="hint">Recomendado: máximo 60 caracteres.</p>
+              </div>
+              <div class="field">
+                <label>Descripción</label>
+                <textarea class="txt !min-h-[80px]">Centro comercial en el corazón de Pereira con más de 140 locales de moda, tecnología, calzado, gastronomía y servicios.</textarea>
+                <p class="hint">Recomendado: máximo 160 caracteres.</p>
+              </div>
+              <div class="field !mb-0">
+                <label>Imagen al compartir (Open Graph)</label>
+                <label class="dropzone !py-4">
+                  <input accept="image/*" type="file"/>
+                  <span class="material-symbols-outlined">share</span>
+                  <p class="text-xs font-bold">Subir imagen 1200 × 630 px</p>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <!-- Mantenimiento -->
+          <div class="space-y-5">
+            <div class="card">
+              <div class="card-head"><h3 class="card-title">Mantenimiento</h3></div>
+              <div class="card-body space-y-4">
+                <label class="flex items-start justify-between gap-3 cursor-pointer">
+                  <span><span class="text-sm font-semibold block">Modo mantenimiento</span><span class="text-xs text-[#8b837d]">Muestra una página de «volvemos pronto» a los visitantes</span></span>
+                  <span class="switch"><input type="checkbox"/><i></i></span>
+                </label>
+                <div class="divider !my-0"></div>
+                <label class="flex items-start justify-between gap-3 cursor-pointer">
+                  <span><span class="text-sm font-semibold block">Copia de seguridad automática</span><span class="text-xs text-[#8b837d]">Todos los domingos a las 3:00 AM</span></span>
+                  <span class="switch"><input checked type="checkbox"/><i></i></span>
+                </label>
+                <div class="divider !my-0"></div>
+                <div class="flex items-center justify-between gap-3">
+                  <div>
+                    <p class="text-sm font-semibold">Última copia</p>
+                    <p class="text-xs text-[#8b837d]">1 de septiembre de 2026 · 3:00 AM · 312 MB</p>
+                  </div>
+                  <button class="btn-secondary" onclick="toast('Generando copia de seguridad…')">
+                    <span class="material-symbols-outlined">backup</span> Crear ahora
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card border-red-200">
+              <div class="card-head border-red-100">
+                <h3 class="card-title text-red-600">Zona sensible</h3>
+              </div>
+              <div class="card-body space-y-3">
+                <div class="flex items-center justify-between gap-3">
+                  <div><p class="text-sm font-semibold">Restablecer contenido de inicio</p><p class="text-xs text-[#8b837d]">Vuelve al hero, categorías y textos originales</p></div>
+                  <button class="btn-danger" onclick="confirmarAccion('¿Restablecer el contenido de inicio?','Se perderán los textos e imágenes personalizados.', () => toast('Contenido restablecido','del'))">Restablecer</button>
+                </div>
+                <div class="divider !my-0"></div>
+                <div class="flex items-center justify-between gap-3">
+                  <div><p class="text-sm font-semibold">Vaciar la galería</p><p class="text-xs text-[#8b837d]">Elimina todas las imágenes no utilizadas</p></div>
+                  <button class="btn-danger" onclick="confirmarAccion('¿Vaciar la galería?','Las imágenes sin usar se eliminarán definitivamente.', () => toast('Galería vaciada','del'))">Vaciar</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-5">
+          <button class="btn-secondary" onclick="toast('Cambios descartados','del')">Descartar</button>
+          <button class="btn-primary" onclick="toast('Ajustes guardados','ok')">
+            <span class="material-symbols-outlined">save</span> Guardar ajustes
+          </button>
+        </div>
+      </section>
+
+    </main>
+
+    <!-- Pie del panel -->
+    <footer class="px-4 md:px-7 py-5 border-t border-[#0D0D0D]/8 text-xs text-[#8b837d] flex flex-col sm:flex-row items-center justify-between gap-2">
+      <p>Panel administrador · Centro Comercial San Andresito del Eje</p>
+      <p>Versión 1.0 · Pereira, Colombia</p>
+    </footer>
+  </div>
+</div>
+
+<!-- Avisos flotantes -->
+<div id="toast-stack"></div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     MODAL: DIAPOSITIVA DEL HERO
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="modal" id="modal-hero">
+  <div class="modal-backdrop" onclick="cerrarModal('modal-hero')"></div>
+  <div class="modal-panel w-[94%] max-w-2xl">
+    <div class="card-head sticky top-0 bg-white z-10 rounded-t-2xl">
+      <h3 class="card-title" id="modal-hero-titulo">Nueva diapositiva del hero</h3>
+      <button class="btn-icon" onclick="cerrarModal('modal-hero')"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form class="card-body" onsubmit="guardarHero(event)">
+      <input type="hidden" id="hero-id"/>
+
+      <div class="field">
+        <label>Imagen de fondo</label>
+        <label class="dropzone">
+          <input accept="image/*" type="file" onchange="previsualizar(this,'hero-img-preview','hero-imagen')"/>
+          <span class="material-symbols-outlined">add_photo_alternate</span>
+          <p class="text-xs font-bold">Sube una imagen horizontal 1920 × 1080 px</p>
+          <p class="text-[11px] text-[#8b837d]">o pega una dirección web más abajo</p>
+        </label>
+        <div class="flex items-center gap-3 mt-3">
+          <img alt="Vista previa" class="w-28 h-16 rounded-lg object-cover border border-[#0D0D0D]/10 bg-[#e6e1dd]" id="hero-img-preview" src=""/>
+          <input class="inp flex-1 text-xs" id="hero-imagen" placeholder="https://…" type="url" oninput="document.getElementById('hero-img-preview').src=this.value"/>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Título principal</label>
+        <input class="inp" id="hero-titulo" maxlength="60" placeholder="San Andresito del Eje" required type="text"/>
+        <p class="hint">Se muestra en letra grande sobre la imagen. Máximo 60 caracteres.</p>
+      </div>
+
+      <div class="field">
+        <label>Texto descriptivo</label>
+        <textarea class="txt !min-h-[70px]" id="hero-descripcion" maxlength="160" placeholder="Todo lo que buscas en un solo lugar…"></textarea>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <div class="field">
+          <label>Texto del botón</label>
+          <input class="inp" id="hero-boton" placeholder="Explorar Locales" type="text"/>
+        </div>
+        <div class="field">
+          <label>Enlace del botón</label>
+          <input class="inp" id="hero-enlace" placeholder="#tiendas" type="text"/>
+        </div>
+        <div class="field">
+          <label>Ícono del botón</label>
+          <select class="sel" id="hero-icono">
+            <option value="storefront">Tienda</option>
+            <option value="dinner_dining">Restaurante</option>
+            <option value="celebration">Evento</option>
+            <option value="local_offer">Promoción</option>
+            <option value="location_on">Ubicación</option>
+          </select>
+        </div>
+      </div>
+
+      <label class="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#FAFAFA] border border-[#0D0D0D]/8 cursor-pointer">
+        <span><span class="text-sm font-semibold block">Diapositiva visible</span><span class="text-xs text-[#8b837d]">Si la desactivas no aparece en el carrusel</span></span>
+        <span class="switch"><input checked id="hero-activo" type="checkbox"/><i></i></span>
+      </label>
+
+      <div class="flex justify-end gap-2 mt-5">
+        <button class="btn-secondary" type="button" onclick="cerrarModal('modal-hero')">Cancelar</button>
+        <button class="btn-primary" type="submit"><span class="material-symbols-outlined">save</span> Guardar diapositiva</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     MODAL: COMERCIO
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="modal" id="modal-comercio">
+  <div class="modal-backdrop" onclick="cerrarModal('modal-comercio')"></div>
+  <div class="modal-panel w-[94%] max-w-3xl">
+    <div class="card-head sticky top-0 bg-white z-10 rounded-t-2xl">
+      <h3 class="card-title" id="modal-comercio-titulo">Nuevo comercio</h3>
+      <button class="btn-icon" onclick="cerrarModal('modal-comercio')"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form class="card-body" onsubmit="guardarComercio(event)">
+      <input type="hidden" id="com-id"/>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <!-- Imagen -->
+        <div>
+          <p class="lbl">Foto del local</p>
+          <img alt="Vista previa" class="w-full h-32 rounded-xl object-cover border border-[#0D0D0D]/10 bg-[#e6e1dd] mb-2" id="com-img-preview" src=""/>
+          <label class="dropzone !py-3">
+            <input accept="image/*" type="file" onchange="previsualizar(this,'com-img-preview','com-imagen')"/>
+            <span class="material-symbols-outlined !text-[22px]">add_photo_alternate</span>
+            <p class="text-[11px] font-bold">Subir foto 800 × 600</p>
+          </label>
+          <input class="inp mt-2 text-xs" id="com-imagen" placeholder="o pega una URL" type="url" oninput="document.getElementById('com-img-preview').src=this.value"/>
+        </div>
+
+        <!-- Datos -->
+        <div class="md:col-span-2">
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="field">
+              <label>Nombre del comercio</label>
+              <input class="inp" id="com-nombre" placeholder="Nike Store" required type="text"/>
+            </div>
+            <div class="field">
+              <label>Categoría</label>
+              <select class="sel" id="com-categoria"></select>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-3 gap-4">
+            <div class="field">
+              <label>Local</label>
+              <input class="inp" id="com-local" placeholder="215" required type="text"/>
+            </div>
+            <div class="field">
+              <label>Piso</label>
+              <select class="sel" id="com-piso">
+                <option>Piso 1</option><option>Piso 2</option><option>Piso 3</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Teléfono</label>
+              <input class="inp" id="com-telefono" placeholder="(606) 335-0000" type="tel"/>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Horario de atención</label>
+            <input class="inp" id="com-horario" placeholder="Lun - Sáb: 09:30 - 20:00" type="text"/>
+            <p class="hint">Se muestra tal cual en la tarjeta del comercio.</p>
+          </div>
+
+          <div class="field">
+            <label>Descripción breve</label>
+            <textarea class="txt !min-h-[70px]" id="com-descripcion" placeholder="Calzado deportivo y ropa de marca…"></textarea>
+          </div>
+
+          <div class="field">
+            <label>Enlace de la tienda</label>
+            <input class="inp" id="com-enlace" placeholder="tienda.html" type="text" value="tienda.html"/>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <label class="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#FAFAFA] border border-[#0D0D0D]/8 cursor-pointer">
+              <span class="text-sm font-semibold">Destacar en inicio</span>
+              <span class="switch"><input id="com-destacado" type="checkbox"/><i></i></span>
+            </label>
+            <label class="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#FAFAFA] border border-[#0D0D0D]/8 cursor-pointer">
+              <span class="text-sm font-semibold">Publicado</span>
+              <span class="switch"><input checked id="com-activo" type="checkbox"/><i></i></span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 mt-5">
+        <button class="btn-secondary" type="button" onclick="cerrarModal('modal-comercio')">Cancelar</button>
+        <button class="btn-primary" type="submit"><span class="material-symbols-outlined">save</span> Guardar comercio</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     MODAL: CATEGORÍA
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="modal" id="modal-categoria">
+  <div class="modal-backdrop" onclick="cerrarModal('modal-categoria')"></div>
+  <div class="modal-panel w-[94%] max-w-lg">
+    <div class="card-head sticky top-0 bg-white z-10 rounded-t-2xl">
+      <h3 class="card-title" id="modal-categoria-titulo">Nueva categoría</h3>
+      <button class="btn-icon" onclick="cerrarModal('modal-categoria')"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form class="card-body" onsubmit="guardarCategoria(event)">
+      <input type="hidden" id="cat-id"/>
+      <div class="field">
+        <label>Nombre de la categoría</label>
+        <input class="inp" id="cat-nombre" maxlength="18" placeholder="Moda" required type="text"/>
+        <p class="hint">Textos cortos se ven mejor en la cuadrícula (máx. 18 caracteres).</p>
+      </div>
+      <div class="field">
+        <label>Ícono</label>
+        <input type="hidden" id="cat-icono" value="apparel"/>
+        <div class="grid grid-cols-6 sm:grid-cols-8 gap-2 p-3 rounded-xl border border-[#0D0D0D]/10 max-h-44 overflow-y-auto" id="icon-picker"><!-- render JS --></div>
+      </div>
+      <label class="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#FAFAFA] border border-[#0D0D0D]/8 cursor-pointer">
+        <span class="text-sm font-semibold">Visible en el sitio</span>
+        <span class="switch"><input checked id="cat-visible" type="checkbox"/><i></i></span>
+      </label>
+      <div class="flex justify-end gap-2 mt-5">
+        <button class="btn-secondary" type="button" onclick="cerrarModal('modal-categoria')">Cancelar</button>
+        <button class="btn-primary" type="submit"><span class="material-symbols-outlined">save</span> Guardar categoría</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     MODAL: EVENTO
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="modal" id="modal-evento">
+  <div class="modal-backdrop" onclick="cerrarModal('modal-evento')"></div>
+  <div class="modal-panel w-[94%] max-w-3xl">
+    <div class="card-head sticky top-0 bg-white z-10 rounded-t-2xl">
+      <h3 class="card-title" id="modal-evento-titulo">Nuevo evento</h3>
+      <button class="btn-icon" onclick="cerrarModal('modal-evento')"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form class="card-body" onsubmit="guardarEvento(event)">
+      <input type="hidden" id="ev-id"/>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+        <div>
+          <p class="lbl">Imagen del evento</p>
+          <img alt="Vista previa" class="w-full h-40 rounded-xl object-cover border border-[#0D0D0D]/10 bg-[#e6e1dd] mb-2" id="ev-img-preview" src=""/>
+          <label class="dropzone !py-3">
+            <input accept="image/*" type="file" onchange="previsualizar(this,'ev-img-preview','ev-imagen')"/>
+            <span class="material-symbols-outlined !text-[22px]">add_photo_alternate</span>
+            <p class="text-[11px] font-bold">Subir imagen 1200 × 900</p>
+          </label>
+          <input class="inp mt-2 text-xs" id="ev-imagen" placeholder="o pega una URL" type="url" oninput="document.getElementById('ev-img-preview').src=this.value"/>
+        </div>
+
+        <div class="md:col-span-2">
+          <div class="field">
+            <label>Título del evento</label>
+            <input class="inp" id="ev-titulo" placeholder="Expo Tech &amp; Gadgets 2026" required type="text"/>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="field">
+              <label>Categoría</label>
+              <select class="sel" id="ev-categoria">
+                <option>Tecnología</option>
+                <option>Gastronomía</option>
+                <option>Moda</option>
+                <option>Familiar</option>
+              </select>
+            </div>
+            <div class="field">
+              <label>Tipo de entrada</label>
+              <input class="inp" id="ev-entrada" placeholder="Entrada libre" type="text" value="Entrada libre"/>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div class="field">
+              <label>Inicio</label>
+              <input class="inp" id="ev-inicio" required type="datetime-local"/>
+            </div>
+            <div class="field">
+              <label>Finalización</label>
+              <input class="inp" id="ev-fin" required type="datetime-local"/>
+              <p class="hint">Al pasar esta fecha el evento se oculta solo.</p>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Lugar dentro del centro comercial</label>
+            <input class="inp" id="ev-lugar" placeholder="Plaza Central • Piso 1" type="text"/>
+          </div>
+
+          <div class="field">
+            <label>Descripción</label>
+            <textarea class="txt" id="ev-descripcion" maxlength="200" placeholder="Lanzamientos, descuentos exclusivos y sorteos en vivo…"></textarea>
+            <p class="hint">Máximo 200 caracteres para que quepa en la tarjeta del carrusel.</p>
+          </div>
+
+          <label class="flex items-center justify-between gap-3 p-3 rounded-xl bg-[#FAFAFA] border border-[#0D0D0D]/8 cursor-pointer">
+            <span><span class="text-sm font-semibold block">Publicar en el sitio</span><span class="text-xs text-[#8b837d]">Desactívalo para guardarlo como borrador</span></span>
+            <span class="switch"><input checked id="ev-activo" type="checkbox"/><i></i></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="flex justify-end gap-2 mt-5">
+        <button class="btn-secondary" type="button" onclick="cerrarModal('modal-evento')">Cancelar</button>
+        <button class="btn-primary" type="submit"><span class="material-symbols-outlined">save</span> Guardar evento</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     MODAL: USUARIO
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="modal" id="modal-usuario">
+  <div class="modal-backdrop" onclick="cerrarModal('modal-usuario')"></div>
+  <div class="modal-panel w-[94%] max-w-lg">
+    <div class="card-head sticky top-0 bg-white z-10 rounded-t-2xl">
+      <h3 class="card-title">Invitar usuario al panel</h3>
+      <button class="btn-icon" onclick="cerrarModal('modal-usuario')"><span class="material-symbols-outlined">close</span></button>
+    </div>
+    <form class="card-body" onsubmit="guardarUsuario(event)">
+      <div class="field">
+        <label>Nombre completo</label>
+        <input class="inp" id="usr-nombre" placeholder="Marcela Ríos" required type="text"/>
+      </div>
+      <div class="field">
+        <label>Correo electrónico</label>
+        <input class="inp" id="usr-email" placeholder="nombre@sanandresitoeje.com" required type="email"/>
+        <p class="hint">Recibirá una invitación para crear su contraseña.</p>
+      </div>
+      <div class="field">
+        <label>Rol</label>
+        <select class="sel" id="usr-rol">
+          <option>Editor</option>
+          <option>Gestor de comercios</option>
+          <option>Gestor de eventos</option>
+          <option>Super Administrador</option>
+        </select>
+      </div>
+      <p class="lbl">Acceso a secciones</p>
+      <div class="grid grid-cols-2 gap-2 mb-4">
+        <label class="flex items-center gap-2 text-sm p-2 rounded-lg border border-[#0D0D0D]/8"><input checked class="accent-[#D97C2B]" type="checkbox"/> Hero</label>
+        <label class="flex items-center gap-2 text-sm p-2 rounded-lg border border-[#0D0D0D]/8"><input checked class="accent-[#D97C2B]" type="checkbox"/> Comercios</label>
+        <label class="flex items-center gap-2 text-sm p-2 rounded-lg border border-[#0D0D0D]/8"><input checked class="accent-[#D97C2B]" type="checkbox"/> Eventos</label>
+        <label class="flex items-center gap-2 text-sm p-2 rounded-lg border border-[#0D0D0D]/8"><input checked class="accent-[#D97C2B]" type="checkbox"/> Galería</label>
+        <label class="flex items-center gap-2 text-sm p-2 rounded-lg border border-[#0D0D0D]/8"><input class="accent-[#D97C2B]" type="checkbox"/> Textos</label>
+        <label class="flex items-center gap-2 text-sm p-2 rounded-lg border border-[#0D0D0D]/8"><input class="accent-[#D97C2B]" type="checkbox"/> Usuarios</label>
+      </div>
+      <div class="flex justify-end gap-2">
+        <button class="btn-secondary" type="button" onclick="cerrarModal('modal-usuario')">Cancelar</button>
+        <button class="btn-primary" type="submit"><span class="material-symbols-outlined">send</span> Enviar invitación</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════════════════════════════════
+     MODAL: CONFIRMACIÓN
+     ════════════════════════════════════════════════════════════════════════ -->
+<div class="modal" id="modal-confirm">
+  <div class="modal-backdrop" onclick="cerrarModal('modal-confirm')"></div>
+  <div class="modal-panel w-[92%] max-w-md !mt-[18vh]">
+    <div class="p-6 text-center">
+      <div class="w-14 h-14 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center mx-auto mb-4">
+        <span class="material-symbols-outlined !text-[28px]">warning</span>
+      </div>
+      <h3 class="font-['Outfit',sans-serif] text-lg font-extrabold" id="confirm-titulo">¿Eliminar elemento?</h3>
+      <p class="text-sm text-[#8b837d] mt-2" id="confirm-texto">Esta acción no se puede deshacer.</p>
+      <div class="flex gap-2 mt-6">
+        <button class="btn-secondary flex-1" onclick="cerrarModal('modal-confirm')">Cancelar</button>
+        <button class="btn-danger flex-1 !bg-red-600 !text-white !border-red-600 hover:!brightness-110" id="confirm-ok">Sí, continuar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════════════════════════════════════════════
+   PANEL ADMINISTRADOR — LÓGICA DE LA INTERFAZ
+   Prototipo de diseño: los datos viven en memoria (objeto `db`). Cuando se
+   conecte un backend, basta con reemplazar las funciones «guardar…» y
+   «render…» por llamadas a la API; la interfaz no cambia.
+   ══════════════════════════════════════════════════════════════════════════ */
+'use strict';
+
+/* ── 1. DATOS DE DEMOSTRACIÓN ─────────────────────────────────────────────
+   Reflejan exactamente el contenido actual de inicio.html                   */
+const db = {
+  hero: [
+    { id: 1, titulo: 'San Andresito del Eje', descripcion: 'Todo lo que buscas en un solo lugar: moda, tecnología, gastronomía y los mejores precios de la región.', boton: 'Explorar Locales', enlace: '#tiendas', icono: 'storefront', activo: true, imagen: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCg0QBksIf-t60frWJd-nO8ciWMsJQ1pz7wMKrQhgo9q-hCD1yecv09gcDtEvXVXt9e1_Gc525lw2R5wWGPhBzoImI5AJ82vTfaVVsyWjz4zX4079I5mlL_9AIAFIKLVOuDWMP3gasoPRWIF0DZTDB1Y-hAigK1sMid0YcfYXPGPUqrsVdggYN5H4d7pKZBwqCZak4c8_vfINcOV53BJX_KIj6fIOz5jJqMmQJMyoBjZtEwTzTC10p4Gg2IX-Sz8Aoc4pc' },
+    { id: 2, titulo: 'Gran Variedad y Calidad', descripcion: 'Las mejores marcas en calzado, perfumería, electrónica y moda con atención cercana y personalizada.', boton: 'Explorar Comercios', enlace: '#tiendas', icono: 'storefront', activo: true, imagen: 'https://lh3.googleusercontent.com/aida-public/AB6AXuBmWAb4GYZWhwhS2L4d_ZmpVxxvWHh595f0MB8E0Vpz25GKf6tZDOQzztAm7-DkLHsJtFBtMxJRiRXjCsKLZH08Fn4VcZJIM-HzFavlm3_s5-jHDT93tymZheTuZLT_VU0JsLpDOU4YEhdyoZevsPzWKGI2559HeaPyv5m0veQFvbCGVVY0oHAn2GODLSbN-Q8Zy2At9aIfsd6s-gSmVGFtQmwnqSUnRZHoVbPFZnVZdMU9h_STjORVnA' },
+    { id: 3, titulo: 'Momentos para Compartir', descripcion: 'Disfruta de nuestra zona gourmet, terrazas al aire libre y la mejor selección de café del Eje Cafetero.', boton: 'Ver Restaurantes', enlace: '#tiendas', icono: 'dinner_dining', activo: true, imagen: 'https://lh3.googleusercontent.com/aida-public/AB6AXuCuItd6EXWnzKT569V-3mEn-MJtDNPcbb4y-lhwCIm8ROZDq_3Pa1SWzox1_lpqPX8gstUw0oCpr1Gg7dsb_OxvdS_o19nI0a3kQYOzoCh4hxs5CWSRp2rxy2HPCnjO35CtCkSj0ENNwtziKLaOAOqcCkEBdiYVue2DwNtI0AolSRbr_ocwJaQIjT26KfeNuVe___ulQW-o4-BhcWgBUvQjT5qQaqBDVZYu9U3HpKb5-oD0t66kA23PNg' }
+  ],
+  categorias: [
+    { id: 1, nombre: 'Moda', icono: 'apparel', visible: true },
+    { id: 2, nombre: 'Tecnología', icono: 'devices', visible: true },
+    { id: 3, nombre: 'Hogar', icono: 'chair', visible: true },
+    { id: 4, nombre: 'Belleza', icono: 'spa', visible: true },
+    { id: 5, nombre: 'Restaurantes', icono: 'restaurant', visible: true },
+    { id: 6, nombre: 'Ocio & Cine', icono: 'theater_comedy', visible: true },
+    { id: 7, nombre: 'Salud & Fit', icono: 'fitness_center', visible: true },
+    { id: 8, nombre: 'Servicios', icono: 'account_balance', visible: true }
+  ],
+  comercios: [
+    { id: 1, nombre: 'Nike Store', categoria: 'Moda', local: '215', piso: 'Piso 2', horario: 'Lun - Sáb: 09:30 - 20:00', telefono: '(606) 335-0012', destacado: true, activo: true, enlace: 'tienda.html', descripcion: 'Calzado deportivo y ropa de marca original.', imagen: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80' },
+    { id: 2, nombre: 'Electro & Celulares Eje', categoria: 'Tecnología', local: '104', piso: 'Piso 1', horario: 'Lun - Dom: 10:00 - 20:30', telefono: '(606) 335-0044', destacado: true, activo: true, enlace: '#', descripcion: 'Telefonía, accesorios y reparación técnica.', imagen: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80' },
+    { id: 3, nombre: 'Perfumes & Estilo', categoria: 'Belleza', local: '132', piso: 'Piso 1', horario: 'Lun - Sáb: 09:30 - 20:00', telefono: '(606) 335-0077', destacado: true, activo: true, enlace: '#', descripcion: 'Perfumería importada y cosmética.', imagen: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=600&q=80' },
+    { id: 4, nombre: 'Café del Eje', categoria: 'Restaurantes', local: '301', piso: 'Piso 3', horario: 'Lun - Dom: 08:00 - 21:00', telefono: '(606) 335-0090', destacado: false, activo: true, enlace: '#', descripcion: 'Café de origen y repostería artesanal.', imagen: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80' },
+    { id: 5, nombre: 'Muebles Casa Viva', categoria: 'Hogar', local: '228', piso: 'Piso 2', horario: 'Lun - Sáb: 10:00 - 19:00', telefono: '(606) 335-0033', destacado: false, activo: true, enlace: '#', descripcion: 'Muebles, decoración y textiles para el hogar.', imagen: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=600&q=80' },
+    { id: 6, nombre: 'Gimnasio Power Fit', categoria: 'Salud & Fit', local: '310', piso: 'Piso 3', horario: 'Lun - Sáb: 05:00 - 22:00', telefono: '(606) 335-0055', destacado: false, activo: false, enlace: '#', descripcion: 'Zona de máquinas, clases grupales y entrenamiento.', imagen: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&w=600&q=80' }
+  ],
+  eventos: [
+    { id: 1, titulo: 'Expo Tech & Gadgets 2026', categoria: 'Tecnología', inicio: '2026-10-12T14:00', fin: '2026-10-12T19:00', lugar: 'Plaza Central • Piso 1', entrada: 'Entrada libre', activo: true, descripcion: 'Lanzamientos en telefonía, accesorios gamer, descuentos exclusivos de temporada y sorteos en vivo.', imagen: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=600&q=80' },
+    { id: 2, titulo: 'Atardecer Cafetero & Acústico', categoria: 'Gastronomía', inicio: '2026-10-18T17:30', fin: '2026-10-18T21:00', lugar: 'Terraza Boulevard Gourmet', entrada: 'Entrada libre', activo: true, descripcion: 'Catas de café especial del Eje, repostería artesanal y música en vivo con artistas locales de Pereira.', imagen: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80' },
+    { id: 3, titulo: 'Gran Trasnochón San Andresito', categoria: 'Moda', inicio: '2026-11-01T10:00', fin: '2026-11-01T23:00', lugar: 'Todos los niveles del Mall', entrada: 'Entrada libre', activo: true, descripcion: 'Hasta 50% de descuento en calzado, perfumería y moda con horario extendido hasta las 11:00 PM.', imagen: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=600&q=80' },
+    { id: 4, titulo: 'Festival de la Familia & Arte Infantil', categoria: 'Familiar', inicio: '2026-11-15T11:00', fin: '2026-11-15T17:00', lugar: 'Plazoleta Principal', entrada: 'Entrada libre', activo: true, descripcion: 'Talleres recreativos, show de magia y sorpresas para compartir en familia en el centro de Pereira.', imagen: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=80' },
+    { id: 5, titulo: 'Feria del Regreso a Clases', categoria: 'Familiar', inicio: '2025-01-15T10:00', fin: '2025-01-20T20:00', lugar: 'Plazoleta Principal', entrada: 'Entrada libre', activo: true, descripcion: 'Descuentos en útiles escolares, uniformes y morrales.', imagen: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=600&q=80' }
+  ],
+  galeria: [
+    { id: 1,  nombre: 'fachada-principal.jpg', carpeta: 'Hero', peso: '412 KB', url: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c?auto=format&fit=crop&w=500&q=70' },
+    { id: 2,  nombre: 'pasillo-comercial.jpg', carpeta: 'Hero', peso: '388 KB', url: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=500&q=70' },
+    { id: 3,  nombre: 'zona-gourmet.jpg', carpeta: 'Hero', peso: '455 KB', url: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=500&q=70' },
+    { id: 4,  nombre: 'nike-store.jpg', carpeta: 'Comercios', peso: '287 KB', url: 'https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=500&q=70' },
+    { id: 5,  nombre: 'tecnologia-local.jpg', carpeta: 'Comercios', peso: '301 KB', url: 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=500&q=70' },
+    { id: 6,  nombre: 'perfumeria.jpg', carpeta: 'Comercios', peso: '265 KB', url: 'https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=500&q=70' },
+    { id: 7,  nombre: 'muebles-hogar.jpg', carpeta: 'Comercios', peso: '344 KB', url: 'https://images.unsplash.com/photo-1555041469-a586c61ea9bc?auto=format&fit=crop&w=500&q=70' },
+    { id: 8,  nombre: 'expo-tech.jpg', carpeta: 'Eventos', peso: '398 KB', url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=500&q=70' },
+    { id: 9,  nombre: 'festival-familia.jpg', carpeta: 'Eventos', peso: '376 KB', url: 'https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&w=500&q=70' },
+    { id: 10, nombre: 'concierto-terraza.jpg', carpeta: 'Eventos', peso: '421 KB', url: 'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3?auto=format&fit=crop&w=500&q=70' },
+    { id: 11, nombre: 'parqueadero.jpg', carpeta: 'Instalaciones', peso: '224 KB', url: 'https://images.unsplash.com/photo-1506521781263-d8422e82f27a?auto=format&fit=crop&w=500&q=70' },
+    { id: 12, nombre: 'plazoleta-comidas.jpg', carpeta: 'Instalaciones', peso: '312 KB', url: 'https://images.unsplash.com/photo-1555396273-367ea4eb4db5?auto=format&fit=crop&w=500&q=70' }
+  ],
+  usuarios: [
+    { id: 1, nombre: 'Eduardo Caicedo', email: 'eduardo.caicedom@gmail.com', rol: 'Super Administrador', acceso: 'Hoy · 08:12', activo: true, foto: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80' },
+    { id: 2, nombre: 'Marcela Ríos', email: 'marcela.rios@sanandresitoeje.com', rol: 'Editor', acceso: 'Ayer · 17:40', activo: true, foto: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=120&q=80' },
+    { id: 3, nombre: 'Julián Vélez', email: 'julian.velez@sanandresitoeje.com', rol: 'Gestor de comercios', acceso: '3 sep · 11:05', activo: true, foto: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=120&q=80' },
+    { id: 4, nombre: 'Laura Ospina', email: 'laura.ospina@sanandresitoeje.com', rol: 'Gestor de eventos', acceso: '20 ago · 09:15', activo: false, foto: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&w=120&q=80' }
+  ],
+  horarios: [
+    { dia: 'Lunes',    abre: '09:00', cierra: '20:00', cerrado: false },
+    { dia: 'Martes',   abre: '09:00', cierra: '20:00', cerrado: false },
+    { dia: 'Miércoles',abre: '09:00', cierra: '20:00', cerrado: false },
+    { dia: 'Jueves',   abre: '09:00', cierra: '20:00', cerrado: false },
+    { dia: 'Viernes',  abre: '09:00', cierra: '21:00', cerrado: false },
+    { dia: 'Sábado',   abre: '09:00', cierra: '21:00', cerrado: false },
+    { dia: 'Domingo',  abre: '10:00', cierra: '18:00', cerrado: false }
+  ]
+};
+
+const ICONOS = ['apparel','devices','chair','spa','restaurant','theater_comedy','fitness_center','account_balance','storefront','watch','diamond','toys','pets','local_florist','shopping_bag','sports_soccer','local_pharmacy','cake','coffee','smartphone','laptop_mac','headphones','checkroom','footprint','local_laundry_service','key','print','savings','local_cafe','icecream','child_care','book'];
+
+const TITULOS = {
+  resumen:    ['Resumen general', 'Estado del contenido publicado en el sitio'],
+  hero:       ['Hero / Carrusel principal', 'Imágenes grandes de la portada'],
+  comercios:  ['Comercios', 'Directorio de locales del centro comercial'],
+  categorias: ['Categorías', 'Accesos rápidos de la página de inicio'],
+  eventos:    ['Eventos', 'Agenda cultural y comercial'],
+  galeria:    ['Galería de imágenes', 'Todas las fotos del sitio en un solo lugar'],
+  ubicacion:  ['Ubicación & Horarios', 'Mapa, dirección, contacto y horarios de puertas'],
+  contenido:  ['Textos & Footer', 'Menús, redes sociales y pie de página'],
+  usuarios:   ['Usuarios', 'Accesos al panel y permisos por rol'],
+  perfil:     ['Mi perfil', 'Datos de tu cuenta de administrador'],
+  ajustes:    ['Ajustes del sitio', 'Identidad, SEO y mantenimiento']
+};
+
+/* ── 2. UTILIDADES DE INTERFAZ ───────────────────────────────────────────── */
+const $  = (sel) => document.querySelector(sel);
+const $$ = (sel) => Array.from(document.querySelectorAll(sel));
+const nuevoId = (lista) => (lista.length ? Math.max(...lista.map(i => i.id)) + 1 : 1);
+
+function esc(t) {
+  return String(t == null ? '' : t)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+function toast(mensaje, tipo) {
+  const icono = tipo === 'del' ? 'delete' : (tipo === 'ok' ? 'check_circle' : 'info');
+  const el = document.createElement('div');
+  el.className = 'toast ' + (tipo || '');
+  el.innerHTML = '<span class="material-symbols-outlined">' + icono + '</span><span>' + esc(mensaje) + '</span>';
+  $('#toast-stack').appendChild(el);
+  setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateX(24px)'; }, 2600);
+  setTimeout(() => el.remove(), 3000);
+}
+
+function showView(id) {
+  $$('.admin-view').forEach(v => v.classList.remove('active'));
+  const vista = document.getElementById('view-' + id);
+  if (vista) vista.classList.add('active');
+  $$('.nav-item[data-nav]').forEach(b => b.classList.toggle('active', b.dataset.nav === id));
+  const t = TITULOS[id] || ['Panel', ''];
+  $('#page-title').textContent = t[0];
+  $('#page-sub').textContent = t[1];
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  if (window.innerWidth < 1024) toggleSidebar(false);
+}
+
+function toggleSidebar(abrir) {
+  const barra = $('#sidebar'), fondo = $('#sidebar-backdrop');
+  const mostrar = abrir === undefined ? barra.classList.contains('-translate-x-full') : abrir;
+  barra.classList.toggle('-translate-x-full', !mostrar);
+  fondo.classList.toggle('hidden', !mostrar);
+}
+
+function toggleUserMenu(e) {
+  if (e) e.stopPropagation();
+  $('#user-menu').classList.toggle('hidden');
+}
+document.addEventListener('click', () => $('#user-menu').classList.add('hidden'));
+$('#user-menu').addEventListener('click', (e) => e.stopPropagation());
+
+function abrirModal(id) { document.getElementById(id).classList.add('open'); document.body.style.overflow = 'hidden'; }
+function cerrarModal(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = ''; }
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') $$('.modal.open').forEach(m => cerrarModal(m.id));
+});
+
+function confirmarAccion(titulo, texto, alConfirmar) {
+  $('#confirm-titulo').textContent = titulo;
+  $('#confirm-texto').textContent = texto;
+  const btn = $('#confirm-ok');
+  const clon = btn.cloneNode(true);           // limpia listeners anteriores
+  btn.parentNode.replaceChild(clon, btn);
+  clon.addEventListener('click', () => { cerrarModal('modal-confirm'); alConfirmar(); });
+  abrirModal('modal-confirm');
+}
+
+// Muestra la imagen elegida en el <img> indicado y guarda su dirección temporal.
+function previsualizar(input, idImagen, idCampo) {
+  const archivo = input.files && input.files[0];
+  if (!archivo) return;
+  const url = URL.createObjectURL(archivo);
+  document.getElementById(idImagen).src = url;
+  if (idCampo) document.getElementById(idCampo).value = url;
+}
+
+/* ── 3. HERO ─────────────────────────────────────────────────────────────── */
+function renderHero() {
+  const cont = $('#hero-list');
+  cont.innerHTML = db.hero.map((s, i) => `
+    <div class="card p-3 flex flex-col sm:flex-row gap-3 items-start ${s.activo ? '' : 'opacity-60'}">
+      <div class="relative shrink-0">
+        <img alt="${esc(s.titulo)}" class="w-full sm:w-40 h-24 rounded-lg object-cover bg-[#e6e1dd]" src="${esc(s.imagen)}"/>
+        <span class="absolute top-1.5 left-1.5 w-6 h-6 rounded-md bg-[#0D0D0D]/75 text-white text-[11px] font-bold flex items-center justify-center backdrop-blur-sm">${i + 1}</span>
+      </div>
+      <div class="flex-1 min-w-0">
+        <div class="flex items-center gap-2 flex-wrap">
+          <h4 class="font-bold text-sm">${esc(s.titulo)}</h4>
+          ${s.activo ? '<span class="chip chip-ok">Visible</span>' : '<span class="chip chip-off">Oculta</span>'}
+        </div>
+        <p class="text-xs text-[#8b837d] mt-1 line-clamp-2">${esc(s.descripcion)}</p>
+        <div class="flex items-center gap-3 mt-2 text-[11px] text-[#8b837d]">
+          <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[14px] text-[#D97C2B]">${esc(s.icono)}</span>${esc(s.boton)}</span>
+          <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">link</span>${esc(s.enlace)}</span>
+        </div>
+      </div>
+      <div class="flex sm:flex-col gap-1.5 shrink-0">
+        <button class="btn-icon" onclick="moverHero(${i},-1)" title="Subir" ${i === 0 ? 'disabled' : ''}><span class="material-symbols-outlined">arrow_upward</span></button>
+        <button class="btn-icon" onclick="moverHero(${i},1)" title="Bajar" ${i === db.hero.length - 1 ? 'disabled' : ''}><span class="material-symbols-outlined">arrow_downward</span></button>
+        <button class="btn-icon" onclick="verHero(${s.id})" title="Previsualizar"><span class="material-symbols-outlined">visibility</span></button>
+        <button class="btn-icon" onclick="abrirFormHero(${s.id})" title="Editar"><span class="material-symbols-outlined">edit</span></button>
+        <button class="btn-icon danger" onclick="eliminarHero(${s.id})" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
+      </div>
+    </div>`).join('');
+  $('#nav-count-hero').textContent = db.hero.length;
+  verHero(db.hero[0] ? db.hero[0].id : null);
+}
+
+function verHero(id) {
+  const s = db.hero.find(h => h.id === id) || db.hero[0];
+  if (!s) return;
+  $('#hero-preview-img').src = s.imagen;
+  $('#hero-preview-title').textContent = s.titulo;
+  $('#hero-preview-desc').textContent = s.descripcion;
+  $('#hero-preview-btn').textContent = s.boton;
+  $('#hero-preview-dots').innerHTML = db.hero.map(h =>
+    '<span class="h-2 rounded ' + (h.id === s.id ? 'w-6 bg-[#D97C2B]' : 'w-2 bg-white/40') + '"></span>').join('');
+}
+
+function moverHero(i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= db.hero.length) return;
+  [db.hero[i], db.hero[j]] = [db.hero[j], db.hero[i]];
+  renderHero();
+  toast('Orden del carrusel actualizado', 'ok');
+}
+
+function abrirFormHero(id) {
+  const s = db.hero.find(h => h.id === id);
+  $('#modal-hero-titulo').textContent = s ? 'Editar diapositiva' : 'Nueva diapositiva del hero';
+  $('#hero-id').value = s ? s.id : '';
+  $('#hero-titulo').value = s ? s.titulo : '';
+  $('#hero-descripcion').value = s ? s.descripcion : '';
+  $('#hero-boton').value = s ? s.boton : 'Explorar Locales';
+  $('#hero-enlace').value = s ? s.enlace : '#tiendas';
+  $('#hero-icono').value = s ? s.icono : 'storefront';
+  $('#hero-imagen').value = s ? s.imagen : '';
+  $('#hero-img-preview').src = s ? s.imagen : '';
+  $('#hero-activo').checked = s ? s.activo : true;
+  abrirModal('modal-hero');
+}
+
+function guardarHero(e) {
+  e.preventDefault();
+  const id = $('#hero-id').value;
+  const datos = {
+    titulo: $('#hero-titulo').value,
+    descripcion: $('#hero-descripcion').value,
+    boton: $('#hero-boton').value || 'Explorar',
+    enlace: $('#hero-enlace').value || '#',
+    icono: $('#hero-icono').value,
+    imagen: $('#hero-imagen').value || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=800&q=70',
+    activo: $('#hero-activo').checked
+  };
+  if (id) {
+    Object.assign(db.hero.find(h => h.id === +id), datos);
+    toast('Diapositiva actualizada', 'ok');
+  } else {
+    db.hero.push(Object.assign({ id: nuevoId(db.hero) }, datos));
+    toast('Diapositiva añadida al carrusel', 'ok');
+  }
+  cerrarModal('modal-hero');
+  renderHero();
+}
+
+function eliminarHero(id) {
+  const s = db.hero.find(h => h.id === id);
+  confirmarAccion('¿Eliminar esta diapositiva?', '«' + s.titulo + '» dejará de aparecer en la portada.', () => {
+    db.hero = db.hero.filter(h => h.id !== id);
+    renderHero();
+    toast('Diapositiva eliminada', 'del');
+  });
+}
+
+/* ── 4. COMERCIOS ────────────────────────────────────────────────────────── */
+function renderComercios() {
+  const texto  = ($('#filtro-comercio-texto').value || '').toLowerCase();
+  const cat    = $('#filtro-comercio-cat').value;
+  const piso   = $('#filtro-comercio-piso').value;
+  const estado = $('#filtro-comercio-estado').value;
+
+  const lista = db.comercios.filter(c =>
+    (!texto  || (c.nombre + ' ' + c.categoria + ' ' + c.local).toLowerCase().includes(texto)) &&
+    (!cat    || c.categoria === cat) &&
+    (!piso   || c.piso === piso) &&
+    (estado === '' || String(c.activo ? 1 : 0) === estado)
+  );
+
+  $('#comercios-tbody').innerHTML = lista.length ? lista.map(c => `
+    <tr>
+      <td>
+        <div class="flex items-center gap-3">
+          <img alt="${esc(c.nombre)}" class="thumb" src="${esc(c.imagen)}"/>
+          <div class="min-w-0">
+            <p class="font-bold truncate">${esc(c.nombre)}</p>
+            <p class="text-[11px] text-[#8b837d] truncate">${esc(c.descripcion)}</p>
+          </div>
+        </div>
+      </td>
+      <td><span class="chip chip-primary">${esc(c.categoria)}</span></td>
+      <td><span class="font-semibold">Local ${esc(c.local)}</span><br/><span class="text-[11px] text-[#8b837d]">${esc(c.piso)}</span></td>
+      <td class="text-[11px] text-[#5a534e]">${esc(c.horario)}</td>
+      <td class="text-center">
+        <button class="btn-icon !border-0 ${c.destacado ? 'text-[#D99923]' : 'text-[#d6d1cd]'}" onclick="destacarComercio(${c.id})" title="Mostrar en la página de inicio">
+          <span class="material-symbols-outlined" style="font-variation-settings:'FILL' ${c.destacado ? 1 : 0}">star</span>
+        </button>
+      </td>
+      <td class="text-center">
+        <label class="switch"><input ${c.activo ? 'checked' : ''} type="checkbox" onchange="alternarComercio(${c.id}, this.checked)"/><i></i></label>
+      </td>
+      <td>
+        <div class="flex items-center justify-end gap-1.5">
+          <button class="btn-icon" onclick="abrirFormComercio(${c.id})" title="Editar"><span class="material-symbols-outlined">edit</span></button>
+          <button class="btn-icon danger" onclick="eliminarComercio(${c.id})" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
+        </div>
+      </td>
+    </tr>`).join('')
+    : '<tr><td colspan="7" class="text-center py-10 text-[#8b837d] text-sm">No se encontraron comercios con esos filtros.</td></tr>';
+
+  $('#comercios-contador').textContent = db.comercios.length;
+  $('#comercios-visibles').textContent = lista.length;
+  $('#nav-count-comercios').textContent = db.comercios.length;
+  $('#kpi-comercios').textContent = db.comercios.filter(c => c.activo).length;
+}
+
+function destacarComercio(id) {
+  const c = db.comercios.find(x => x.id === id);
+  c.destacado = !c.destacado;
+  renderComercios();
+  toast(c.destacado ? '«' + c.nombre + '» se mostrará en inicio' : '«' + c.nombre + '» ya no está destacado', 'ok');
+}
+
+function alternarComercio(id, valor) {
+  const c = db.comercios.find(x => x.id === id);
+  c.activo = valor;
+  toast(valor ? '«' + c.nombre + '» publicado' : '«' + c.nombre + '» oculto', valor ? 'ok' : 'del');
+  renderComercios();
+}
+
+function abrirFormComercio(id) {
+  const c = db.comercios.find(x => x.id === id);
+  $('#modal-comercio-titulo').textContent = c ? 'Editar comercio' : 'Nuevo comercio';
+  $('#com-id').value = c ? c.id : '';
+  $('#com-nombre').value = c ? c.nombre : '';
+  $('#com-categoria').innerHTML = db.categorias.map(k => '<option>' + esc(k.nombre) + '</option>').join('');
+  if (c) $('#com-categoria').value = c.categoria;
+  $('#com-local').value = c ? c.local : '';
+  $('#com-piso').value = c ? c.piso : 'Piso 1';
+  $('#com-telefono').value = c ? c.telefono : '';
+  $('#com-horario').value = c ? c.horario : 'Lun - Sáb: 09:30 - 20:00';
+  $('#com-descripcion').value = c ? c.descripcion : '';
+  $('#com-enlace').value = c ? c.enlace : 'tienda.html';
+  $('#com-imagen').value = c ? c.imagen : '';
+  $('#com-img-preview').src = c ? c.imagen : '';
+  $('#com-destacado').checked = c ? c.destacado : false;
+  $('#com-activo').checked = c ? c.activo : true;
+  abrirModal('modal-comercio');
+}
+
+function guardarComercio(e) {
+  e.preventDefault();
+  const id = $('#com-id').value;
+  const datos = {
+    nombre: $('#com-nombre').value,
+    categoria: $('#com-categoria').value,
+    local: $('#com-local').value,
+    piso: $('#com-piso').value,
+    telefono: $('#com-telefono').value,
+    horario: $('#com-horario').value,
+    descripcion: $('#com-descripcion').value,
+    enlace: $('#com-enlace').value,
+    imagen: $('#com-imagen').value || 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&w=600&q=70',
+    destacado: $('#com-destacado').checked,
+    activo: $('#com-activo').checked
+  };
+  if (id) {
+    Object.assign(db.comercios.find(x => x.id === +id), datos);
+    toast('Comercio actualizado', 'ok');
+  } else {
+    db.comercios.push(Object.assign({ id: nuevoId(db.comercios) }, datos));
+    toast('Comercio agregado al directorio', 'ok');
+  }
+  cerrarModal('modal-comercio');
+  renderComercios();
+}
+
+function eliminarComercio(id) {
+  const c = db.comercios.find(x => x.id === id);
+  confirmarAccion('¿Eliminar «' + c.nombre + '»?', 'Se quitará del directorio y de la página de inicio.', () => {
+    db.comercios = db.comercios.filter(x => x.id !== id);
+    renderComercios();
+    toast('Comercio eliminado', 'del');
+  });
+}
