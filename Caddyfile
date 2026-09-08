@@ -1,0 +1,6 @@
+:{$PORT:8080}
+
+root * /app
+encode gzip zstd
+file_server
+try_files {path} {path}/ /index.html

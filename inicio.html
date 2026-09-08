@@ -1,0 +1,1267 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>San Andresito del Eje - Centro Comercial</title>
+  
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+  
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+      main > :first-child { margin-top: 0 !important; }
+      main > :last-child { margin-bottom: 0 !important; }
+    }
+    ::-webkit-scrollbar { display: none; }
+    .slide-fade { transition: opacity 0.8s ease-in-out, transform 0.8s ease-in-out; }
+    /* Carrusel de Próximos Eventos: el JS sobrescribe transform/opacity en línea,
+       aquí van solo los valores base y los ajustes que el script no controla. */
+    .event-card {
+      transition: transform 0.75s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.75s cubic-bezier(0.25, 1, 0.5, 1), filter 0.75s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.75s cubic-bezier(0.25, 1, 0.5, 1);
+      backface-visibility: hidden;
+    }
+    .event-card img { -webkit-user-drag: none; user-select: none; }
+    .event-card-info { transition: opacity 0.5s ease 0.15s; }
+    /* El escenario es enfocable para navegar con las flechas del teclado. */
+    #events-carousel-stage:focus { outline: none; }
+    #events-carousel-stage:focus-visible {
+      outline: 2px solid #D97C2B;
+      outline-offset: -4px;
+      border-radius: 1rem;
+    }
+    /* Respeta a quien pidió menos animación en su sistema: el autoplay ya se
+       desactiva en el script y aquí eliminamos los desplazamientos. */
+    @media (prefers-reduced-motion: reduce) {
+      .slide-fade,
+      .event-card,
+      .event-card-info {
+        transition-duration: 0.01ms !important;
+      }
+    }
+  </style>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#D97C2B",
+            "primary-hover": "#bf681c",
+            "secondary": "#D99923",
+            "background": "#F2F2F2",
+            "surface": "#F2F2F2",
+            "onyx": "#0D0D0D",
+            "on-surface": "#0D0D0D"
+          },
+          fontFamily: {
+            "outfit": ["Outfit", "sans-serif"],
+            "grotesk": ["Hanken Grotesk", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-[#F2F2F2] font-['Hanken_Grotesk',sans-serif] text-[#0D0D0D] antialiased selection:bg-[#D97C2B] selection:text-white">
+
+  <!-- Header / Barra de Navegación -->
+  <header class="fixed top-0 left-0 right-0 w-full z-50 bg-[#FFFFFF]/95 backdrop-blur-xl border-b border-[#0D0D0D]/10 shadow-[0_2px_12px_rgba(13,13,13,0.04)]">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-10 flex items-center justify-between py-2 gap-4">
+      <a class="inline-flex items-center" href="#" aria-label="Inicio">
+        <img alt="Centro Comercial San Andresito del Eje" class="w-auto object-contain h-16 md:h-20 transition-transform hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBg3Vk1lACpJ0yJco0d649B4GyXaWZSXx_g7QYNMZap8QfHkSb93oGCQjJ-CLWsYg4KmEnOMLoAt8xczDOunhLmbjiBcXhusNTdB9OIaeTfRhn8XgGrgyqd59Fw3HR2T_4Rzz9u5rY8RnElvclkucg-HdS-GhsDVPwy_kSTFyZwMK-eGFqq5wr092RTmItbjk5BpM9wyalcTQjhPkBlHke3Xn2_r1gk4PTqk63ewXxxc2sWgnu0cCH-I4fQM59lZ53nRhg"/>
+      </a>
+
+      <!-- Columna con Redes Sociales + Horario encima y Menú de Enlaces debajo expandido a lo ancho -->
+      <div class="flex-1 flex flex-col items-end gap-2 max-w-full">
+        <!-- Barra superior: Dirección, Teléfono, Horario y Redes Sociales distribuidos equilibradamente a lo ancho -->
+        <div class="w-full flex items-center justify-between gap-2 text-xs text-[#5a534e] pb-0.5 border-b border-[#0D0D0D]/5">
+          <!-- 1. Dirección -->
+          <a class="inline-flex items-center gap-1.5 hover:text-[#D97C2B] transition-colors truncate" href="#mapa" title="Ver ubicación en mapa">
+            <span class="material-symbols-outlined text-[16px] text-[#D97C2B] shrink-0">location_on</span>
+            <span class="font-medium hidden sm:inline truncate">Cra. 8 entre Cll. 30 y 31, Pereira</span>
+            <span class="font-medium sm:hidden">Cra. 8, Pereira</span>
+          </a>
+
+          <!-- 2. Teléfono -->
+          <a class="inline-flex items-center gap-1.5 hover:text-[#D97C2B] transition-colors font-medium shrink-0" href="tel:+5763350000" title="Llamar a recepción">
+            <span class="material-symbols-outlined text-[16px] text-[#D97C2B] shrink-0">call</span>
+            <span class="hidden md:inline text-neutral-400 font-normal">Recepción:</span>
+            <span>(606) 335-0000</span>
+          </a>
+
+          <!-- 3. Horario -->
+          <div class="hidden lg:flex items-center gap-1.5 font-medium bg-[#F2F2F2] px-3 py-0.5 rounded-full border border-[#0D0D0D]/5 shrink-0">
+            <span class="material-symbols-outlined text-[14px] text-[#D97C2B]">schedule</span>
+            <span>Abierto hoy: 10:00 - 21:00</span>
+          </div>
+
+          <!-- 4. Redes Sociales -->
+          <div class="flex items-center gap-1.5 shrink-0">
+            <a class="w-6 h-6 rounded-full bg-[#D97C2B]/10 text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors border border-[#D97C2B]/20" href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Síguenos en Instagram" aria-label="Instagram">
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a class="w-6 h-6 rounded-full bg-[#D97C2B]/10 text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors border border-[#D97C2B]/20" href="https://facebook.com" target="_blank" rel="noopener noreferrer" title="Síguenos en Facebook" aria-label="Facebook">
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.7 5H18V0h-3.808C10.595 0 9 1.583 9 4.615V8z"/></svg>
+            </a>
+            <a class="w-6 h-6 rounded-full bg-[#D97C2B]/10 text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors border border-[#D97C2B]/20" href="https://tiktok.com" target="_blank" rel="noopener noreferrer" title="Síguenos en TikTok" aria-label="TikTok">
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.47 6.27 6.27 0 0 0 1.95-4.52V8.04a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.95-.47z"/></svg>
+            </a>
+            <a class="w-6 h-6 rounded-full bg-[#D97C2B]/10 text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors border border-[#D97C2B]/20" href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp">
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Menú de Enlaces enfocado a Centro Comercial -->
+        <nav class="w-full flex items-center justify-end gap-2 text-sm font-semibold overflow-x-auto py-0.5">
+          <a class="px-4 py-1.5 bg-[#D97C2B] text-white rounded-full shadow-sm text-center shrink-0" href="#">Inicio</a>
+          <a class="px-3.5 py-1.5 text-[#5a534e] hover:text-[#0D0D0D] hover:bg-[#F2F2F2] rounded-full transition-colors whitespace-nowrap text-center shrink-0" href="#categorias">Categorías</a>
+          <a class="px-3.5 py-1.5 text-[#5a534e] hover:text-[#0D0D0D] hover:bg-[#F2F2F2] rounded-full transition-colors whitespace-nowrap text-center shrink-0" href="#tiendas">Comercios</a>
+          <a class="px-3.5 py-1.5 text-[#5a534e] hover:text-[#0D0D0D] hover:bg-[#F2F2F2] rounded-full transition-colors whitespace-nowrap text-center shrink-0" href="#eventos">Eventos</a>
+          <a class="px-3.5 py-1.5 text-[#5a534e] hover:text-[#0D0D0D] hover:bg-[#F2F2F2] rounded-full transition-colors whitespace-nowrap text-center shrink-0" href="#mapa">Ubicación &amp; Mapa</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <main class="w-full bg-[#F2F2F2] min-h-screen pt-24">
+    <!-- HERO CON CARRUSEL DE 3 SEGUNDOS -->
+    <section class="w-full pt-6 pb-8 px-6 lg:px-10">
+      <div class="max-w-[1440px] mx-auto">
+        <div class="relative w-full h-[540px] rounded-xl overflow-hidden shadow-lg bg-[#0D0D0D] border border-[#0D0D0D]/10">
+          
+          <!-- Slide 1: Fachada / Bienvenida -->
+          <div class="hero-item absolute inset-0 slide-fade opacity-100 scale-100 z-10" data-idx="0">
+            <img alt="San Andresito del Eje Pereira" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCg0QBksIf-t60frWJd-nO8ciWMsJQ1pz7wMKrQhgo9q-hCD1yecv09gcDtEvXVXt9e1_Gc525lw2R5wWGPhBzoImI5AJ82vTfaVVsyWjz4zX4079I5mlL_9AIAFIKLVOuDWMP3gasoPRWIF0DZTDB1Y-hAigK1sMid0YcfYXPGPUqrsVdggYN5H4d7pKZBwqCZak4c8_vfINcOV53BJX_KIj6fIOz5jJqMmQJMyoBjZtEwTzTC10p4Gg2IX-Sz8Aoc4pc"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0D0D0D]/90 via-[#0D0D0D]/40 to-black/20"></div>
+            <div class="absolute bottom-12 left-8 md:left-14 right-8 z-20 text-white max-w-2xl">
+              <h1 class="font-['Outfit',sans-serif] text-3xl md:text-5xl font-extrabold tracking-tight mb-3 leading-tight text-white drop-shadow-md">
+                San Andresito del Eje
+              </h1>
+              <p class="text-neutral-200 text-base md:text-lg mb-6 line-clamp-2 drop-shadow">
+                Todo lo que buscas en un solo lugar: moda, tecnología, gastronomía y los mejores precios de la región.
+              </p>
+              <div class="flex items-center gap-3">
+                <a class="px-6 py-2.5 rounded-lg bg-[#D97C2B] hover:bg-[#bf681c] text-white font-semibold text-sm transition-all shadow-md flex items-center gap-2" href="#tiendas">
+                  <span class="material-symbols-outlined text-[18px]">storefront</span> Explorar Locales
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 2: Galería Comercial / Boutiques -->
+          <div class="hero-item absolute inset-0 slide-fade opacity-0 scale-105 pointer-events-none z-0" data-idx="1">
+            <img alt="Pasillos y tiendas comerciales" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBmWAb4GYZWhwhS2L4d_ZmpVxxvWHh595f0MB8E0Vpz25GKf6tZDOQzztAm7-DkLHsJtFBtMxJRiRXjCsKLZH08Fn4VcZJIM-HzFavlm3_s5-jHDT93tymZheTuZLT_VU0JsLpDOU4YEhdyoZevsPzWKGI2559HeaPyv5m0veQFvbCGVVY0oHAn2GODLSbN-Q8Zy2At9aIfsd6s-gSmVGFtQmwnqSUnRZHoVbPFZnVZdMU9h_STjORVnA"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0D0D0D]/90 via-[#0D0D0D]/40 to-black/20"></div>
+            <div class="absolute bottom-12 left-8 md:left-14 right-8 z-20 text-white max-w-2xl">
+              <h2 class="font-['Outfit',sans-serif] text-3xl md:text-5xl font-extrabold tracking-tight mb-3 leading-tight text-white drop-shadow-md">
+                Gran Variedad y Calidad
+              </h2>
+              <p class="text-neutral-200 text-base md:text-lg mb-6 line-clamp-2 drop-shadow">
+                Las mejores marcas en calzado, perfumería, electrónica y moda con atención cercana y personalizada.
+              </p>
+              <div class="flex items-center gap-3">
+                <a class="px-6 py-2.5 rounded-lg bg-[#D97C2B] hover:bg-[#bf681c] text-white font-semibold text-sm transition-all shadow-md flex items-center gap-2" href="#tiendas">
+                  <span class="material-symbols-outlined text-[18px]">storefront</span> Explorar Comercios
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Slide 3: Terrazas y Gastronomía -->
+          <div class="hero-item absolute inset-0 slide-fade opacity-0 scale-105 pointer-events-none z-0" data-idx="2">
+            <img alt="Plaza gastronómica y café" class="w-full h-full object-cover object-center" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCuItd6EXWnzKT569V-3mEn-MJtDNPcbb4y-lhwCIm8ROZDq_3Pa1SWzox1_lpqPX8gstUw0oCpr1Gg7dsb_OxvdS_o19nI0a3kQYOzoCh4hxs5CWSRp2rxy2HPCnjO35CtCkSj0ENNwtziKLaOAOqcCkEBdiYVue2DwNtI0AolSRbr_ocwJaQIjT26KfeNuVe___ulQW-o4-BhcWgBUvQjT5qQaqBDVZYu9U3HpKb5-oD0t66kA23PNg"/>
+            <div class="absolute inset-0 bg-gradient-to-t from-[#0D0D0D]/90 via-[#0D0D0D]/40 to-black/20"></div>
+            <div class="absolute bottom-12 left-8 md:left-14 right-8 z-20 text-white max-w-2xl">
+              <h2 class="font-['Outfit',sans-serif] text-3xl md:text-5xl font-extrabold tracking-tight mb-3 leading-tight text-white drop-shadow-md">
+                Momentos para Compartir
+              </h2>
+              <p class="text-neutral-200 text-base md:text-lg mb-6 line-clamp-2 drop-shadow">
+                Disfruta de nuestra zona gourmet, terrazas al aire libre y la mejor selección de café del Eje Cafetero.
+              </p>
+              <div class="flex items-center gap-3">
+                <a class="px-6 py-2.5 rounded-lg bg-[#D97C2B] hover:bg-[#bf681c] text-white font-semibold text-sm transition-all shadow-md flex items-center gap-2" href="#">
+                  <span class="material-symbols-outlined text-[18px]">dinner_dining</span> Ver Restaurantes
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Indicadores de Slide y Temporizador (3 segundos) -->
+          <div class="absolute bottom-6 right-8 md:right-14 z-30 flex items-center gap-2 bg-[#0D0D0D]/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20">
+            <button aria-label="Slide 1" class="bullet-indicator w-8 h-2 rounded bg-[#D97C2B] transition-all duration-300" onclick="setSlide(0)"></button>
+            <button aria-label="Slide 2" class="bullet-indicator w-2.5 h-2 rounded bg-white/40 hover:bg-white/70 transition-all duration-300" onclick="setSlide(1)"></button>
+            <button aria-label="Slide 3" class="bullet-indicator w-2.5 h-2 rounded bg-white/40 hover:bg-white/70 transition-all duration-300" onclick="setSlide(2)"></button>
+          </div>
+
+          <!-- Botones de Navegación Manual -->
+          <div class="absolute top-1/2 -translate-y-1/2 left-4 z-30">
+            <button aria-label="Slide anterior" class="w-10 h-10 rounded-lg bg-[#0D0D0D]/40 hover:bg-[#D97C2B] text-white flex items-center justify-center backdrop-blur-md transition-all border border-white/10" onclick="prevSlide()">
+              <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+            </button>
+          </div>
+          <div class="absolute top-1/2 -translate-y-1/2 right-4 z-30">
+            <button aria-label="Slide siguiente" class="w-10 h-10 rounded-lg bg-[#0D0D0D]/40 hover:bg-[#D97C2B] text-white flex items-center justify-center backdrop-blur-md transition-all border border-white/10" onclick="nextSlide()">
+              <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Script del Carrusel cada 3 Segundos -->
+    <script>
+      let activeIdx = 0;
+      const allSlides = document.querySelectorAll('.hero-item');
+      const allBullets = document.querySelectorAll('.bullet-indicator');
+      let timer = null;
+
+      function renderSlide(idx) {
+        if (!allSlides.length) return;
+        activeIdx = (idx + allSlides.length) % allSlides.length;
+
+        allSlides.forEach((s, i) => {
+          if (i === activeIdx) {
+            s.classList.remove('opacity-0', 'scale-105', 'pointer-events-none', 'z-0');
+            s.classList.add('opacity-100', 'scale-100', 'z-10');
+          } else {
+            s.classList.remove('opacity-100', 'scale-100', 'z-10');
+            s.classList.add('opacity-0', 'scale-105', 'pointer-events-none', 'z-0');
+          }
+        });
+
+        allBullets.forEach((b, i) => {
+          if (i === activeIdx) {
+            b.className = 'bullet-indicator w-8 h-2 rounded-full bg-[#D97C2B] transition-all duration-300';
+          } else {
+            b.className = 'bullet-indicator w-2.5 h-2 rounded-full bg-white/40 hover:bg-white/70 transition-all duration-300';
+          }
+        });
+      }
+
+      function nextSlide() {
+        renderSlide(activeIdx + 1);
+        resetAutoPlay();
+      }
+
+      function prevSlide() {
+        renderSlide(activeIdx - 1);
+        resetAutoPlay();
+      }
+
+      function setSlide(i) {
+        renderSlide(i);
+        resetAutoPlay();
+      }
+
+      function startAutoPlay() {
+        timer = setInterval(() => {
+          renderSlide(activeIdx + 1);
+        }, 3000); // 3 Segundos
+      }
+
+      function resetAutoPlay() {
+        clearInterval(timer);
+        startAutoPlay();
+      }
+
+      startAutoPlay();
+    </script>
+
+    <!-- Nuestros Comercios & Categorías (Fondo Blanco anterior) -->
+    <section id="tiendas" class="w-full pt-6 pb-16 px-6 lg:px-10 bg-[#FFFFFF] border-t border-[#0D0D0D]/10">
+      <div class="max-w-[1440px] mx-auto">
+        
+        <!-- Bloque de Categorías Destacadas -->
+        <div id="categorias" class="mb-12">
+          <div class="mb-6">
+            <h3 class="font-['Outfit',sans-serif] text-xl md:text-2xl font-bold text-[#0D0D0D]">Categorías Destacadas</h3>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+            <a class="group flex flex-col items-center text-center py-2 px-2.5 rounded-lg bg-[#F2F2F2] hover:bg-[#D97C2B] hover:text-white transition-all duration-200 border border-[#0D0D0D]/5 shadow-xs" href="#tiendas">
+              <div class="w-8 h-8 rounded-md bg-[#FFFFFF] flex items-center justify-center text-[#D97C2B] group-hover:bg-white/20 group-hover:text-white transition-colors shadow-xs mb-1.5">
+                <span class="material-symbols-outlined text-[18px]">apparel</span>
+              </div>
+              <span class="font-semibold text-[11px] leading-tight group-hover:text-white">Moda</span>
+            </a>
+            <a class="group flex flex-col items-center text-center py-2 px-2.5 rounded-lg bg-[#F2F2F2] hover:bg-[#D97C2B] hover:text-white transition-all duration-200 border border-[#0D0D0D]/5 shadow-xs" href="#tiendas">
+              <div class="w-8 h-8 rounded-md bg-[#FFFFFF] flex items-center justify-center text-[#D97C2B] group-hover:bg-white/20 group-hover:text-white transition-colors shadow-xs mb-1.5">
+                <span class="material-symbols-outlined text-[18px]">devices</span>
+              </div>
+              <span class="font-semibold text-[11px] leading-tight group-hover:text-white">Tecnología</span>
+            </a>
+            <a class="group flex flex-col items-center text-center py-2 px-2.5 rounded-lg bg-[#F2F2F2] hover:bg-[#D97C2B] hover:text-white transition-all duration-200 border border-[#0D0D0D]/5 shadow-xs" href="#tiendas">
+              <div class="w-8 h-8 rounded-md bg-[#FFFFFF] flex items-center justify-center text-[#D97C2B] group-hover:bg-white/20 group-hover:text-white transition-colors shadow-xs mb-1.5">
+                <span class="material-symbols-outlined text-[18px]">chair</span>
+              </div>
+              <span class="font-semibold text-[11px] leading-tight group-hover:text-white">Hogar</span>
+            </a>
+            <a class="group flex flex-col items-center text-center py-2 px-2.5 rounded-lg bg-[#F2F2F2] hover:bg-[#D97C2B] hover:text-white transition-all duration-200 border border-[#0D0D0D]/5 shadow-xs" href="#tiendas">
+              <div class="w-8 h-8 rounded-md bg-[#FFFFFF] flex items-center justify-center text-[#D97C2B] group-hover:bg-white/20 group-hover:text-white transition-colors shadow-xs mb-1.5">
+                <span class="material-symbols-outlined text-[18px]">spa</span>
+              </div>
+              <span class="font-semibold text-[11px] leading-tight group-hover:text-white">Belleza</span>
+            </a>
+            <a class="group flex flex-col items-center text-center py-2 px-2.5 rounded-lg bg-[#F2F2F2] hover:bg-[#D97C2B] hover:text-white transition-all duration-200 border border-[#0D0D0D]/5 shadow-xs" href="#tiendas">
+              <div class="w-8 h-8 rounded-md bg-[#FFFFFF] flex items-center justify-center text-[#D97C2B] group-hover:bg-white/20 group-hover:text-white transition-colors shadow-xs mb-1.5">
+                <span class="material-symbols-outlined text-[18px]">restaurant</span>
+              </div>
+              <span class="font-semibold text-[11px] leading-tight group-hover:text-white">Restaurantes</span>
+            </a>
+            <a class="group flex flex-col items-center text-center py-2 px-2.5 rounded-lg bg-[#F2F2F2] hover:bg-[#D97C2B] hover:text-white transition-all duration-200 border border-[#0D0D0D]/5 shadow-xs" href="#tiendas">
+              <div class="w-8 h-8 rounded-md bg-[#FFFFFF] flex items-center justify-center text-[#D97C2B] group-hover:bg-white/20 group-hover:text-white transition-colors shadow-xs mb-1.5">
+                <span class="material-symbols-outlined text-[18px]">theater_comedy</span>
+              </div>
+              <span class="font-semibold text-[11px] leading-tight group-hover:text-white">Ocio &amp; Cine</span>
+            </a>
+            <a class="group flex flex-col items-center text-center py-2 px-2.5 rounded-lg bg-[#F2F2F2] hover:bg-[#D97C2B] hover:text-white transition-all duration-200 border border-[#0D0D0D]/5 shadow-xs" href="#tiendas">
+              <div class="w-8 h-8 rounded-md bg-[#FFFFFF] flex items-center justify-center text-[#D97C2B] group-hover:bg-white/20 group-hover:text-white transition-colors shadow-xs mb-1.5">
+                <span class="material-symbols-outlined text-[18px]">fitness_center</span>
+              </div>
+              <span class="font-semibold text-[11px] leading-tight group-hover:text-white">Salud &amp; Fit</span>
+            </a>
+            <a class="group flex flex-col items-center text-center py-2 px-2.5 rounded-lg bg-[#F2F2F2] hover:bg-[#D97C2B] hover:text-white transition-all duration-200 border border-[#0D0D0D]/5 shadow-xs" href="#tiendas">
+              <div class="w-8 h-8 rounded-md bg-[#FFFFFF] flex items-center justify-center text-[#D97C2B] group-hover:bg-white/20 group-hover:text-white transition-colors shadow-xs mb-1.5">
+                <span class="material-symbols-outlined text-[18px]">account_balance</span>
+              </div>
+              <span class="font-semibold text-[11px] leading-tight group-hover:text-white">Servicios</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Encabezado de Comercios con botón radiante #D97C2B -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h2 class="font-['Outfit',sans-serif] text-2xl md:text-3xl font-bold text-[#0D0D0D]">Nuestros Comercios</h2>
+          </div>
+          <a class="relative inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#D97C2B] text-white text-sm font-semibold transition-all duration-300 shadow-md hover:shadow-[0_0_25px_rgba(217,124,43,0.65)] hover:scale-[1.03] hover:brightness-110 active:scale-[0.98] group w-fit overflow-hidden" href="#">
+            <span class="relative z-10">Ver directorio completo (140)</span>
+            <span class="material-symbols-outlined text-[18px] relative z-10 group-hover:translate-x-1.5 transition-transform duration-300">arrow_forward</span>
+            <!-- Destello de luz sutil en hover -->
+            <span class="absolute inset-0 -translate-x-full group-hover:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent"></span>
+          </a>
+        </div>
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <!-- Tienda 1 -->
+          <div class="flex flex-col bg-[#FFFFFF] rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-[#0D0D0D]/10 relative">
+            <div class="relative h-48 overflow-hidden bg-[#e6e1dd]">
+              <img alt="Nike Store" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"/>
+              
+              <!-- Tarjeta de Categoría pegada al margen derecho -->
+              <div class="absolute top-0 right-0 bg-[#0D0D0D]/85 backdrop-blur-md text-white px-3.5 py-1.5 rounded-bl-xl border-l border-b border-white/20 shadow-md flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-[#D97C2B]"></span>
+                <span class="text-xs font-bold tracking-wider uppercase">Calzado</span>
+              </div>
+            </div>
+            <div class="p-5 flex flex-col flex-1 justify-between">
+              <div>
+                <div class="mb-3">
+                  <h3 class="font-bold text-lg text-[#0D0D0D] group-hover:text-[#D97C2B] transition-colors">Nike Store</h3>
+                </div>
+
+                <!-- Ubicación y Horario en la misma línea con separador -->
+                <div class="flex items-center justify-between gap-3 text-sm py-3 border-y border-[#0D0D0D]/10 mb-5 bg-[#FAFAFA] px-3 rounded-lg">
+                  <div class="flex items-center gap-2 font-bold text-[#0D0D0D] shrink-0 text-sm">
+                    <span class="flex items-center text-[#D97C2B] font-bold">
+                      <span class="material-symbols-outlined text-[22px] leading-none">location_on</span>:
+                    </span>
+                    <span>Local 215</span>
+                    <span class="w-[1px] h-3.5 bg-[#0D0D0D]/20 inline-block"></span>
+                    <span>Piso 2</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 text-xs text-[#5a534e] font-medium shrink-0">
+                    <span class="material-symbols-outlined text-[#D97C2B] text-[18px] leading-none">schedule</span>
+                    <span>Lun - Sáb: 09:30 - 20:00</span>
+                  </div>
+                </div>
+              </div>
+              <a class="relative w-full py-2.5 rounded-xl bg-[#D97C2B] text-white text-sm text-center font-semibold transition-all duration-300 shadow-md hover:shadow-[0_0_22px_rgba(217,124,43,0.65)] hover:brightness-110 active:scale-[0.99] flex items-center justify-center gap-2 group/btn overflow-hidden" href="tienda.html">
+                <span class="relative z-10">Ver Tienda &amp; Catálogo</span>
+                <span class="material-symbols-outlined text-[18px] relative z-10 group-hover/btn:translate-x-1 transition-transform duration-300">arrow_forward</span>
+                <span class="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent"></span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Tienda 2 -->
+          <div class="flex flex-col bg-[#FFFFFF] rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-[#0D0D0D]/10 relative">
+            <div class="relative h-48 overflow-hidden bg-[#e6e1dd]">
+              <img alt="Tecnología San Andresito" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80"/>
+              
+              <!-- Tarjeta de Categoría pegada al margen derecho -->
+              <div class="absolute top-0 right-0 bg-[#0D0D0D]/85 backdrop-blur-md text-white px-3.5 py-1.5 rounded-bl-xl border-l border-b border-white/20 shadow-md flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-[#D97C2B]"></span>
+                <span class="text-xs font-bold tracking-wider uppercase">Telefonía</span>
+              </div>
+            </div>
+            <div class="p-5 flex flex-col flex-1 justify-between">
+              <div>
+                <div class="mb-3">
+                  <h3 class="font-bold text-lg text-[#0D0D0D] group-hover:text-[#D97C2B] transition-colors">Electro &amp; Celulares Eje</h3>
+                </div>
+
+                <!-- Ubicación y Horario en la misma línea con separador -->
+                <div class="flex items-center justify-between gap-3 text-sm py-3 border-y border-[#0D0D0D]/10 mb-5 bg-[#FAFAFA] px-3 rounded-lg">
+                  <div class="flex items-center gap-2 font-bold text-[#0D0D0D] shrink-0 text-sm">
+                    <span class="flex items-center text-[#D97C2B] font-bold">
+                      <span class="material-symbols-outlined text-[22px] leading-none">location_on</span>:
+                    </span>
+                    <span>Local 104</span>
+                    <span class="w-[1px] h-3.5 bg-[#0D0D0D]/20 inline-block"></span>
+                    <span>Piso 1</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 text-xs text-[#5a534e] font-medium shrink-0">
+                    <span class="material-symbols-outlined text-[#D97C2B] text-[18px] leading-none">schedule</span>
+                    <span>Lun - Dom: 10:00 - 20:30</span>
+                  </div>
+                </div>
+              </div>
+              <a class="relative w-full py-2.5 rounded-xl bg-[#D97C2B] text-white text-sm text-center font-semibold transition-all duration-300 shadow-md hover:shadow-[0_0_22px_rgba(217,124,43,0.65)] hover:brightness-110 active:scale-[0.99] flex items-center justify-center gap-2 group/btn overflow-hidden" href="#">
+                <span class="relative z-10">Ver Tienda &amp; Catálogo</span>
+                <span class="material-symbols-outlined text-[18px] relative z-10 group-hover/btn:translate-x-1 transition-transform duration-300">arrow_forward</span>
+                <span class="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent"></span>
+              </a>
+            </div>
+          </div>
+
+          <!-- Tienda 3 -->
+          <div class="flex flex-col bg-[#FFFFFF] rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-[#0D0D0D]/10 relative">
+            <div class="relative h-48 overflow-hidden bg-[#e6e1dd]">
+              <img alt="Perfumería y Belleza" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://images.unsplash.com/photo-1523293182086-7651a899d37f?auto=format&fit=crop&w=600&q=80"/>
+              
+              <!-- Tarjeta de Categoría pegada al margen derecho -->
+              <div class="absolute top-0 right-0 bg-[#0D0D0D]/85 backdrop-blur-md text-white px-3.5 py-1.5 rounded-bl-xl border-l border-b border-white/20 shadow-md flex items-center gap-1.5">
+                <span class="w-2 h-2 rounded-full bg-[#D97C2B]"></span>
+                <span class="text-xs font-bold tracking-wider uppercase">Belleza</span>
+              </div>
+            </div>
+            <div class="p-5 flex flex-col flex-1 justify-between">
+              <div>
+                <div class="mb-3">
+                  <h3 class="font-bold text-lg text-[#0D0D0D] group-hover:text-[#D97C2B] transition-colors">Perfumes &amp; Estilo</h3>
+                </div>
+
+                <!-- Ubicación y Horario en la misma línea con separador -->
+                <div class="flex items-center justify-between gap-3 text-sm py-3 border-y border-[#0D0D0D]/10 mb-5 bg-[#FAFAFA] px-3 rounded-lg">
+                  <div class="flex items-center gap-2 font-bold text-[#0D0D0D] shrink-0 text-sm">
+                    <span class="flex items-center text-[#D97C2B] font-bold">
+                      <span class="material-symbols-outlined text-[22px] leading-none">location_on</span>:
+                    </span>
+                    <span>Local 132</span>
+                    <span class="w-[1px] h-3.5 bg-[#0D0D0D]/20 inline-block"></span>
+                    <span>Piso 1</span>
+                  </div>
+                  <div class="flex items-center gap-1.5 text-xs text-[#5a534e] font-medium shrink-0">
+                    <span class="material-symbols-outlined text-[#D97C2B] text-[18px] leading-none">schedule</span>
+                    <span>Lun - Sáb: 09:30 - 20:00</span>
+                  </div>
+                </div>
+              </div>
+              <a class="relative w-full py-2.5 rounded-xl bg-[#D97C2B] text-white text-sm text-center font-semibold transition-all duration-300 shadow-md hover:shadow-[0_0_22px_rgba(217,124,43,0.65)] hover:brightness-110 active:scale-[0.99] flex items-center justify-center gap-2 group/btn overflow-hidden" href="#">
+                <span class="relative z-10">Ver Tienda &amp; Catálogo</span>
+                <span class="material-symbols-outlined text-[18px] relative z-10 group-hover/btn:translate-x-1 transition-transform duration-300">arrow_forward</span>
+                <span class="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent"></span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════════════════════════
+         SECCIÓN PRÓXIMOS EVENTOS
+         Carrusel tipo coverflow. Las tarjetas NO se escriben aquí: se generan
+         desde el array EVENTOS del script que está al final de la sección.
+         Para añadir o quitar un evento, edita solo ese array.
+         ══════════════════════════════════════════════════════════════════════ -->
+    <section id="eventos" aria-labelledby="eventos-titulo" class="w-full pt-10 pb-14 bg-[#F4F4F6] border-t border-[#0D0D0D]/10 overflow-hidden relative text-[#0D0D0D]">
+      <!-- Resplandor cálido de fondo que resalta el centro del escenario -->
+      <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[400px] bg-gradient-to-r from-[#D97C2B]/8 via-[#D99923]/6 to-[#D97C2B]/8 rounded-full blur-[100px] pointer-events-none"></div>
+
+      <!-- Encabezado de la sección -->
+      <div class="max-w-[1440px] mx-auto px-6 lg:px-10 mb-6 relative z-10">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <span class="text-xs font-bold text-[#D97C2B] uppercase tracking-widest block mb-1">Agenda Cultural &amp; Comercial</span>
+            <h2 id="eventos-titulo" class="font-['Outfit',sans-serif] text-2xl md:text-3xl font-extrabold text-[#0D0D0D] tracking-tight">Próximos Eventos</h2>
+          </div>
+
+          <div class="flex items-center gap-4" id="events-controls">
+            <!-- Contador de posición: 01 / 04 -->
+            <p class="font-['Outfit',sans-serif] text-sm font-bold text-[#5a534e] tabular-nums tracking-wide" aria-hidden="true">
+              <span id="events-counter-current" class="text-[#0D0D0D]">01</span><span class="text-[#0D0D0D]/25 mx-1">/</span><span id="events-counter-total">04</span>
+            </p>
+
+            <div class="flex items-center gap-2">
+              <button type="button" id="events-prev" aria-label="Evento anterior" class="w-10 h-10 rounded-full bg-white hover:bg-[#D97C2B] text-[#0D0D0D] hover:text-white shadow-sm hover:shadow-md border border-[#0D0D0D]/10 flex items-center justify-center transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D97C2B] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F4F4F6]">
+                <span class="material-symbols-outlined text-[20px]">chevron_left</span>
+              </button>
+              <button type="button" id="events-next" aria-label="Evento siguiente" class="w-10 h-10 rounded-full bg-white hover:bg-[#D97C2B] text-[#0D0D0D] hover:text-white shadow-sm hover:shadow-md border border-[#0D0D0D]/10 flex items-center justify-center transition-all focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D97C2B] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F4F4F6]">
+                <span class="material-symbols-outlined text-[20px]">chevron_right</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Escenario del carrusel: las laterales quedan recortadas suavemente por el overflow -->
+      <div class="relative w-full overflow-hidden select-none py-4 z-10" id="events-carousel-stage"
+           role="region" aria-roledescription="carrusel" aria-label="Próximos eventos del centro comercial"
+           tabindex="0" style="touch-action: pan-y;">
+        <div class="relative w-full h-[420px] sm:h-[460px] md:h-[500px] flex items-center justify-center" id="events-carousel-track">
+          <!-- Tarjetas generadas por JS desde el array EVENTOS -->
+        </div>
+      </div>
+
+      <!-- Anuncio para lectores de pantalla al cambiar de diapositiva -->
+      <p class="sr-only" id="events-live" aria-live="polite" aria-atomic="true"></p>
+
+      <!-- Indicadores / puntos de navegación -->
+      <div class="flex items-center justify-center gap-2 mt-4 relative z-10" id="events-carousel-dots" role="tablist" aria-label="Seleccionar evento"></div>
+
+      <!-- Estado vacío: se muestra solo si no queda ningún evento futuro en el array -->
+      <div id="events-empty" class="max-w-[1440px] mx-auto px-6 lg:px-10 py-14 text-center relative z-10" hidden>
+        <span class="material-symbols-outlined text-[40px] text-[#D97C2B]/60">event_upcoming</span>
+        <h3 class="font-['Outfit',sans-serif] text-lg font-bold text-[#0D0D0D] mt-2">Estamos preparando la nueva agenda</h3>
+        <p class="text-sm text-[#5a534e] mt-1 max-w-md mx-auto">Muy pronto anunciaremos las próximas ferias, trasnochones y actividades del centro comercial.</p>
+        <a href="tel:+5763350000" class="inline-flex items-center gap-1.5 mt-4 text-sm font-bold text-[#D97C2B] hover:text-[#bf681c] transition-colors">
+          <span class="material-symbols-outlined text-[18px]">call</span>
+          Consulta la agenda al (606) 335-0000
+        </a>
+      </div>
+
+      <noscript>
+        <p class="max-w-[1440px] mx-auto px-6 lg:px-10 text-sm text-[#5a534e] text-center py-8">
+          Activa JavaScript en tu navegador para ver la agenda de próximos eventos, o comunícate al (606) 335-0000.
+        </p>
+      </noscript>
+    </section>
+
+    <!-- Script del carrusel de Próximos Eventos -->
+    <script>
+      (function initEventsCarousel() {
+        'use strict';
+
+        /* ────────────────────────────────────────────────────────────────────
+           1. DATOS — Única fuente de verdad de la sección.
+              Para publicar un evento nuevo, agrega un objeto a este array.
+              El orden no importa: se ordenan solos por fecha y los eventos
+              que ya pasaron se ocultan automáticamente.
+
+              inicio / fin : formato 'AAAA-MM-DDTHH:MM' (hora local de Colombia)
+                             El día de la semana NO se escribe: se calcula solo
+                             a partir de esta fecha, así nunca se contradicen.
+              categoria    : debe existir en el mapa CATEGORIAS de abajo
+              entrada      : texto corto del tipo de acceso
+           ──────────────────────────────────────────────────────────────────── */
+        const EVENTOS = [
+          {
+            titulo: 'Expo Tech & Gadgets 2026',
+            categoria: 'Tecnología',
+            inicio: '2026-10-12T14:00',
+            fin: '2026-10-12T19:00',
+            lugar: 'Plaza Central • Piso 1',
+            entrada: 'Entrada libre',
+            descripcion: 'Lanzamientos en telefonía, accesorios gamer, descuentos exclusivos de temporada y sorteos en vivo.',
+            imagen: 'https://images.unsplash.com/photo-1519389950473-47ba0277781c'
+          },
+          {
+            titulo: 'Atardecer Cafetero & Acústico',
+            categoria: 'Gastronomía',
+            inicio: '2026-10-18T17:30',
+            fin: '2026-10-18T21:00',
+            lugar: 'Terraza Boulevard Gourmet',
+            entrada: 'Entrada libre',
+            descripcion: 'Catas de café especial del Eje, repostería artesanal y música en vivo con artistas locales de Pereira.',
+            imagen: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4'
+          },
+          {
+            titulo: 'Gran Trasnochón San Andresito',
+            categoria: 'Moda',
+            inicio: '2026-11-01T10:00',
+            fin: '2026-11-01T23:00',
+            lugar: 'Todos los niveles del Mall',
+            entrada: 'Entrada libre',
+            descripcion: 'Hasta 50% de descuento en calzado, perfumería y moda con horario extendido hasta las 11:00 PM.',
+            imagen: 'https://images.unsplash.com/photo-1441986300917-64674bd600d8'
+          },
+          {
+            titulo: 'Festival de la Familia & Arte Infantil',
+            categoria: 'Familiar',
+            inicio: '2026-11-15T11:00',
+            fin: '2026-11-15T17:00',
+            lugar: 'Plazoleta Principal',
+            entrada: 'Entrada libre',
+            descripcion: 'Talleres recreativos, show de magia y sorpresas para compartir en familia en el centro de Pereira.',
+            imagen: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30'
+          }
+        ];
+
+        // Estilo del chip de categoría: alterna la paleta naranja / dorada de la marca.
+        const CATEGORIAS = {
+          'Tecnología':  { etiqueta: 'Tecnología',           clases: 'bg-[#D97C2B] text-white' },
+          'Gastronomía': { etiqueta: 'Gastronomía & Show',   clases: 'bg-[#D99923] text-[#0D0D0D]' },
+          'Moda':        { etiqueta: 'Moda & Calzado',       clases: 'bg-[#D97C2B] text-white' },
+          'Familiar':    { etiqueta: 'Familiar & Niños',     clases: 'bg-[#D99923] text-[#0D0D0D]' }
+        };
+        const CATEGORIA_POR_DEFECTO = { etiqueta: 'Evento', clases: 'bg-[#0D0D0D] text-white' };
+
+        /* ────────────────────────────────────────────────────────────────────
+           2. UTILIDADES DE FECHA Y TEXTO
+           ──────────────────────────────────────────────────────────────────── */
+        const stage = document.getElementById('events-carousel-stage');
+        const track = document.getElementById('events-carousel-track');
+        const dotsContainer = document.getElementById('events-carousel-dots');
+        const liveRegion = document.getElementById('events-live');
+        const emptyState = document.getElementById('events-empty');
+        const controls = document.getElementById('events-controls');
+        const prevBtn = document.getElementById('events-prev');
+        const nextBtn = document.getElementById('events-next');
+        const counterCurrent = document.getElementById('events-counter-current');
+        const counterTotal = document.getElementById('events-counter-total');
+        if (!stage || !track) return;
+
+        const LOCALE = 'es-CO';
+        const fmtMes = new Intl.DateTimeFormat(LOCALE, { month: 'short' });
+        const fmtDiaSemana = new Intl.DateTimeFormat(LOCALE, { weekday: 'long' });
+        const fmtHora = new Intl.DateTimeFormat(LOCALE, { hour: 'numeric', minute: '2-digit', hour12: true });
+        const fmtFechaLarga = new Intl.DateTimeFormat(LOCALE, { day: 'numeric', month: 'long' });
+
+        const MS_DIA = 86400000;
+
+        function aMedianoche(fecha) {
+          const d = new Date(fecha);
+          d.setHours(0, 0, 0, 0);
+          return d;
+        }
+
+        // Días completos entre hoy y la fecha dada (0 = hoy, 1 = mañana...).
+        function diasFaltantes(fecha) {
+          return Math.round((aMedianoche(fecha) - aMedianoche(new Date())) / MS_DIA);
+        }
+
+        // Cuenta regresiva legible; devuelve además si es inminente para destacarla.
+        function cuentaRegresiva(fecha) {
+          const dias = diasFaltantes(fecha);
+          if (dias <= 0) return { texto: 'Hoy', inminente: true };
+          if (dias === 1) return { texto: 'Mañana', inminente: true };
+          if (dias <= 13) return { texto: 'En ' + dias + ' días', inminente: dias <= 3 };
+          if (dias < 90) return { texto: 'En ' + Math.round(dias / 7) + ' semanas', inminente: false };
+          const meses = Math.round(dias / 30);
+          return { texto: 'En ' + meses + (meses === 1 ? ' mes' : ' meses'), inminente: false };
+        }
+
+        const capitalizar = (t) => t.charAt(0).toUpperCase() + t.slice(1);
+
+        // Limpia el mes abreviado que algunos navegadores devuelven como "oct."
+        const mesCorto = (fecha) => fmtMes.format(fecha).replace('.', '').toUpperCase();
+
+        // es-CO devuelve "2:00 p. m." con espacios estrechos; lo normalizamos
+        // al formato "2:00 PM" que usa el resto del sitio.
+        function formatoHora(fecha) {
+          return fmtHora.format(fecha)
+            .replace(/[\u202f\u00a0]/g, ' ')
+            .replace(/\s*a\.?\s*m\.?/i, ' AM')
+            .replace(/\s*p\.?\s*m\.?/i, ' PM')
+            .trim();
+        }
+
+        // Rango horario del evento: "2:00 PM - 7:00 PM"
+        const rangoHorario = (inicio, fin) => formatoHora(inicio) + ' - ' + formatoHora(fin);
+
+        // Escapa el texto de los datos antes de inyectarlo como HTML.
+        function esc(texto) {
+          return String(texto)
+            .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+        }
+
+        // Unsplash sirve el tamaño que le pidamos: generamos srcset para no
+        // descargar una imagen de 1400px en un teléfono.
+        function srcUnsplash(base, ancho) {
+          return base + '?auto=format&fit=crop&w=' + ancho + '&q=80';
+        }
+
+        /* ────────────────────────────────────────────────────────────────────
+           3. PREPARACIÓN DE DATOS: descarta pasados y ordena por fecha
+           ──────────────────────────────────────────────────────────────────── */
+        const ahora = new Date();
+        const eventos = EVENTOS
+          .map((ev) => ({ ...ev, dInicio: new Date(ev.inicio), dFin: new Date(ev.fin || ev.inicio) }))
+          .filter((ev) => !isNaN(ev.dInicio) && ev.dFin >= ahora)
+          .sort((a, b) => a.dInicio - b.dInicio);
+
+        const total = eventos.length;
+
+        // Sin eventos futuros mostramos el estado vacío en vez de un carrusel hueco.
+        if (total === 0) {
+          stage.hidden = true;
+          dotsContainer.hidden = true;
+          if (controls) controls.hidden = true;
+          if (emptyState) emptyState.hidden = false;
+          return;
+        }
+        if (counterTotal) counterTotal.textContent = String(total).padStart(2, '0');
+
+        /* ────────────────────────────────────────────────────────────────────
+           4. RENDER DE LAS TARJETAS
+           ──────────────────────────────────────────────────────────────────── */
+        const TAMANO_TARJETA = 'w-[80%] sm:w-[65%] md:w-[54%] lg:w-[48%] xl:w-[44%]';
+
+        function plantillaTarjeta(ev, idx) {
+          const cat = CATEGORIAS[ev.categoria] || CATEGORIA_POR_DEFECTO;
+          const cuenta = cuentaRegresiva(ev.dInicio);
+          const clasesCuenta = cuenta.inminente
+            ? 'bg-[#D97C2B] text-white'
+            : 'bg-white/95 text-[#0D0D0D]';
+          const diaSemana = capitalizar(fmtDiaSemana.format(ev.dInicio));
+
+          return '' +
+            '<article class="event-card absolute top-0 ' + TAMANO_TARJETA + ' h-full rounded-2xl overflow-hidden bg-[#0D0D0D] cursor-grab active:cursor-grabbing will-change-transform border border-[#0D0D0D]/10"' +
+            ' data-index="' + idx + '" role="group" aria-roledescription="diapositiva" aria-label="' + (idx + 1) + ' de ' + total + ': ' + esc(ev.titulo) + '">' +
+
+              '<img src="' + srcUnsplash(ev.imagen, 1200) + '"' +
+              ' srcset="' + srcUnsplash(ev.imagen, 700) + ' 700w, ' + srcUnsplash(ev.imagen, 1200) + ' 1200w"' +
+              ' sizes="(max-width: 640px) 80vw, (max-width: 1024px) 54vw, 44vw"' +
+              ' alt="' + esc(ev.titulo) + '" draggable="false" decoding="async"' +
+              (idx === 0 ? ' fetchpriority="high"' : ' loading="lazy"') +
+              ' class="w-full h-full object-cover pointer-events-none"/>' +
+
+              // Degradado de legibilidad sobre la foto
+              '<div class="absolute inset-0 bg-gradient-to-t from-[#0D0D0D] via-[#0D0D0D]/45 to-[#0D0D0D]/10 pointer-events-none"></div>' +
+
+              // Distintivos superiores: fecha + categoría
+              '<div class="absolute top-5 left-5 flex items-center gap-2 pointer-events-none">' +
+                '<div class="bg-white/95 backdrop-blur-md rounded-xl px-3 py-1.5 text-center shadow-md border border-white/40">' +
+                  '<span class="block text-[11px] font-bold text-[#D97C2B] uppercase tracking-wider leading-none">' + mesCorto(ev.dInicio) + '</span>' +
+                  '<span class="block text-lg font-black text-[#0D0D0D] leading-none mt-0.5 tabular-nums">' + String(ev.dInicio.getDate()).padStart(2, '0') + '</span>' +
+                '</div>' +
+                '<span class="px-3 py-1 rounded-lg text-xs font-bold shadow-md ' + cat.clases + '">' + esc(cat.etiqueta) + '</span>' +
+              '</div>' +
+
+              // Cuenta regresiva: sustituye al distintivo repetido de "entrada libre"
+              '<div class="absolute top-5 right-5 pointer-events-none">' +
+                '<span class="px-3 py-1 rounded-lg backdrop-blur-md text-xs font-bold shadow-md flex items-center gap-1 ' + clasesCuenta + '">' +
+                  '<span class="material-symbols-outlined text-[15px]">schedule</span>' + esc(cuenta.texto) +
+                '</span>' +
+              '</div>' +
+
+              // Contenido inferior
+              '<div class="absolute bottom-0 left-0 right-0 p-6 md:p-8 text-white event-card-info pointer-events-none">' +
+                '<h3 class="font-[\'Outfit\',sans-serif] text-xl md:text-2xl lg:text-3xl font-bold leading-tight mb-2 text-white text-balance">' + esc(ev.titulo) + '</h3>' +
+                '<p class="text-white/75 text-xs md:text-sm line-clamp-2 mb-4 max-w-xl">' + esc(ev.descripcion) + '</p>' +
+                '<div class="flex flex-wrap items-center gap-y-2 gap-x-5 text-xs text-white/75 border-t border-white/15 pt-3">' +
+                  metaItem('schedule', diaSemana + ' • ' + rangoHorario(ev.dInicio, ev.dFin)) +
+                  metaItem('pin_drop', ev.lugar) +
+                  (ev.entrada ? metaItem('confirmation_number', ev.entrada) : '') +
+                '</div>' +
+              '</div>' +
+            '</article>';
+        }
+
+        function metaItem(icono, texto) {
+          return '<div class="flex items-center gap-1.5">' +
+                   '<span class="material-symbols-outlined text-[#D97C2B] text-[17px]">' + icono + '</span>' +
+                   '<span>' + esc(texto) + '</span>' +
+                 '</div>';
+        }
+
+        track.innerHTML = eventos.map(plantillaTarjeta).join('');
+        const cards = Array.from(track.querySelectorAll('.event-card'));
+
+        // Datos estructurados para que Google reconozca la agenda como eventos.
+        (function inyectarSchema() {
+          // Colombia es UTC-5 todo el año, sin horario de verano.
+          const conZonaHoraria = (t) => t.length === 16 ? t + ':00-05:00' : t;
+          const schema = document.createElement('script');
+          schema.type = 'application/ld+json';
+          schema.textContent = JSON.stringify(eventos.map((ev) => ({
+            '@context': 'https://schema.org',
+            '@type': 'Event',
+            name: ev.titulo,
+            description: ev.descripcion,
+            startDate: conZonaHoraria(ev.inicio),
+            endDate: conZonaHoraria(ev.fin),
+            eventStatus: 'https://schema.org/EventScheduled',
+            eventAttendanceMode: 'https://schema.org/OfflineEventAttendanceMode',
+            image: srcUnsplash(ev.imagen, 1200),
+            location: {
+              '@type': 'Place',
+              name: 'Centro Comercial San Andresito del Eje — ' + ev.lugar,
+              address: {
+                '@type': 'PostalAddress',
+                streetAddress: 'Cra. 8 entre Cll. 30 y 31',
+                addressLocality: 'Pereira',
+                addressRegion: 'Risaralda',
+                addressCountry: 'CO'
+              }
+            }
+          })));
+          document.head.appendChild(schema);
+        })();
+
+        /* ────────────────────────────────────────────────────────────────────
+           5. PUNTOS INDICADORES
+           ──────────────────────────────────────────────────────────────────── */
+        dotsContainer.innerHTML = '';
+        eventos.forEach((ev, idx) => {
+          const dot = document.createElement('button');
+          dot.type = 'button';
+          dot.setAttribute('role', 'tab');
+          dot.setAttribute('aria-label', ev.titulo);
+          dot.addEventListener('click', () => { irA(idx); reiniciarTemporizador(); });
+          dotsContainer.appendChild(dot);
+        });
+        const dots = Array.from(dotsContainer.children);
+
+        /* ────────────────────────────────────────────────────────────────────
+           6. ESTADO Y PINTADO DEL CARRUSEL
+           ──────────────────────────────────────────────────────────────────── */
+        const INTERVALO_AUTOPLAY = 5200; // ms entre avances automáticos
+        const TRANSICION = 'transform 0.75s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.75s cubic-bezier(0.25, 1, 0.5, 1), filter 0.75s cubic-bezier(0.25, 1, 0.5, 1), box-shadow 0.75s cubic-bezier(0.25, 1, 0.5, 1)';
+
+        const menosMovimiento = window.matchMedia('(prefers-reduced-motion: reduce)');
+        let indiceActual = 0;
+        let temporizador = null;
+        let arrastreX = 0; // desplazamiento en píxeles mientras se arrastra
+
+        // Posición relativa de cada tarjeta respecto a la central, en rango simétrico.
+        function desplazamientoRelativo(idx) {
+          let offset = ((idx - indiceActual) % total + total) % total;
+          if (offset > total / 2) offset -= total;
+          return offset;
+        }
+
+        function pintar(animado = true) {
+          const arrastrando = arrastreX !== 0;
+          // Amortiguamos el arrastre para que la tarjeta acompañe al dedo sin excederse.
+          const deltaPx = Math.max(-160, Math.min(160, arrastreX * 0.55));
+
+          cards.forEach((card, idx) => {
+            const offset = desplazamientoRelativo(idx);
+            const info = card.querySelector('.event-card-info');
+
+            card.style.transition = (animado && !arrastrando && !menosMovimiento.matches) ? TRANSICION : 'none';
+
+            if (offset === 0) {
+              // Tarjeta protagonista: centrada, nítida y elevada.
+              card.style.transform = 'translate3d(' + deltaPx + 'px, 0, 0) scale(1)';
+              card.style.opacity = '1';
+              card.style.filter = 'brightness(1)';
+              card.style.boxShadow = '0 16px 36px -12px rgba(13,13,13,0.22), 0 2px 10px rgba(13,13,13,0.06)';
+              card.style.borderColor = 'rgba(13, 13, 13, 0.12)';
+              card.style.zIndex = '30';
+              card.style.pointerEvents = 'auto';
+              card.removeAttribute('aria-hidden');
+              if (info) info.style.opacity = '1';
+            } else if (offset === -1 || offset === 1) {
+              // Tarjetas vecinas: visibles, atenuadas y clicables para traerlas al centro.
+              const lado = offset === -1 ? -68 : 68;
+              card.style.transform = 'translate3d(calc(' + lado + '% + ' + deltaPx + 'px), 0, 0) scale(0.82)';
+              card.style.opacity = '0.7';
+              card.style.filter = 'brightness(0.72)';
+              card.style.boxShadow = '0 8px 20px -8px rgba(13,13,13,0.12)';
+              card.style.borderColor = 'rgba(13, 13, 13, 0.08)';
+              card.style.zIndex = '20';
+              card.style.pointerEvents = 'auto';
+              card.setAttribute('aria-hidden', 'true');
+              // La información de las vecinas se oculta: solo compite con la central.
+              if (info) info.style.opacity = '0';
+            } else {
+              // Resto: fuera de escena, esperando turno.
+              card.style.transform = 'translate3d(' + (offset > 0 ? 120 : -120) + '%, 0, 0) scale(0.7)';
+              card.style.opacity = '0';
+              card.style.filter = 'brightness(0.5)';
+              card.style.boxShadow = 'none';
+              card.style.borderColor = 'transparent';
+              card.style.zIndex = '10';
+              card.style.pointerEvents = 'none';
+              card.setAttribute('aria-hidden', 'true');
+              if (info) info.style.opacity = '0';
+            }
+          });
+
+          dots.forEach((dot, idx) => {
+            const activo = idx === indiceActual;
+            dot.className = 'h-2 rounded-full transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-[#D97C2B] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F4F4F6] ' +
+              (activo ? 'w-8 bg-[#D97C2B]' : 'w-2.5 bg-[#0D0D0D]/20 hover:bg-[#0D0D0D]/40');
+            dot.setAttribute('aria-selected', activo ? 'true' : 'false');
+            dot.tabIndex = activo ? 0 : -1;
+          });
+
+          if (counterCurrent) counterCurrent.textContent = String(indiceActual + 1).padStart(2, '0');
+        }
+
+        // Anuncia el cambio a lectores de pantalla sin robar el foco.
+        function anunciar() {
+          if (!liveRegion) return;
+          const ev = eventos[indiceActual];
+          liveRegion.textContent = 'Evento ' + (indiceActual + 1) + ' de ' + total + ': ' + ev.titulo +
+            ', ' + fmtFechaLarga.format(ev.dInicio) + '.';
+        }
+
+        function irA(indice) {
+          indiceActual = ((indice % total) + total) % total;
+          pintar(true);
+          anunciar();
+        }
+        const siguiente = () => irA(indiceActual + 1);
+        const anterior = () => irA(indiceActual - 1);
+
+        /* ────────────────────────────────────────────────────────────────────
+           7. CONTROLES: botones, teclado y clic en las vecinas
+           ──────────────────────────────────────────────────────────────────── */
+        if (prevBtn) prevBtn.addEventListener('click', () => { anterior(); reiniciarTemporizador(); });
+        if (nextBtn) nextBtn.addEventListener('click', () => { siguiente(); reiniciarTemporizador(); });
+
+        cards.forEach((card, idx) => {
+          card.addEventListener('click', () => {
+            if (idx !== indiceActual) { irA(idx); reiniciarTemporizador(); }
+          });
+        });
+
+        // Navegación por teclado sobre el escenario enfocado.
+        stage.addEventListener('keydown', (e) => {
+          const acciones = {
+            ArrowLeft: anterior,
+            ArrowRight: siguiente,
+            Home: () => irA(0),
+            End: () => irA(total - 1)
+          };
+          const accion = acciones[e.key];
+          if (!accion) return;
+          e.preventDefault();
+          accion();
+          reiniciarTemporizador();
+        });
+
+        /* ────────────────────────────────────────────────────────────────────
+           8. AUTOPLAY — se detiene cuando no aporta nada:
+              fuera de la pantalla, en otra pestaña, al pasar el mouse,
+              al navegar con el teclado o si el usuario pidió menos movimiento.
+           ──────────────────────────────────────────────────────────────────── */
+        let visibleEnPantalla = true;
+        let interaccionPausada = false;
+
+        function puedeAutoavanzar() {
+          return total > 1 && visibleEnPantalla && !interaccionPausada &&
+                 !menosMovimiento.matches && !document.hidden;
+        }
+
+        function arrancarTemporizador() {
+          detenerTemporizador();
+          if (puedeAutoavanzar()) temporizador = setInterval(siguiente, INTERVALO_AUTOPLAY);
+        }
+        function detenerTemporizador() {
+          if (temporizador) { clearInterval(temporizador); temporizador = null; }
+        }
+        const reiniciarTemporizador = () => arrancarTemporizador();
+
+        function pausarPorInteraccion() { interaccionPausada = true; detenerTemporizador(); }
+        function reanudarTrasInteraccion() { interaccionPausada = false; arrancarTemporizador(); }
+
+        stage.addEventListener('mouseenter', pausarPorInteraccion);
+        stage.addEventListener('mouseleave', reanudarTrasInteraccion);
+        stage.addEventListener('focusin', pausarPorInteraccion);
+        stage.addEventListener('focusout', reanudarTrasInteraccion);
+        dotsContainer.addEventListener('focusin', pausarPorInteraccion);
+        dotsContainer.addEventListener('focusout', reanudarTrasInteraccion);
+
+        document.addEventListener('visibilitychange', arrancarTemporizador);
+
+        // Solo animamos mientras la sección está a la vista.
+        if ('IntersectionObserver' in window) {
+          new IntersectionObserver((entradas) => {
+            visibleEnPantalla = entradas[0].isIntersecting;
+            arrancarTemporizador();
+          }, { threshold: 0.2 }).observe(stage);
+        }
+
+        // Si el usuario cambia su preferencia de movimiento, reaccionamos al vuelo.
+        const alCambiarMovimiento = () => { pintar(false); arrancarTemporizador(); };
+        if (menosMovimiento.addEventListener) menosMovimiento.addEventListener('change', alCambiarMovimiento);
+        else if (menosMovimiento.addListener) menosMovimiento.addListener(alCambiarMovimiento);
+
+        /* ────────────────────────────────────────────────────────────────────
+           9. ARRASTRE Y DESLIZAMIENTO (táctil y con mouse)
+              Las tarjetas siguen el dedo mientras se arrastra.
+           ──────────────────────────────────────────────────────────────────── */
+        const UMBRAL_SWIPE = 45; // px mínimos para que cuente como deslizamiento
+        let inicioX = 0;
+        let arrastrando = false;
+
+        function alIniciarArrastre(x) {
+          arrastrando = true;
+          inicioX = x;
+          arrastreX = 0;
+          pausarPorInteraccion();
+        }
+
+        function alMoverArrastre(x) {
+          if (!arrastrando) return;
+          arrastreX = x - inicioX;
+          pintar(false); // sin transición: seguimiento en vivo del dedo
+        }
+
+        function alSoltarArrastre() {
+          if (!arrastrando) return;
+          arrastrando = false;
+          const recorrido = arrastreX;
+          arrastreX = 0;
+          if (recorrido < -UMBRAL_SWIPE) siguiente();
+          else if (recorrido > UMBRAL_SWIPE) anterior();
+          else pintar(true); // vuelve a su sitio si no alcanzó el umbral
+          reanudarTrasInteraccion();
+        }
+
+        stage.addEventListener('touchstart', (e) => {
+          if (e.touches.length === 1) alIniciarArrastre(e.touches[0].clientX);
+        }, { passive: true });
+        stage.addEventListener('touchmove', (e) => {
+          if (e.touches.length === 1) alMoverArrastre(e.touches[0].clientX);
+        }, { passive: true });
+        stage.addEventListener('touchend', alSoltarArrastre);
+        stage.addEventListener('touchcancel', alSoltarArrastre);
+
+        stage.addEventListener('mousedown', (e) => {
+          e.preventDefault(); // evita el arrastre nativo de la imagen
+          alIniciarArrastre(e.clientX);
+        });
+        window.addEventListener('mousemove', (e) => { if (arrastrando) alMoverArrastre(e.clientX); });
+        window.addEventListener('mouseup', () => { if (arrastrando) alSoltarArrastre(); });
+
+        /* ── 10. Arranque ─────────────────────────────────────────────────── */
+        pintar(false);
+        arrancarTemporizador();
+      })();
+    </script>
+
+    <!-- Sección Ubicación & Google Maps (Al Ancho del Contenido) -->
+    <section id="mapa" class="w-full py-14 px-6 lg:px-10 bg-[#F2F2F2] border-t border-[#0D0D0D]/10">
+      <div class="max-w-[1440px] mx-auto">
+        <!-- Encabezado de la Sección -->
+        <div class="mb-8">
+          <h2 class="font-['Outfit',sans-serif] text-2xl md:text-3xl font-extrabold text-[#0D0D0D] tracking-tight">
+            ¿Cómo Llegar a San Andresito del Eje?
+          </h2>
+          <p class="text-sm text-[#5a534e] mt-1 max-w-xl">
+            Estamos ubicados en pleno centro de Pereira con acceso rápido por las vías principales, transporte público y parqueadero vigilado.
+          </p>
+        </div>
+
+        <!-- Mapa al Ancho del Contenido -->
+        <div class="w-full relative h-[460px] lg:h-[500px] rounded-xl overflow-hidden shadow-lg border border-[#0D0D0D]/10 bg-white group">
+          <iframe 
+            title="Ubicación Centro Comercial San Andresito del Eje"
+            src="https://www.google.com/maps?q=Centro+Comercial+San+Andresito+del+Eje,+Carrera+8,+Pereira,+Risaralda&output=embed" 
+            width="100%" 
+            height="100%" 
+            style="border:0;" 
+            allowfullscreen="" 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade"
+            class="w-full h-full block">
+          </iframe>
+
+          <!-- Tarjeta de Horario dentro del mapa (flotante glassmorphism en esquina inferior izquierda) -->
+          <div class="absolute bottom-6 left-6 z-10 pointer-events-auto max-w-sm w-auto">
+            <div class="p-4 rounded-xl bg-white/95 backdrop-blur-md border border-[#0D0D0D]/10 shadow-2xl">
+              <div class="flex items-start gap-3">
+                <div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-xl">schedule</span>
+                </div>
+                <div class="w-full text-xs">
+                  <h3 class="font-bold text-[#0D0D0D] text-sm mb-1.5">Horario de Puertas</h3>
+                  <div class="space-y-1 text-[#5a534e]">
+                    <div class="flex items-center justify-between gap-4">
+                      <span>Lunes a Sábado:</span>
+                      <strong class="text-[#0D0D0D] font-bold">9:00 AM - 8:00 PM</strong>
+                    </div>
+                    <div class="flex items-center justify-between gap-4">
+                      <span>Domingos y Festivos:</span>
+                      <strong class="text-[#0D0D0D] font-bold">10:00 AM - 6:00 PM</strong>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botón dentro del mapa (flotante con efecto glassmorphism) -->
+          <div class="absolute top-6 right-6 z-10 pointer-events-auto">
+            <a class="px-5 py-3 rounded-lg bg-[#0D0D0D]/90 hover:bg-[#0D0D0D] text-white text-xs font-bold transition-all inline-flex items-center gap-2 shadow-2xl backdrop-blur-md border border-white/20 hover:scale-105" href="https://maps.google.com/?q=Centro+Comercial+San+Andresito+del+Eje+Pereira" target="_blank" rel="noopener noreferrer">
+              <span class="material-symbols-outlined text-[18px] text-[#D97C2B]">open_in_new</span>
+              <span>Abrir en Google Maps</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer con Transición Curva Suave e Información Completa -->
+    <footer class="w-full bg-[#D97C2B] text-white relative mt-6 overflow-hidden">
+      <!-- Transición Curva Orgánica Superior (SVG Wave) -->
+      <div class="w-full overflow-hidden leading-none -mb-1">
+        <svg class="relative block w-full h-12 md:h-20 text-[#F2F2F2]" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,60 L1200,0 L0,0 Z" fill="currentColor"></path>
+        </svg>
+      </div>
+
+      <!-- Franja Horizontal Minimalista de Atributos (Sin tarjetas gruesas) -->
+      <div class="max-w-[1440px] mx-auto px-6 lg:px-10 pt-2 pb-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 py-6 border-b border-white/20">
+          <!-- Item 1 -->
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-white text-3xl opacity-90 shrink-0">location_on</span>
+            <div>
+              <h5 class="text-xs font-bold uppercase tracking-wider text-white leading-tight">Ubicación Central</h5>
+              <p class="text-[11px] text-white/80 mt-0.5">Cra. 8 # 30 - 25, Pereira</p>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="flex items-center gap-3 md:border-l md:border-white/20 md:pl-6">
+            <span class="material-symbols-outlined text-white text-3xl opacity-90 shrink-0">local_parking</span>
+            <div>
+              <h5 class="text-xs font-bold uppercase tracking-wider text-white leading-tight">Parqueadero</h5>
+              <p class="text-[11px] text-white/80 mt-0.5">Acceso vigilado 24/7</p>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="flex items-center gap-3 lg:border-l lg:border-white/20 lg:pl-6">
+            <span class="material-symbols-outlined text-white text-3xl opacity-90 shrink-0">wifi</span>
+            <div>
+              <h5 class="text-xs font-bold uppercase tracking-wider text-white leading-tight">Zona Wi-Fi Gratis</h5>
+              <p class="text-[11px] text-white/80 mt-0.5">Conexión en todos los pisos</p>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="flex items-center gap-3 md:border-l md:border-white/20 md:pl-6">
+            <span class="material-symbols-outlined text-white text-3xl opacity-90 shrink-0">verified_user</span>
+            <div>
+              <h5 class="text-xs font-bold uppercase tracking-wider text-white leading-tight">Compra Segura</h5>
+              <p class="text-[11px] text-white/80 mt-0.5">Comercio 100% certificado</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido Principal Multicolumna del Footer -->
+      <div class="max-w-[1440px] mx-auto px-6 lg:px-10 py-10 border-t border-white/20">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+          <!-- Columna 1 & 2: Identidad & Descripción -->
+          <div class="lg:col-span-2 space-y-4">
+            <div class="inline-flex items-center bg-white p-3 rounded-xl shadow-md">
+              <img alt="San Andresito del Eje" class="h-12 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCy0L1kLrBICOrhVJ-sS-_hiPgGogyKQdWTFQRR9jaUvPLWn2CLbF6dfPjiLctJJVRhyqDWHat94yFFXytSqkW7THcgWGCPqqefcB77AV4pJZpmHH1j1ipxbD5LTWz5vXQ9f9GKy6i0DW6NEXHDz8ND3YohCzCOwR4r958HydxoJfnAu-tO3ohrZ2qJhAuHWRNZshJX-VkvR08WAbhJXOuLLnRZ9jXxcZA6r8B5p4GkmL4xcB0tQhRtLBUwYDPNenJbpko"/>
+            </div>
+            <p class="text-xs text-white/90 leading-relaxed max-w-sm">
+              El Centro Comercial San Andresito del Eje es el punto de encuentro comercial tradicional por excelencia en Pereira. Más de 140 locales dedicados a tecnología, calzado, moda, gastronomía y servicios financieros con la mejor calidez del Eje Cafetero.
+            </p>
+            <div class="flex items-center gap-2 pt-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-white/80">Síguenos:</span>
+              <div class="flex items-center gap-1.5">
+                <a class="w-7 h-7 rounded-full bg-white/15 hover:bg-white hover:text-[#D97C2B] text-white flex items-center justify-center transition-colors shadow-sm" href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+                <a class="w-7 h-7 rounded-full bg-white/15 hover:bg-white hover:text-[#D97C2B] text-white flex items-center justify-center transition-colors shadow-sm" href="https://facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.7 5H18V0h-3.808C10.595 0 9 1.583 9 4.615V8z"/></svg>
+                </a>
+                <a class="w-7 h-7 rounded-full bg-white/15 hover:bg-white hover:text-[#D97C2B] text-white flex items-center justify-center transition-colors shadow-sm" href="https://tiktok.com" target="_blank" rel="noopener noreferrer" title="TikTok">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.47 6.27 6.27 0 0 0 1.95-4.52V8.04a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.95-.47z"/></svg>
+                </a>
+                <a class="w-7 h-7 rounded-full bg-white/15 hover:bg-white hover:text-emerald-600 text-white flex items-center justify-center transition-colors shadow-sm" href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer" title="WhatsApp">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna 3: Explorar Navegación -->
+          <div>
+            <h4 class="text-sm font-bold uppercase tracking-wider text-white mb-4 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-white"></span> Navegación
+            </h4>
+            <ul class="space-y-2 text-xs text-white/85">
+              <li><a class="hover:text-white hover:underline transition-colors" href="#">Inicio</a></li>
+              <li><a class="hover:text-white hover:underline transition-colors" href="#tiendas">Nuestros Comercios</a></li>
+              <li><a class="hover:text-white hover:underline transition-colors" href="#tiendas">Categorías Destacadas</a></li>
+              <li><a class="hover:text-white hover:underline transition-colors" href="#eventos">Próximos Eventos</a></li>
+              <li><a class="hover:text-white hover:underline transition-colors" href="#mapa">Ubicación & Google Maps</a></li>
+              <li><a class="hover:text-white hover:underline transition-colors" href="tienda.html">Directorio de Marcas</a></li>
+            </ul>
+          </div>
+
+          <!-- Columna 4: Servicios al Cliente -->
+          <div>
+            <h4 class="text-sm font-bold uppercase tracking-wider text-white mb-4 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-white"></span> Servicios
+            </h4>
+            <ul class="space-y-2 text-xs text-white/85">
+              <li><span class="text-white/70">Atención al Visitante</span></li>
+              <li><span class="text-white/70">Parqueadero de Carros y Motos</span></li>
+              <li><span class="text-white/70">Cajeros Automáticos (Piso 1)</span></li>
+              <li><span class="text-white/70">Punto de Información Central</span></li>
+              <li><span class="text-white/70">Zona de Comidas y Café</span></li>
+              <li><span class="text-white/70">Seguridad & Monitoreo 24/7</span></li>
+            </ul>
+          </div>
+
+          <!-- Columna 5: Contacto Directo -->
+          <div>
+            <h4 class="text-sm font-bold uppercase tracking-wider text-white mb-4 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-white"></span> Contáctanos
+            </h4>
+            <div class="space-y-3 text-xs text-white/85">
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-white text-[18px] shrink-0 mt-0.5">location_on</span>
+                <span>Cra. 8 entre Cll. 30 y 31, Pereira, Risaralda</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-white text-[18px] shrink-0">call</span>
+                <a class="hover:underline font-semibold text-white" href="tel:+5763350000">(606) 335-0000</a>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-white text-[18px] shrink-0">mail</span>
+                <span class="text-white/90">contacto@sanandresitoeje.com</span>
+              </div>
+              <div class="pt-2">
+                <a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-[#D97C2B] font-bold text-xs hover:bg-neutral-100 transition-colors shadow-sm" href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer">
+                  <span class="material-symbols-outlined text-[16px]">chat</span> Chat de Atención
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra Inferior de Derechos y Créditos -->
+      <div class="w-full border-t border-white/20 bg-black/10 py-5">
+        <div class="max-w-[1440px] mx-auto px-6 lg:px-10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/80">
+          <p>© 2025 Centro Comercial San Andresito del Eje. Todos los derechos reservados.</p>
+          <div class="flex items-center gap-4 text-white/70">
+            <a class="hover:text-white transition-colors" href="#">Términos y Condiciones</a>
+            <span>•</span>
+            <a class="hover:text-white transition-colors" href="#">Política de Privacidad</a>
+            <span>•</span>
+            <span class="text-white/90 font-medium">Pereira, Colombia</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+</body>
+</html>

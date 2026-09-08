@@ -1,0 +1,1188 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Panel Administrador · San Andresito del Eje</title>
+
+  <!-- Fonts & Icons (mismos de la web pública) -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#D97C2B",
+            "primary-hover": "#bf681c",
+            "secondary": "#D99923",
+            "background": "#F2F2F2",
+            "surface": "#FFFFFF",
+            "onyx": "#0D0D0D",
+            "muted": "#5a534e"
+          },
+          fontFamily: {
+            "outfit": ["Outfit", "sans-serif"],
+            "grotesk": ["Hanken Grotesk", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+
+  <style>
+    /* ═══════════════════════════════════════════════════════════════
+       SISTEMA DE COMPONENTES DEL PANEL
+       Mismos colores y radios que la web pública para que el admin
+       se sienta parte del mismo producto.
+       ═══════════════════════════════════════════════════════════════ */
+    html, body { margin:0; padding:0; }
+    body { background:#F2F2F2; color:#0D0D0D; }
+
+    /* Scrollbar delgada (en la web pública está oculta; aquí la necesitamos) */
+    ::-webkit-scrollbar { width:8px; height:8px; }
+    ::-webkit-scrollbar-track { background:transparent; }
+    ::-webkit-scrollbar-thumb { background:rgba(13,13,13,.18); border-radius:99px; }
+    ::-webkit-scrollbar-thumb:hover { background:rgba(217,124,43,.6); }
+    aside ::-webkit-scrollbar-thumb { background:rgba(255,255,255,.18); }
+
+    /* ── Navegación lateral ───────────────────────────────────────── */
+    .nav-item {
+      display:flex; align-items:center; gap:.75rem; width:100%;
+      padding:.55rem .75rem; border-radius:.65rem; border:1px solid transparent;
+      background:transparent; color:rgba(255,255,255,.62);
+      font-size:.8125rem; font-weight:600; text-align:left; cursor:pointer;
+      transition:background .2s, color .2s, box-shadow .25s, transform .2s;
+    }
+    .nav-item:hover { background:rgba(255,255,255,.07); color:#fff; }
+    .nav-item.active {
+      background:linear-gradient(90deg, #D97C2B, rgba(217,153,35,.85));
+      color:#fff; box-shadow:0 8px 18px -8px rgba(217,124,43,1);
+    }
+    .nav-item .material-symbols-outlined { font-size:20px; }
+    .nav-item .badge-count {
+      margin-left:auto; font-size:.625rem; font-weight:700; padding:.1rem .4rem;
+      border-radius:99px; background:rgba(255,255,255,.14); color:#fff;
+    }
+    .nav-group-label {
+      font-size:.625rem; letter-spacing:.14em; text-transform:uppercase;
+      color:rgba(255,255,255,.32); font-weight:700; padding:0 .75rem;
+      margin:1.35rem 0 .5rem;
+    }
+
+    /* ── Botones ──────────────────────────────────────────────────── */
+    .btn-primary {
+      position:relative; display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+      padding:.6rem 1.15rem; border-radius:.75rem; border:0; cursor:pointer;
+      background:#D97C2B; color:#fff; font-weight:600; font-size:.8125rem;
+      box-shadow:0 4px 10px -4px rgba(217,124,43,.9); overflow:hidden;
+      transition:box-shadow .3s, filter .3s, transform .15s;
+    }
+    .btn-primary:hover { box-shadow:0 0 22px rgba(217,124,43,.6); filter:brightness(1.08); }
+    .btn-primary:active { transform:scale(.98); }
+    .btn-primary .material-symbols-outlined { font-size:18px; }
+
+    .btn-secondary {
+      display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+      padding:.6rem 1.05rem; border-radius:.75rem; cursor:pointer;
+      background:#fff; color:#0D0D0D; font-weight:600; font-size:.8125rem;
+      border:1px solid rgba(13,13,13,.12); transition:all .2s;
+    }
+    .btn-secondary:hover { border-color:#D97C2B; color:#D97C2B; background:#fff8f2; }
+    .btn-secondary .material-symbols-outlined { font-size:18px; }
+
+    .btn-danger {
+      display:inline-flex; align-items:center; justify-content:center; gap:.5rem;
+      padding:.6rem 1.05rem; border-radius:.75rem; cursor:pointer;
+      background:#fff; color:#dc2626; font-weight:600; font-size:.8125rem;
+      border:1px solid rgba(220,38,38,.25); transition:all .2s;
+    }
+    .btn-danger:hover { background:#dc2626; color:#fff; border-color:#dc2626; }
+    .btn-danger .material-symbols-outlined { font-size:18px; }
+
+    .btn-icon {
+      display:inline-flex; align-items:center; justify-content:center;
+      width:34px; height:34px; border-radius:.6rem; cursor:pointer;
+      background:#fff; border:1px solid rgba(13,13,13,.10); color:#5a534e;
+      transition:all .2s;
+    }
+    .btn-icon:hover { color:#D97C2B; border-color:#D97C2B; background:#fff8f2; }
+    .btn-icon.danger:hover { color:#dc2626; border-color:rgba(220,38,38,.4); background:#fef2f2; }
+    .btn-icon .material-symbols-outlined { font-size:18px; }
+    .btn-icon:disabled { opacity:.35; cursor:not-allowed; }
+    .btn-icon:disabled:hover { color:#5a534e; border-color:rgba(13,13,13,.10); background:#fff; }
+
+    /* ── Tarjetas ─────────────────────────────────────────────────── */
+    .card {
+      background:#fff; border:1px solid rgba(13,13,13,.10); border-radius:.85rem;
+      box-shadow:0 1px 3px rgba(13,13,13,.04);
+    }
+    .card-head {
+      padding:1rem 1.25rem; border-bottom:1px solid rgba(13,13,13,.08);
+      display:flex; align-items:center; justify-content:space-between; gap:1rem; flex-wrap:wrap;
+    }
+    .card-title { font-family:'Outfit',sans-serif; font-weight:700; font-size:1rem; letter-spacing:-.01em; }
+    .card-body { padding:1.25rem; }
+
+    /* ── Formularios ──────────────────────────────────────────────── */
+    .field { display:block; margin-bottom:1rem; }
+    .field > label, .lbl {
+      display:block; font-size:.6875rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:.08em; color:#5a534e; margin-bottom:.4rem;
+    }
+    .inp, .sel, .txt {
+      width:100%; background:#fff; color:#0D0D0D; font-family:inherit; font-size:.875rem;
+      border:1px solid rgba(13,13,13,.14); border-radius:.65rem; padding:.6rem .8rem;
+      transition:border-color .2s, box-shadow .2s; outline:none; box-sizing:border-box;
+    }
+    .inp:focus, .sel:focus, .txt:focus {
+      border-color:#D97C2B; box-shadow:0 0 0 3px rgba(217,124,43,.15);
+    }
+    .inp::placeholder, .txt::placeholder { color:#a8a09a; }
+    .txt { resize:vertical; min-height:96px; line-height:1.5; }
+    .sel { appearance:none; background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235a534e'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E"); background-repeat:no-repeat; background-position:right .5rem center; background-size:20px; padding-right:2rem; }
+    .hint { font-size:.6875rem; color:#8b837d; margin-top:.35rem; line-height:1.45; }
+
+    /* ── Interruptor (switch) ─────────────────────────────────────── */
+    .switch { position:relative; display:inline-block; width:42px; height:23px; flex:none; }
+    .switch input { position:absolute; inset:0; opacity:0; width:100%; height:100%; margin:0; cursor:pointer; z-index:2; }
+    .switch i { position:absolute; inset:0; background:#d6d1cd; border-radius:99px; transition:background .25s; display:block; }
+    .switch i::after {
+      content:''; position:absolute; top:3px; left:3px; width:17px; height:17px; border-radius:50%;
+      background:#fff; box-shadow:0 1px 3px rgba(0,0,0,.28); transition:transform .25s;
+    }
+    .switch input:checked + i { background:#D97C2B; }
+    .switch input:checked + i::after { transform:translateX(19px); }
+    .switch input:focus-visible + i { outline:2px solid #D97C2B; outline-offset:2px; }
+
+    /* ── Chips y etiquetas ────────────────────────────────────────── */
+    .chip {
+      display:inline-flex; align-items:center; gap:.35rem; padding:.2rem .6rem;
+      border-radius:99px; font-size:.6875rem; font-weight:700; letter-spacing:.02em;
+    }
+    .chip-primary { background:rgba(217,124,43,.12); color:#b8641d; }
+    .chip-gold    { background:rgba(217,153,35,.16); color:#8f6410; }
+    .chip-ok      { background:rgba(16,185,129,.12); color:#047857; }
+    .chip-off     { background:rgba(13,13,13,.07); color:#5a534e; }
+    .chip-warn    { background:rgba(245,158,11,.15); color:#b45309; }
+    .chip-danger  { background:rgba(220,38,38,.10); color:#b91c1c; }
+
+    /* ── Vistas (SPA sencilla) ────────────────────────────────────── */
+    .admin-view { display:none; }
+    .admin-view.active { display:block; animation:viewIn .35s cubic-bezier(.25,1,.5,1); }
+    @keyframes viewIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:none; } }
+
+    /* ── Tablas ───────────────────────────────────────────────────── */
+    table.tbl { width:100%; border-collapse:collapse; font-size:.8125rem; }
+    table.tbl thead th {
+      text-align:left; font-size:.625rem; font-weight:700; text-transform:uppercase;
+      letter-spacing:.1em; color:#8b837d; padding:.65rem 1rem; background:#FAFAFA;
+      border-bottom:1px solid rgba(13,13,13,.08); white-space:nowrap;
+    }
+    table.tbl tbody td { padding:.7rem 1rem; border-bottom:1px solid rgba(13,13,13,.06); vertical-align:middle; }
+    table.tbl tbody tr { transition:background .18s; }
+    table.tbl tbody tr:hover { background:#FFF9F4; }
+    table.tbl tbody tr:last-child td { border-bottom:0; }
+
+    /* ── Zona de carga de imágenes ────────────────────────────────── */
+    .dropzone {
+      display:flex; flex-direction:column; align-items:center; justify-content:center; gap:.4rem;
+      border:2px dashed rgba(217,124,43,.4); border-radius:.85rem; background:#FFF9F4;
+      padding:1.5rem 1rem; text-align:center; cursor:pointer; transition:all .22s; position:relative;
+    }
+    .dropzone:hover, .dropzone.dragover { border-color:#D97C2B; background:#fff2e6; transform:translateY(-1px); }
+    .dropzone input[type=file] { position:absolute; inset:0; opacity:0; cursor:pointer; }
+    .dropzone .material-symbols-outlined { font-size:30px; color:#D97C2B; }
+
+    /* ── Modales ──────────────────────────────────────────────────── */
+    .modal { position:fixed; inset:0; z-index:90; display:none; }
+    .modal.open { display:block; }
+    .modal-backdrop { position:absolute; inset:0; background:rgba(13,13,13,.55); backdrop-filter:blur(4px); animation:fadeIn .2s ease; }
+    .modal-panel {
+      position:relative; margin:2.5vh auto; max-height:95vh; overflow-y:auto;
+      background:#fff; border-radius:1rem; box-shadow:0 30px 70px -20px rgba(13,13,13,.5);
+      animation:panelIn .3s cubic-bezier(.25,1,.5,1);
+    }
+    @keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+    @keyframes panelIn { from { opacity:0; transform:translateY(24px) scale(.97); } to { opacity:1; transform:none; } }
+
+    /* ── Avisos flotantes ─────────────────────────────────────────── */
+    #toast-stack { position:fixed; bottom:1.25rem; right:1.25rem; z-index:120; display:flex; flex-direction:column; gap:.6rem; }
+    .toast {
+      display:flex; align-items:center; gap:.65rem; padding:.75rem 1rem; border-radius:.75rem;
+      background:#0D0D0D; color:#fff; font-size:.8125rem; font-weight:600;
+      box-shadow:0 16px 32px -12px rgba(13,13,13,.6); animation:toastIn .3s cubic-bezier(.25,1,.5,1);
+      border-left:3px solid #D97C2B; min-width:250px;
+    }
+    .toast.ok  { border-left-color:#10b981; }
+    .toast.del { border-left-color:#ef4444; }
+    .toast .material-symbols-outlined { font-size:19px; }
+    @keyframes toastIn { from { opacity:0; transform:translateX(28px); } to { opacity:1; transform:none; } }
+
+    /* ── Pestañas del perfil ──────────────────────────────────────── */
+    .tab-btn {
+      padding:.6rem .2rem; font-size:.8125rem; font-weight:700; color:#8b837d;
+      border-bottom:2px solid transparent; cursor:pointer; background:none; border-top:0; border-left:0; border-right:0;
+      transition:color .2s, border-color .2s;
+    }
+    .tab-btn:hover { color:#0D0D0D; }
+    .tab-btn.active { color:#D97C2B; border-bottom-color:#D97C2B; }
+    .tab-pane { display:none; }
+    .tab-pane.active { display:block; animation:viewIn .3s ease; }
+
+    /* ── Utilidades ───────────────────────────────────────────────── */
+    .thumb { width:56px; height:40px; border-radius:.5rem; object-fit:cover; background:#e6e1dd; flex:none; }
+    .divider { height:1px; background:rgba(13,13,13,.08); margin:1.25rem 0; }
+    .sortable-ghost { opacity:.4; }
+    [hidden] { display:none !important; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .admin-view.active, .modal-panel, .toast, .tab-pane.active { animation:none !important; }
+      * { transition-duration:.01ms !important; }
+    }
+  </style>
+</head>
+<body class="font-['Hanken_Grotesk',sans-serif] antialiased selection:bg-[#D97C2B] selection:text-white">
+
+<div class="flex min-h-screen">
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       BARRA LATERAL DE NAVEGACIÓN
+       ══════════════════════════════════════════════════════════════════════ -->
+  <div id="sidebar-backdrop" class="fixed inset-0 bg-[#0D0D0D]/50 z-40 lg:hidden hidden" onclick="toggleSidebar(false)"></div>
+
+  <aside id="sidebar" class="fixed lg:sticky top-0 left-0 z-50 h-screen w-[262px] shrink-0 bg-[#0D0D0D] flex flex-col -translate-x-full lg:translate-x-0 transition-transform duration-300 ease-out">
+
+    <!-- Identidad -->
+    <div class="px-4 pt-5 pb-4 border-b border-white/10">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-white flex items-center justify-center shrink-0 shadow-md overflow-hidden">
+          <img alt="San Andresito del Eje" class="w-full h-full object-contain p-1" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCy0L1kLrBICOrhVJ-sS-_hiPgGogyKQdWTFQRR9jaUvPLWn2CLbF6dfPjiLctJJVRhyqDWHat94yFFXytSqkW7THcgWGCPqqefcB77AV4pJZpmHH1j1ipxbD5LTWz5vXQ9f9GKy6i0DW6NEXHDz8ND3YohCzCOwR4r958HydxoJfnAu-tO3ohrZ2qJhAuHWRNZshJX-VkvR08WAbhJXOuLLnRZ9jXxcZA6r8B5p4GkmL4xcB0tQhRtLBUwYDPNenJbpko"/>
+        </div>
+        <div class="min-w-0">
+          <p class="font-['Outfit',sans-serif] text-white font-bold text-sm leading-tight truncate">San Andresito</p>
+          <p class="text-[10px] uppercase tracking-[.14em] text-[#D99923] font-bold mt-0.5">Panel Admin</p>
+        </div>
+        <button class="ml-auto lg:hidden text-white/60 hover:text-white" onclick="toggleSidebar(false)" aria-label="Cerrar menú">
+          <span class="material-symbols-outlined">close</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Enlaces -->
+    <nav class="flex-1 overflow-y-auto px-3 pb-4">
+      <p class="nav-group-label" style="margin-top:.9rem">Principal</p>
+      <button class="nav-item active" data-nav="resumen" onclick="showView('resumen')">
+        <span class="material-symbols-outlined">dashboard</span> Resumen
+      </button>
+
+      <p class="nav-group-label">Contenido del sitio</p>
+      <button class="nav-item" data-nav="hero" onclick="showView('hero')">
+        <span class="material-symbols-outlined">view_carousel</span> Hero / Carrusel
+        <span class="badge-count" id="nav-count-hero">3</span>
+      </button>
+      <button class="nav-item" data-nav="comercios" onclick="showView('comercios')">
+        <span class="material-symbols-outlined">storefront</span> Comercios
+        <span class="badge-count" id="nav-count-comercios">6</span>
+      </button>
+      <button class="nav-item" data-nav="categorias" onclick="showView('categorias')">
+        <span class="material-symbols-outlined">category</span> Categorías
+        <span class="badge-count" id="nav-count-categorias">8</span>
+      </button>
+      <button class="nav-item" data-nav="eventos" onclick="showView('eventos')">
+        <span class="material-symbols-outlined">celebration</span> Eventos
+        <span class="badge-count" id="nav-count-eventos">4</span>
+      </button>
+      <button class="nav-item" data-nav="galeria" onclick="showView('galeria')">
+        <span class="material-symbols-outlined">photo_library</span> Galería de imágenes
+      </button>
+      <button class="nav-item" data-nav="ubicacion" onclick="showView('ubicacion')">
+        <span class="material-symbols-outlined">location_on</span> Ubicación &amp; Horarios
+      </button>
+      <button class="nav-item" data-nav="contenido" onclick="showView('contenido')">
+        <span class="material-symbols-outlined">article</span> Textos &amp; Footer
+      </button>
+
+      <p class="nav-group-label">Administración</p>
+      <button class="nav-item" data-nav="usuarios" onclick="showView('usuarios')">
+        <span class="material-symbols-outlined">group</span> Usuarios
+      </button>
+      <button class="nav-item" data-nav="perfil" onclick="showView('perfil')">
+        <span class="material-symbols-outlined">account_circle</span> Mi perfil
+      </button>
+      <button class="nav-item" data-nav="ajustes" onclick="showView('ajustes')">
+        <span class="material-symbols-outlined">settings</span> Ajustes del sitio
+      </button>
+    </nav>
+
+    <!-- Pie de la barra: usuario en sesión -->
+    <div class="p-3 border-t border-white/10">
+      <a href="inicio.html" target="_blank" class="nav-item mb-2" style="color:#D99923">
+        <span class="material-symbols-outlined">open_in_new</span> Ver sitio web
+      </a>
+      <div class="flex items-center gap-2.5 p-2 rounded-xl bg-white/5 border border-white/10">
+        <img alt="Eduardo Caicedo" class="w-9 h-9 rounded-lg object-cover shrink-0" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"/>
+        <div class="min-w-0 flex-1">
+          <p class="text-white text-xs font-bold truncate">Eduardo Caicedo</p>
+          <p class="text-[10px] text-white/45 truncate">Super Administrador</p>
+        </div>
+        <a href="admin-login.html" class="w-8 h-8 rounded-lg flex items-center justify-center text-white/50 hover:text-white hover:bg-white/10 transition-colors" title="Cerrar sesión">
+          <span class="material-symbols-outlined text-[18px]">logout</span>
+        </a>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       COLUMNA PRINCIPAL
+       ══════════════════════════════════════════════════════════════════════ -->
+  <div class="flex-1 min-w-0 flex flex-col">
+
+    <!-- Cabecera superior -->
+    <header class="sticky top-0 z-30 bg-white/95 backdrop-blur-xl border-b border-[#0D0D0D]/10 shadow-[0_2px_12px_rgba(13,13,13,.04)]">
+      <div class="px-4 md:px-7 py-3 flex items-center gap-3">
+        <button class="lg:hidden btn-icon" onclick="toggleSidebar(true)" aria-label="Abrir menú">
+          <span class="material-symbols-outlined">menu</span>
+        </button>
+
+        <div class="min-w-0 flex-1">
+          <h1 id="page-title" class="font-['Outfit',sans-serif] text-lg md:text-xl font-extrabold tracking-tight truncate">Resumen general</h1>
+          <p id="page-sub" class="text-xs text-[#8b837d] truncate hidden sm:block">Estado del contenido publicado en el sitio</p>
+        </div>
+
+        <!-- Buscador global -->
+        <div class="relative hidden xl:block w-64">
+          <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#a8a09a] text-[19px]">search</span>
+          <input class="inp pl-9 bg-[#F7F7F7]" placeholder="Buscar comercios, eventos…" type="search"/>
+        </div>
+
+        <button class="btn-icon relative" title="Notificaciones" onclick="toast('3 notificaciones sin leer')">
+          <span class="material-symbols-outlined">notifications</span>
+          <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#D97C2B] text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">3</span>
+        </button>
+
+        <a class="btn-secondary hidden md:inline-flex" href="inicio.html" target="_blank">
+          <span class="material-symbols-outlined">visibility</span> Ver sitio
+        </a>
+
+        <!-- Menú de usuario -->
+        <div class="relative">
+          <button class="flex items-center gap-2 pl-1 pr-2 py-1 rounded-xl border border-[#0D0D0D]/10 hover:border-[#D97C2B] transition-colors bg-white" onclick="toggleUserMenu(event)">
+            <img alt="Eduardo Caicedo" class="w-8 h-8 rounded-lg object-cover" src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=120&q=80"/>
+            <span class="material-symbols-outlined text-[18px] text-[#8b837d]">expand_more</span>
+          </button>
+          <div id="user-menu" class="hidden absolute right-0 mt-2 w-60 card p-2 z-50 shadow-xl">
+            <div class="px-3 py-2.5 border-b border-[#0D0D0D]/8 mb-1">
+              <p class="font-bold text-sm">Eduardo Caicedo</p>
+              <p class="text-[11px] text-[#8b837d] truncate">eduardo.caicedom@gmail.com</p>
+              <span class="chip chip-primary mt-2">Super Administrador</span>
+            </div>
+            <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-[#F7F7F7] text-sm flex items-center gap-2.5" onclick="showView('perfil'); toggleUserMenu()">
+              <span class="material-symbols-outlined text-[18px] text-[#5a534e]">person</span> Mi perfil
+            </button>
+            <button class="w-full text-left px-3 py-2 rounded-lg hover:bg-[#F7F7F7] text-sm flex items-center gap-2.5" onclick="showView('ajustes'); toggleUserMenu()">
+              <span class="material-symbols-outlined text-[18px] text-[#5a534e]">settings</span> Ajustes del sitio
+            </button>
+            <div class="h-px bg-[#0D0D0D]/8 my-1"></div>
+            <a class="w-full text-left px-3 py-2 rounded-lg hover:bg-red-50 text-sm flex items-center gap-2.5 text-red-600" href="admin-login.html">
+              <span class="material-symbols-outlined text-[18px]">logout</span> Cerrar sesión
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Área de contenido -->
+    <main class="flex-1 px-4 md:px-7 py-6 max-w-[1400px] w-full">
+
+      <!-- ════════════════════════════════════════════════════════════════
+           VISTA: RESUMEN
+           ════════════════════════════════════════════════════════════════ -->
+      <section class="admin-view active" id="view-resumen">
+
+        <!-- Bienvenida + accesos rápidos -->
+        <div class="relative overflow-hidden rounded-2xl bg-gradient-to-r from-[#D97C2B] to-[#D99923] text-white p-6 md:p-7 mb-6 shadow-lg">
+          <div class="absolute -right-10 -top-16 w-64 h-64 rounded-full bg-white/10"></div>
+          <div class="absolute -right-24 top-10 w-56 h-56 rounded-full bg-white/5"></div>
+          <div class="relative z-10 flex flex-col lg:flex-row lg:items-end justify-between gap-5">
+            <div>
+              <p class="text-[11px] font-bold uppercase tracking-[.16em] text-white/75 mb-1">Bienvenido de nuevo</p>
+              <h2 class="font-['Outfit',sans-serif] text-2xl md:text-3xl font-extrabold tracking-tight mb-2">Hola, Eduardo 👋</h2>
+              <p class="text-sm text-white/90 max-w-lg">Desde aquí controlas todo lo que ven los visitantes: el carrusel principal, los comercios del directorio, la agenda de eventos y las fotografías del centro comercial.</p>
+            </div>
+            <div class="flex flex-wrap gap-2">
+              <button class="px-4 py-2.5 rounded-xl bg-white text-[#D97C2B] font-bold text-xs flex items-center gap-2 hover:bg-neutral-100 transition-colors shadow-md" onclick="abrirFormEvento()">
+                <span class="material-symbols-outlined text-[18px]">add_circle</span> Nuevo evento
+              </button>
+              <button class="px-4 py-2.5 rounded-xl bg-[#0D0D0D]/25 backdrop-blur-md border border-white/30 text-white font-bold text-xs flex items-center gap-2 hover:bg-[#0D0D0D]/40 transition-colors" onclick="abrirFormComercio()">
+                <span class="material-symbols-outlined text-[18px]">storefront</span> Nuevo comercio
+              </button>
+              <button class="px-4 py-2.5 rounded-xl bg-[#0D0D0D]/25 backdrop-blur-md border border-white/30 text-white font-bold text-xs flex items-center gap-2 hover:bg-[#0D0D0D]/40 transition-colors" onclick="showView('galeria')">
+                <span class="material-symbols-outlined text-[18px]">upload</span> Subir fotos
+              </button>
+              <button class="px-4 py-2.5 rounded-xl bg-[#0D0D0D]/25 backdrop-blur-md border border-white/30 text-white font-bold text-xs flex items-center gap-2 hover:bg-[#0D0D0D]/40 transition-colors" onclick="showView('hero')">
+                <span class="material-symbols-outlined text-[18px]">view_carousel</span> Editar hero
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Indicadores -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="card p-5">
+            <div class="flex items-start justify-between mb-3">
+              <div class="w-10 h-10 rounded-xl bg-[#D97C2B]/12 text-[#D97C2B] flex items-center justify-center">
+                <span class="material-symbols-outlined">storefront</span>
+              </div>
+              <span class="chip chip-ok"><span class="material-symbols-outlined text-[13px]">trending_up</span> +4</span>
+            </div>
+            <p class="font-['Outfit',sans-serif] text-3xl font-extrabold leading-none" id="kpi-comercios">6</p>
+            <p class="text-xs text-[#8b837d] mt-1.5 font-medium">Comercios publicados</p>
+          </div>
+          <div class="card p-5">
+            <div class="flex items-start justify-between mb-3">
+              <div class="w-10 h-10 rounded-xl bg-[#D99923]/16 text-[#a97612] flex items-center justify-center">
+                <span class="material-symbols-outlined">celebration</span>
+              </div>
+              <span class="chip chip-primary">Agenda activa</span>
+            </div>
+            <p class="font-['Outfit',sans-serif] text-3xl font-extrabold leading-none" id="kpi-eventos">4</p>
+            <p class="text-xs text-[#8b837d] mt-1.5 font-medium">Eventos próximos</p>
+          </div>
+          <div class="card p-5">
+            <div class="flex items-start justify-between mb-3">
+              <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center">
+                <span class="material-symbols-outlined">photo_library</span>
+              </div>
+              <span class="chip chip-off">1.2 GB libres</span>
+            </div>
+            <p class="font-['Outfit',sans-serif] text-3xl font-extrabold leading-none" id="kpi-imagenes">12</p>
+            <p class="text-xs text-[#8b837d] mt-1.5 font-medium">Imágenes en galería</p>
+          </div>
+          <div class="card p-5">
+            <div class="flex items-start justify-between mb-3">
+              <div class="w-10 h-10 rounded-xl bg-[#0D0D0D]/8 text-[#0D0D0D] flex items-center justify-center">
+                <span class="material-symbols-outlined">visibility</span>
+              </div>
+              <span class="chip chip-ok"><span class="material-symbols-outlined text-[13px]">trending_up</span> 12%</span>
+            </div>
+            <p class="font-['Outfit',sans-serif] text-3xl font-extrabold leading-none">8.4k</p>
+            <p class="text-xs text-[#8b837d] mt-1.5 font-medium">Visitas este mes</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+
+          <!-- Secciones del sitio -->
+          <div class="card lg:col-span-2">
+            <div class="card-head">
+              <div>
+                <h3 class="card-title">Secciones de la página de inicio</h3>
+                <p class="text-xs text-[#8b837d] mt-0.5">Controla qué bloques se muestran y edítalos con un clic</p>
+              </div>
+            </div>
+            <div class="card-body pt-2 space-y-2">
+
+              <div class="flex items-center gap-3 p-3 rounded-xl border border-[#0D0D0D]/8 hover:border-[#D97C2B]/50 hover:bg-[#FFF9F4] transition-all">
+                <div class="w-9 h-9 rounded-lg bg-[#D97C2B]/12 text-[#D97C2B] flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[20px]">view_carousel</span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="font-bold text-sm">Hero principal</p>
+                  <p class="text-xs text-[#8b837d]">3 imágenes rotando cada 3 segundos</p>
+                </div>
+                <span class="chip chip-ok hidden sm:inline-flex">Publicado</span>
+                <button class="btn-icon" onclick="showView('hero')" title="Editar"><span class="material-symbols-outlined">edit</span></button>
+              </div>
+
+              <div class="flex items-center gap-3 p-3 rounded-xl border border-[#0D0D0D]/8 hover:border-[#D97C2B]/50 hover:bg-[#FFF9F4] transition-all">
+                <div class="w-9 h-9 rounded-lg bg-[#D97C2B]/12 text-[#D97C2B] flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[20px]">category</span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="font-bold text-sm">Categorías destacadas</p>
+                  <p class="text-xs text-[#8b837d]">8 categorías visibles en la cuadrícula</p>
+                </div>
+                <span class="chip chip-ok hidden sm:inline-flex">Publicado</span>
+                <button class="btn-icon" onclick="showView('categorias')" title="Editar"><span class="material-symbols-outlined">edit</span></button>
+              </div>
+
+              <div class="flex items-center gap-3 p-3 rounded-xl border border-[#0D0D0D]/8 hover:border-[#D97C2B]/50 hover:bg-[#FFF9F4] transition-all">
+                <div class="w-9 h-9 rounded-lg bg-[#D97C2B]/12 text-[#D97C2B] flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[20px]">storefront</span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="font-bold text-sm">Nuestros comercios</p>
+                  <p class="text-xs text-[#8b837d]">3 destacados en inicio · 140 en el directorio</p>
+                </div>
+                <span class="chip chip-ok hidden sm:inline-flex">Publicado</span>
+                <button class="btn-icon" onclick="showView('comercios')" title="Editar"><span class="material-symbols-outlined">edit</span></button>
+              </div>
+
+              <div class="flex items-center gap-3 p-3 rounded-xl border border-[#0D0D0D]/8 hover:border-[#D97C2B]/50 hover:bg-[#FFF9F4] transition-all">
+                <div class="w-9 h-9 rounded-lg bg-[#D99923]/16 text-[#a97612] flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[20px]">celebration</span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="font-bold text-sm">Próximos eventos</p>
+                  <p class="text-xs text-[#8b837d]">Carrusel con 4 eventos futuros</p>
+                </div>
+                <span class="chip chip-ok hidden sm:inline-flex">Publicado</span>
+                <button class="btn-icon" onclick="showView('eventos')" title="Editar"><span class="material-symbols-outlined">edit</span></button>
+              </div>
+
+              <div class="flex items-center gap-3 p-3 rounded-xl border border-[#0D0D0D]/8 hover:border-[#D97C2B]/50 hover:bg-[#FFF9F4] transition-all">
+                <div class="w-9 h-9 rounded-lg bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[20px]">location_on</span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="font-bold text-sm">Ubicación &amp; horarios</p>
+                  <p class="text-xs text-[#8b837d]">Mapa de Google y tarjeta de horarios</p>
+                </div>
+                <span class="chip chip-ok hidden sm:inline-flex">Publicado</span>
+                <button class="btn-icon" onclick="showView('ubicacion')" title="Editar"><span class="material-symbols-outlined">edit</span></button>
+              </div>
+
+              <div class="flex items-center gap-3 p-3 rounded-xl border border-[#0D0D0D]/8 hover:border-[#D97C2B]/50 hover:bg-[#FFF9F4] transition-all">
+                <div class="w-9 h-9 rounded-lg bg-[#0D0D0D]/8 text-[#0D0D0D] flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[20px]">article</span>
+                </div>
+                <div class="min-w-0 flex-1">
+                  <p class="font-bold text-sm">Textos, contacto y footer</p>
+                  <p class="text-xs text-[#8b837d]">Redes sociales, servicios y datos de contacto</p>
+                </div>
+                <span class="chip chip-ok hidden sm:inline-flex">Publicado</span>
+                <button class="btn-icon" onclick="showView('contenido')" title="Editar"><span class="material-symbols-outlined">edit</span></button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Actividad reciente -->
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">Actividad reciente</h3>
+            </div>
+            <div class="card-body pt-3">
+              <ol class="relative border-l border-[#0D0D0D]/10 ml-2 space-y-5">
+                <li class="pl-5 relative">
+                  <span class="absolute -left-[7px] top-1 w-3.5 h-3.5 rounded-full bg-[#D97C2B] border-2 border-white shadow"></span>
+                  <p class="text-xs font-bold">Evento publicado</p>
+                  <p class="text-xs text-[#8b837d] mt-0.5">«Expo Tech &amp; Gadgets 2026»</p>
+                  <p class="text-[10px] text-[#a8a09a] mt-1">Hoy · 09:42 · Eduardo C.</p>
+                </li>
+                <li class="pl-5 relative">
+                  <span class="absolute -left-[7px] top-1 w-3.5 h-3.5 rounded-full bg-[#D99923] border-2 border-white shadow"></span>
+                  <p class="text-xs font-bold">Imagen del hero reemplazada</p>
+                  <p class="text-xs text-[#8b837d] mt-0.5">Slide 2 · «Gran Variedad y Calidad»</p>
+                  <p class="text-[10px] text-[#a8a09a] mt-1">Ayer · 18:20 · Eduardo C.</p>
+                </li>
+                <li class="pl-5 relative">
+                  <span class="absolute -left-[7px] top-1 w-3.5 h-3.5 rounded-full bg-emerald-500 border-2 border-white shadow"></span>
+                  <p class="text-xs font-bold">Comercio agregado</p>
+                  <p class="text-xs text-[#8b837d] mt-0.5">«Perfumes &amp; Estilo» · Local 132</p>
+                  <p class="text-[10px] text-[#a8a09a] mt-1">3 sep · 11:05 · Marcela R.</p>
+                </li>
+                <li class="pl-5 relative">
+                  <span class="absolute -left-[7px] top-1 w-3.5 h-3.5 rounded-full bg-[#0D0D0D]/25 border-2 border-white shadow"></span>
+                  <p class="text-xs font-bold">Horario actualizado</p>
+                  <p class="text-xs text-[#8b837d] mt-0.5">Domingos y festivos: 10:00 – 18:00</p>
+                  <p class="text-[10px] text-[#a8a09a] mt-1">1 sep · 08:15 · Eduardo C.</p>
+                </li>
+                <li class="pl-5 relative">
+                  <span class="absolute -left-[7px] top-1 w-3.5 h-3.5 rounded-full bg-[#0D0D0D]/25 border-2 border-white shadow"></span>
+                  <p class="text-xs font-bold">12 fotos subidas</p>
+                  <p class="text-xs text-[#8b837d] mt-0.5">Carpeta «Eventos»</p>
+                  <p class="text-[10px] text-[#a8a09a] mt-1">28 ago · 16:47 · Marcela R.</p>
+                </li>
+              </ol>
+              <button class="btn-secondary w-full mt-5" onclick="showView('perfil'); activarTab('actividad')">Ver todo el historial</button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           VISTA: HERO / CARRUSEL PRINCIPAL
+           ════════════════════════════════════════════════════════════════ -->
+      <section class="admin-view" id="view-hero">
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-[#D97C2B]/12 text-[#D97C2B] flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined">view_carousel</span>
+            </div>
+            <div>
+              <h2 class="font-['Outfit',sans-serif] text-lg font-extrabold">Imágenes del hero</h2>
+              <p class="text-xs text-[#8b837d] max-w-xl mt-0.5">Son las diapositivas grandes que aparecen al abrir la página. Se recomienda usar imágenes horizontales de 1920 × 1080 px y menos de 500 KB.</p>
+            </div>
+          </div>
+          <button class="btn-primary shrink-0" onclick="abrirFormHero()">
+            <span class="material-symbols-outlined">add_photo_alternate</span> Añadir diapositiva
+          </button>
+        </div>
+
+        <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
+
+          <!-- Listado de slides -->
+          <div class="xl:col-span-2 space-y-3" id="hero-list"><!-- render JS --></div>
+
+          <!-- Configuración del carrusel + vista previa -->
+          <div class="space-y-5">
+            <div class="card">
+              <div class="card-head"><h3 class="card-title">Vista previa</h3></div>
+              <div class="card-body pt-3">
+                <div class="relative rounded-xl overflow-hidden bg-[#0D0D0D] aspect-video border border-[#0D0D0D]/10">
+                  <img alt="Vista previa del hero" class="w-full h-full object-cover" id="hero-preview-img" src=""/>
+                  <div class="absolute inset-0 bg-gradient-to-t from-[#0D0D0D]/90 via-[#0D0D0D]/40 to-black/20"></div>
+                  <div class="absolute bottom-4 left-4 right-4 text-white">
+                    <h4 class="font-['Outfit',sans-serif] text-base font-extrabold leading-tight drop-shadow" id="hero-preview-title">—</h4>
+                    <p class="text-[11px] text-neutral-200 mt-1 line-clamp-2" id="hero-preview-desc">—</p>
+                    <span class="inline-flex items-center gap-1.5 mt-2.5 px-3 py-1.5 rounded-lg bg-[#D97C2B] text-white text-[11px] font-semibold" id="hero-preview-btn">Explorar</span>
+                  </div>
+                  <div class="absolute bottom-3 right-3 flex items-center gap-1.5 bg-[#0D0D0D]/60 backdrop-blur-md px-2 py-1 rounded-lg border border-white/20" id="hero-preview-dots"></div>
+                </div>
+                <p class="hint">Así se verá la diapositiva seleccionada en el sitio.</p>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3 class="card-title">Comportamiento</h3></div>
+              <div class="card-body space-y-4">
+                <div class="field !mb-0">
+                  <label for="hero-interval">Tiempo por diapositiva</label>
+                  <div class="flex items-center gap-3">
+                    <input class="flex-1 accent-[#D97C2B]" id="hero-interval" max="10" min="2" step="1" type="range" value="3" oninput="document.getElementById('hero-interval-val').textContent = this.value + ' s'"/>
+                    <span class="chip chip-primary" id="hero-interval-val">3 s</span>
+                  </div>
+                  <p class="hint">Actualmente el sitio rota cada 3 segundos.</p>
+                </div>
+                <div class="divider !my-1"></div>
+                <label class="flex items-center justify-between gap-3 cursor-pointer">
+                  <span class="text-sm font-semibold">Reproducción automática</span>
+                  <span class="switch"><input checked type="checkbox"/><i></i></span>
+                </label>
+                <label class="flex items-center justify-between gap-3 cursor-pointer">
+                  <span class="text-sm font-semibold">Mostrar indicadores</span>
+                  <span class="switch"><input checked type="checkbox"/><i></i></span>
+                </label>
+                <label class="flex items-center justify-between gap-3 cursor-pointer">
+                  <span class="text-sm font-semibold">Mostrar flechas laterales</span>
+                  <span class="switch"><input checked type="checkbox"/><i></i></span>
+                </label>
+                <label class="flex items-center justify-between gap-3 cursor-pointer">
+                  <span class="text-sm font-semibold">Pausar al pasar el mouse</span>
+                  <span class="switch"><input type="checkbox"/><i></i></span>
+                </label>
+                <button class="btn-primary w-full mt-2" onclick="toast('Configuración del carrusel guardada','ok')">
+                  <span class="material-symbols-outlined">save</span> Guardar cambios
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           VISTA: COMERCIOS
+           ════════════════════════════════════════════════════════════════ -->
+      <section class="admin-view" id="view-comercios">
+
+        <div class="card mb-5">
+          <div class="p-4 flex flex-col lg:flex-row lg:items-center gap-3">
+            <div class="relative flex-1 min-w-[200px]">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#a8a09a] text-[19px]">search</span>
+              <input class="inp pl-9" id="filtro-comercio-texto" placeholder="Buscar por nombre, local o categoría…" oninput="renderComercios()" type="search"/>
+            </div>
+            <select class="sel lg:w-44" id="filtro-comercio-cat" onchange="renderComercios()">
+              <option value="">Todas las categorías</option>
+            </select>
+            <select class="sel lg:w-36" id="filtro-comercio-piso" onchange="renderComercios()">
+              <option value="">Todos los pisos</option>
+              <option>Piso 1</option>
+              <option>Piso 2</option>
+              <option>Piso 3</option>
+            </select>
+            <select class="sel lg:w-36" id="filtro-comercio-estado" onchange="renderComercios()">
+              <option value="">Todos los estados</option>
+              <option value="1">Publicados</option>
+              <option value="0">Ocultos</option>
+            </select>
+            <button class="btn-primary shrink-0" onclick="abrirFormComercio()">
+              <span class="material-symbols-outlined">add_business</span> Nuevo comercio
+            </button>
+          </div>
+        </div>
+
+        <div class="card overflow-hidden">
+          <div class="card-head">
+            <div>
+              <h3 class="card-title">Directorio de comercios</h3>
+              <p class="text-xs text-[#8b837d] mt-0.5"><span id="comercios-contador">0</span> comercios · los marcados como <strong>destacados</strong> aparecen en la página de inicio</p>
+            </div>
+            <button class="btn-secondary" onclick="toast('Directorio exportado a CSV','ok')">
+              <span class="material-symbols-outlined">download</span> Exportar
+            </button>
+          </div>
+          <div class="overflow-x-auto">
+            <table class="tbl">
+              <thead>
+                <tr>
+                  <th style="width:38%">Comercio</th>
+                  <th>Categoría</th>
+                  <th>Ubicación</th>
+                  <th>Horario</th>
+                  <th class="text-center">Destacado</th>
+                  <th class="text-center">Estado</th>
+                  <th class="text-right">Acciones</th>
+                </tr>
+              </thead>
+              <tbody id="comercios-tbody"><!-- render JS --></tbody>
+            </table>
+          </div>
+          <div class="p-4 border-t border-[#0D0D0D]/8 flex items-center justify-between text-xs text-[#8b837d]">
+            <span>Mostrando <strong id="comercios-visibles">0</strong> resultados</span>
+            <div class="flex items-center gap-1">
+              <button class="btn-icon" disabled><span class="material-symbols-outlined">chevron_left</span></button>
+              <button class="w-8 h-8 rounded-lg bg-[#D97C2B] text-white text-xs font-bold">1</button>
+              <button class="w-8 h-8 rounded-lg hover:bg-[#F7F7F7] text-xs font-bold">2</button>
+              <button class="btn-icon"><span class="material-symbols-outlined">chevron_right</span></button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           VISTA: CATEGORÍAS
+           ════════════════════════════════════════════════════════════════ -->
+      <section class="admin-view" id="view-categorias">
+
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5">
+          <div class="flex items-start gap-3">
+            <div class="w-10 h-10 rounded-xl bg-[#D97C2B]/12 text-[#D97C2B] flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined">category</span>
+            </div>
+            <div>
+              <h2 class="font-['Outfit',sans-serif] text-lg font-extrabold">Categorías destacadas</h2>
+              <p class="text-xs text-[#8b837d] max-w-xl mt-0.5">Es la fila de accesos que aparece sobre «Nuestros Comercios». Se ve mejor con un número múltiplo de 4 (la cuadrícula del sitio es de 8 columnas).</p>
+            </div>
+          </div>
+          <button class="btn-primary shrink-0" onclick="abrirFormCategoria()">
+            <span class="material-symbols-outlined">add</span> Nueva categoría
+          </button>
+        </div>
+
+        <!-- Previsualización tal como se ve en el sitio -->
+        <div class="card mb-5">
+          <div class="card-head">
+            <h3 class="card-title">Vista previa en el sitio</h3>
+            <span class="chip chip-off">Solo categorías visibles</span>
+          </div>
+          <div class="card-body bg-[#FFFFFF] rounded-b-[.85rem]">
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3" id="categorias-preview"><!-- render JS --></div>
+          </div>
+        </div>
+
+        <!-- Gestión -->
+        <div class="card">
+          <div class="card-head">
+            <h3 class="card-title">Gestionar categorías</h3>
+            <p class="text-xs text-[#8b837d]">Arrastra con las flechas para cambiar el orden</p>
+          </div>
+          <div class="p-3 grid grid-cols-1 md:grid-cols-2 gap-3" id="categorias-list"><!-- render JS --></div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           VISTA: EVENTOS
+           ════════════════════════════════════════════════════════════════ -->
+      <section class="admin-view" id="view-eventos">
+
+        <div class="card mb-5">
+          <div class="p-4 flex flex-col lg:flex-row lg:items-center gap-3">
+            <div class="relative flex-1 min-w-[200px]">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#a8a09a] text-[19px]">search</span>
+              <input class="inp pl-9" id="filtro-evento-texto" placeholder="Buscar evento por título o lugar…" oninput="renderEventos()" type="search"/>
+            </div>
+            <select class="sel lg:w-48" id="filtro-evento-cat" onchange="renderEventos()">
+              <option value="">Todas las categorías</option>
+              <option>Tecnología</option>
+              <option>Gastronomía</option>
+              <option>Moda</option>
+              <option>Familiar</option>
+            </select>
+            <select class="sel lg:w-40" id="filtro-evento-estado" onchange="renderEventos()">
+              <option value="">Todos</option>
+              <option value="proximo">Próximos</option>
+              <option value="pasado">Finalizados</option>
+              <option value="borrador">Borradores</option>
+            </select>
+            <button class="btn-primary shrink-0" onclick="abrirFormEvento()">
+              <span class="material-symbols-outlined">celebration</span> Nuevo evento
+            </button>
+          </div>
+        </div>
+
+        <div class="rounded-xl bg-[#FFF9F4] border border-[#D97C2B]/25 p-3.5 mb-5 flex items-start gap-3">
+          <span class="material-symbols-outlined text-[#D97C2B] text-[20px] shrink-0">info</span>
+          <p class="text-xs text-[#5a534e] leading-relaxed">
+            El carrusel de la página de inicio <strong>oculta automáticamente</strong> los eventos cuya fecha de finalización ya pasó y ordena el resto por fecha. No necesitas borrarlos: quedan archivados aquí como histórico.
+          </p>
+        </div>
+
+        <div class="space-y-3" id="eventos-list"><!-- render JS --></div>
+
+        <div class="hidden text-center py-16 card" id="eventos-vacio">
+          <span class="material-symbols-outlined text-[44px] text-[#d6d1cd]">event_busy</span>
+          <p class="font-bold mt-2">No hay eventos con esos filtros</p>
+          <p class="text-xs text-[#8b837d] mt-1">Prueba con otra búsqueda o crea un evento nuevo.</p>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           VISTA: GALERÍA DE IMÁGENES
+           ════════════════════════════════════════════════════════════════ -->
+      <section class="admin-view" id="view-galeria">
+
+        <div class="grid grid-cols-1 xl:grid-cols-4 gap-5">
+
+          <div class="xl:col-span-3">
+            <!-- Zona de carga -->
+            <div class="dropzone mb-5 !py-8" id="galeria-dropzone">
+              <input accept="image/*" multiple type="file" id="galeria-file" onchange="subirImagenes(this.files)"/>
+              <span class="material-symbols-outlined !text-[38px]">cloud_upload</span>
+              <p class="font-bold text-sm mt-1">Arrastra tus fotos aquí o haz clic para elegirlas</p>
+              <p class="text-xs text-[#8b837d]">JPG, PNG o WebP · máximo 5 MB por imagen · se optimizan automáticamente</p>
+            </div>
+
+            <!-- Filtros por carpeta -->
+            <div class="flex items-center gap-2 mb-4 overflow-x-auto pb-1">
+              <button class="chip chip-primary !px-3.5 !py-1.5 !text-xs shrink-0 filtro-carpeta active" data-carpeta="" onclick="filtrarCarpeta(this,'')">Todas</button>
+              <button class="chip chip-off !px-3.5 !py-1.5 !text-xs shrink-0 filtro-carpeta" data-carpeta="Hero" onclick="filtrarCarpeta(this,'Hero')">Hero</button>
+              <button class="chip chip-off !px-3.5 !py-1.5 !text-xs shrink-0 filtro-carpeta" data-carpeta="Comercios" onclick="filtrarCarpeta(this,'Comercios')">Comercios</button>
+              <button class="chip chip-off !px-3.5 !py-1.5 !text-xs shrink-0 filtro-carpeta" data-carpeta="Eventos" onclick="filtrarCarpeta(this,'Eventos')">Eventos</button>
+              <button class="chip chip-off !px-3.5 !py-1.5 !text-xs shrink-0 filtro-carpeta" data-carpeta="Instalaciones" onclick="filtrarCarpeta(this,'Instalaciones')">Instalaciones</button>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4" id="galeria-grid"><!-- render JS --></div>
+          </div>
+
+          <!-- Panel lateral -->
+          <div class="space-y-5">
+            <div class="card">
+              <div class="card-head"><h3 class="card-title">Almacenamiento</h3></div>
+              <div class="card-body">
+                <div class="flex items-end justify-between mb-2">
+                  <span class="font-['Outfit',sans-serif] text-2xl font-extrabold">312 MB</span>
+                  <span class="text-xs text-[#8b837d]">de 1.5 GB</span>
+                </div>
+                <div class="h-2 rounded-full bg-[#0D0D0D]/8 overflow-hidden">
+                  <div class="h-full rounded-full bg-gradient-to-r from-[#D97C2B] to-[#D99923]" style="width:21%"></div>
+                </div>
+                <div class="mt-4 space-y-2 text-xs">
+                  <div class="flex items-center justify-between"><span class="text-[#5a534e]">Hero</span><strong>86 MB</strong></div>
+                  <div class="flex items-center justify-between"><span class="text-[#5a534e]">Comercios</span><strong>124 MB</strong></div>
+                  <div class="flex items-center justify-between"><span class="text-[#5a534e]">Eventos</span><strong>78 MB</strong></div>
+                  <div class="flex items-center justify-between"><span class="text-[#5a534e]">Instalaciones</span><strong>24 MB</strong></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="card-head"><h3 class="card-title">Recomendaciones</h3></div>
+              <div class="card-body space-y-3 text-xs text-[#5a534e]">
+                <div class="flex gap-2.5">
+                  <span class="material-symbols-outlined text-[#D97C2B] text-[18px] shrink-0">aspect_ratio</span>
+                  <p><strong class="text-[#0D0D0D]">Hero:</strong> 1920 × 1080 px (16:9) horizontal</p>
+                </div>
+                <div class="flex gap-2.5">
+                  <span class="material-symbols-outlined text-[#D97C2B] text-[18px] shrink-0">storefront</span>
+                  <p><strong class="text-[#0D0D0D]">Comercios:</strong> 800 × 600 px (4:3)</p>
+                </div>
+                <div class="flex gap-2.5">
+                  <span class="material-symbols-outlined text-[#D97C2B] text-[18px] shrink-0">celebration</span>
+                  <p><strong class="text-[#0D0D0D]">Eventos:</strong> 1200 × 900 px vertical suave</p>
+                </div>
+                <div class="flex gap-2.5">
+                  <span class="material-symbols-outlined text-[#D97C2B] text-[18px] shrink-0">bolt</span>
+                  <p><strong class="text-[#0D0D0D]">Peso:</strong> por debajo de 500 KB para que la página cargue rápido</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           VISTA: UBICACIÓN & HORARIOS
+           ════════════════════════════════════════════════════════════════ -->
+      <section class="admin-view" id="view-ubicacion">
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
+
+          <!-- Datos de ubicación -->
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">Datos de ubicación y contacto</h3>
+            </div>
+            <div class="card-body">
+              <div class="field">
+                <label for="ub-direccion">Dirección completa</label>
+                <input class="inp" id="ub-direccion" type="text" value="Cra. 8 entre Cll. 30 y 31, Pereira, Risaralda"/>
+                <p class="hint">Aparece en la barra superior, en el mapa y en el footer.</p>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="field">
+                  <label for="ub-direccion-corta">Dirección corta (móvil)</label>
+                  <input class="inp" id="ub-direccion-corta" type="text" value="Cra. 8, Pereira"/>
+                </div>
+                <div class="field">
+                  <label for="ub-ciudad">Ciudad</label>
+                  <input class="inp" id="ub-ciudad" type="text" value="Pereira, Colombia"/>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-4">
+                <div class="field">
+                  <label for="ub-tel">Teléfono de recepción</label>
+                  <input class="inp" id="ub-tel" type="tel" value="(606) 335-0000"/>
+                </div>
+                <div class="field">
+                  <label for="ub-wa">WhatsApp de atención</label>
+                  <input class="inp" id="ub-wa" type="tel" value="+57 300 000 0000"/>
+                </div>
+              </div>
+              <div class="field">
+                <label for="ub-email">Correo de contacto</label>
+                <input class="inp" id="ub-email" type="email" value="contacto@sanandresitoeje.com"/>
+              </div>
+              <div class="field">
+                <label for="ub-mapa">Enlace del mapa (Google Maps embed)</label>
+                <textarea class="txt !min-h-[70px] text-xs" id="ub-mapa">https://www.google.com/maps?q=Centro+Comercial+San+Andresito+del+Eje,+Carrera+8,+Pereira,+Risaralda&output=embed</textarea>
+                <p class="hint">Copia el enlace desde Google Maps → Compartir → Insertar un mapa.</p>
+              </div>
+              <div class="field !mb-0">
+                <label for="ub-descripcion">Texto bajo el título «¿Cómo llegar?»</label>
+                <textarea class="txt !min-h-[80px]" id="ub-descripcion">Estamos ubicados en pleno centro de Pereira con acceso rápido por las vías principales, transporte público y parqueadero vigilado.</textarea>
+              </div>
+              <button class="btn-primary mt-5" onclick="toast('Datos de ubicación actualizados','ok')">
+                <span class="material-symbols-outlined">save</span> Guardar ubicación
+              </button>
+            </div>
+          </div>
+
+          <div class="space-y-5">
+            <!-- Vista previa del mapa -->
+            <div class="card overflow-hidden">
+              <div class="card-head"><h3 class="card-title">Vista previa del mapa</h3></div>
+              <iframe class="w-full h-[260px] block border-0" loading="lazy" referrerpolicy="no-referrer-when-downgrade" src="https://www.google.com/maps?q=Centro+Comercial+San+Andresito+del+Eje,+Carrera+8,+Pereira,+Risaralda&output=embed" title="Vista previa de la ubicación"></iframe>
+            </div>
+
+            <!-- Horarios -->
+            <div class="card">
+              <div class="card-head">
+                <h3 class="card-title">Horario de puertas</h3>
+                <span class="chip chip-ok">Abierto ahora</span>
+              </div>
+              <div class="card-body pt-3 space-y-2" id="horarios-list"><!-- render JS --></div>
+            </div>
+
+            <!-- Fechas especiales -->
+            <div class="card">
+              <div class="card-head">
+                <h3 class="card-title">Fechas especiales</h3>
+                <button class="btn-secondary !py-1.5 !px-3" onclick="toast('Añade una fecha especial')">
+                  <span class="material-symbols-outlined">add</span> Añadir
+                </button>
+              </div>
+              <div class="card-body pt-3 space-y-2">
+                <div class="flex items-center gap-3 p-3 rounded-xl border border-[#0D0D0D]/8">
+                  <span class="material-symbols-outlined text-[#D99923]">event</span>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold">24 y 31 de diciembre</p>
+                    <p class="text-xs text-[#8b837d]">Horario extendido · 9:00 AM – 10:00 PM</p>
+                  </div>
+                  <button class="btn-icon" title="Editar"><span class="material-symbols-outlined">edit</span></button>
+                  <button class="btn-icon danger" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
+                </div>
+                <div class="flex items-center gap-3 p-3 rounded-xl border border-[#0D0D0D]/8">
+                  <span class="material-symbols-outlined text-[#D99923]">event_busy</span>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-bold">1 de enero</p>
+                    <p class="text-xs text-[#8b837d]">Cerrado</p>
+                  </div>
+                  <button class="btn-icon" title="Editar"><span class="material-symbols-outlined">edit</span></button>
+                  <button class="btn-icon danger" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ════════════════════════════════════════════════════════════════
+           VISTA: TEXTOS & FOOTER
+           ════════════════════════════════════════════════════════════════ -->
+      <section class="admin-view" id="view-contenido">
+        <div class="grid grid-cols-1 xl:grid-cols-2 gap-5">
+
+          <!-- Barra superior -->
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">Barra superior del sitio</h3>
+              <span class="chip chip-off">Header</span>
+            </div>
+            <div class="card-body">
+              <div class="field">
+                <label>Aviso de horario del día</label>
+                <input class="inp" type="text" value="Abierto hoy: 10:00 - 21:00"/>
+                <p class="hint">Pastilla gris que aparece junto al teléfono.</p>
+              </div>
+              <div class="divider"></div>
+              <p class="lbl">Enlaces del menú</p>
+              <div class="space-y-2">
+                <div class="flex items-center gap-2">
+                  <input class="inp flex-1" type="text" value="Inicio"/>
+                  <input class="inp flex-1 text-xs" type="text" value="#"/>
+                  <button class="btn-icon danger"><span class="material-symbols-outlined">delete</span></button>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input class="inp flex-1" type="text" value="Categorías"/>
+                  <input class="inp flex-1 text-xs" type="text" value="#categorias"/>
+                  <button class="btn-icon danger"><span class="material-symbols-outlined">delete</span></button>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input class="inp flex-1" type="text" value="Comercios"/>
+                  <input class="inp flex-1 text-xs" type="text" value="#tiendas"/>
+                  <button class="btn-icon danger"><span class="material-symbols-outlined">delete</span></button>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input class="inp flex-1" type="text" value="Eventos"/>
+                  <input class="inp flex-1 text-xs" type="text" value="#eventos"/>
+                  <button class="btn-icon danger"><span class="material-symbols-outlined">delete</span></button>
+                </div>
+                <div class="flex items-center gap-2">
+                  <input class="inp flex-1" type="text" value="Ubicación &amp; Mapa"/>
+                  <input class="inp flex-1 text-xs" type="text" value="#mapa"/>
+                  <button class="btn-icon danger"><span class="material-symbols-outlined">delete</span></button>
+                </div>
+              </div>
+              <button class="btn-secondary w-full mt-3"><span class="material-symbols-outlined">add</span> Añadir enlace</button>
+            </div>
+          </div>
+
+          <!-- Redes sociales -->
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">Redes sociales</h3>
+              <span class="chip chip-off">Header y footer</span>
+            </div>
+            <div class="card-body space-y-3">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-[#D97C2B]/12 text-[#D97C2B] flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </div>
+                <input class="inp flex-1" type="url" value="https://instagram.com/sanandresitoeje"/>
+                <span class="switch"><input checked type="checkbox"/><i></i></span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-[#D97C2B]/12 text-[#D97C2B] flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.7 5H18V0h-3.808C10.595 0 9 1.583 9 4.615V8z"/></svg>
+                </div>
+                <input class="inp flex-1" type="url" value="https://facebook.com/sanandresitoeje"/>
+                <span class="switch"><input checked type="checkbox"/><i></i></span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-[#D97C2B]/12 text-[#D97C2B] flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.47 6.27 6.27 0 0 0 1.95-4.52V8.04a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.95-.47z"/></svg>
+                </div>
+                <input class="inp flex-1" type="url" value="https://tiktok.com/@sanandresitoeje"/>
+                <span class="switch"><input checked type="checkbox"/><i></i></span>
+              </div>
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0">
+                  <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981z"/></svg>
+                </div>
+                <input class="inp flex-1" type="url" value="https://wa.me/573000000000"/>
+                <span class="switch"><input checked type="checkbox"/><i></i></span>
+              </div>
+              <p class="hint">Desactiva el interruptor para ocultar el ícono sin borrar el enlace.</p>
+            </div>
+          </div>
+
+          <!-- Franja de atributos del footer -->
+          <div class="card">
+            <div class="card-head">
+              <h3 class="card-title">Franja de beneficios (footer)</h3>
+              <span class="chip chip-off">4 elementos</span>
+            </div>
+            <div class="card-body space-y-3">
+              <div class="p-3 rounded-xl border border-[#0D0D0D]/8 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[#D97C2B]">location_on</span>
+                  <input class="inp flex-1" type="text" value="Ubicación Central"/>
+                </div>
+                <input class="inp text-xs" type="text" value="Cra. 8 # 30 - 25, Pereira"/>
+              </div>
+              <div class="p-3 rounded-xl border border-[#0D0D0D]/8 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[#D97C2B]">local_parking</span>
+                  <input class="inp flex-1" type="text" value="Parqueadero"/>
+                </div>
+                <input class="inp text-xs" type="text" value="Acceso vigilado 24/7"/>
+              </div>
+              <div class="p-3 rounded-xl border border-[#0D0D0D]/8 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[#D97C2B]">wifi</span>
+                  <input class="inp flex-1" type="text" value="Zona Wi-Fi Gratis"/>
+                </div>
+                <input class="inp text-xs" type="text" value="Conexión en todos los pisos"/>
+              </div>
+              <div class="p-3 rounded-xl border border-[#0D0D0D]/8 space-y-2">
+                <div class="flex items-center gap-2">
+                  <span class="material-symbols-outlined text-[#D97C2B]">verified_user</span>
+                  <input class="inp flex-1" type="text" value="Compra Segura"/>
+                </div>
+                <input class="inp text-xs" type="text" value="Comercio 100% certificado"/>
+              </div>
+            </div>
+          </div>
+
+          <!-- Footer: textos y servicios -->
+          <div class="card">
+            <div class="card-head"><h3 class="card-title">Textos del footer</h3></div>
+            <div class="card-body">
+              <div class="field">
+                <label>Descripción del centro comercial</label>
+                <textarea class="txt">El Centro Comercial San Andresito del Eje es el punto de encuentro comercial tradicional por excelencia en Pereira. Más de 140 locales dedicados a tecnología, calzado, moda, gastronomía y servicios financieros con la mejor calidez del Eje Cafetero.</textarea>
+              </div>
+              <div class="divider"></div>
+              <p class="lbl">Lista de servicios</p>
+              <div class="space-y-2 mb-3">
+                <div class="flex items-center gap-2"><input class="inp flex-1" type="text" value="Atención al Visitante"/><button class="btn-icon danger"><span class="material-symbols-outlined">delete</span></button></div>
+                <div class="flex items-center gap-2"><input class="inp flex-1" type="text" value="Parqueadero de Carros y Motos"/><button class="btn-icon danger"><span class="material-symbols-outlined">delete</span></button></div>
+                <div class="flex items-center gap-2"><input class="inp flex-1" type="text" value="Cajeros Automáticos (Piso 1)"/><button class="btn-icon danger"><span class="material-symbols-outlined">delete</span></button></div>
+                <div class="flex items-center gap-2"><input class="inp flex-1" type="text" value="Punto de Información Central"/><button class="btn-icon danger"><span class="material-symbols-outlined">delete</span></button></div>
+                <div class="flex items-center gap-2"><input class="inp flex-1" type="text" value="Zona de Comidas y Café"/><button class="btn-icon danger"><span class="material-symbols-outlined">delete</span></button></div>
+                <div class="flex items-center gap-2"><input class="inp flex-1" type="text" value="Seguridad &amp; Monitoreo 24/7"/><button class="btn-icon danger"><span class="material-symbols-outlined">delete</span></button></div>
+              </div>
+              <button class="btn-secondary w-full"><span class="material-symbols-outlined">add</span> Añadir servicio</button>
+              <div class="divider"></div>
+              <div class="field !mb-0">
+                <label>Texto de derechos reservados</label>
+                <input class="inp" type="text" value="© 2025 Centro Comercial San Andresito del Eje. Todos los derechos reservados."/>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex justify-end gap-2 mt-5">
+          <button class="btn-secondary" onclick="toast('Cambios descartados','del')">Descartar</button>
+          <button class="btn-primary" onclick="toast('Contenido del sitio actualizado','ok')">
+            <span class="material-symbols-outlined">save</span> Guardar todos los textos
+          </button>
+        </div>
+      </section>
