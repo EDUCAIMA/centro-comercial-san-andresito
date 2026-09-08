@@ -1,0 +1,4 @@
+<body><pre id="r">?</pre><script src="contenido.js"></script><script>
+var c = Contenido.leer();
+document.getElementById('r').textContent = 'PUBLICADO: ' + (c ? ('sí | hero=' + c.hero.length + ' cats=' + c.categorias.length + ' comercios=' + c.comercios.length + ' eventos=' + c.eventos.length + ' | ' + Contenido.espacioUsado() + ' KB | primer titulo hero: ' + c.hero[0].titulo) : 'no hay nada');
+</script></body>
