@@ -14,6 +14,7 @@
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script id="tailwind-config">
+    window.tailwind = window.tailwind || {};
     tailwind.config = {
       darkMode: "class",
       theme: {
@@ -630,6 +631,15 @@
           <button class="btn-primary shrink-0" onclick="abrirFormHero()">
             <span class="material-symbols-outlined">add_photo_alternate</span> Añadir diapositiva
           </button>
+        </div>
+
+        <div class="rounded-xl bg-[#FFF9F4] border border-[#D97C2B]/25 p-3.5 mb-5 flex items-start gap-3">
+          <span class="material-symbols-outlined text-[#D97C2B] text-[20px] shrink-0">cloud_done</span>
+          <p class="text-xs text-[#5a534e] leading-relaxed">
+            Los cambios se publican <strong>automáticamente</strong>: guarda aquí, abre la página de inicio y actualiza (F5) para verlos.
+            Mientras no haya un servidor, el contenido se guarda en <strong>este navegador y este computador</strong>; para volver al diseño original usa
+            <em>Ajustes del sitio → Restablecer contenido de inicio</em>.
+          </p>
         </div>
 
         <div class="grid grid-cols-1 xl:grid-cols-3 gap-5">
@@ -2304,7 +2314,7 @@ function ponerImagen(idCampo, idPreview, valor, nombreArchivo) {
   if (!info) {
     info = document.createElement('div');
     info.id = idCampo + '-info';
-    info.className = 'flex items-center gap-2 mt-2 px-2.5 py-1.5 rounded-lg bg-[#FFF9F4] border border-[#D97C2B]/25 text-[11px]';
+    info.className = 'flex flex-1 min-w-0 items-center gap-2 mt-2 px-2.5 py-1.5 rounded-lg bg-[#FFF9F4] border border-[#D97C2B]/25 text-[11px]';
     campo.parentNode.insertBefore(info, campo.nextSibling);
   }
   info.dataset.preview = idPreview;
