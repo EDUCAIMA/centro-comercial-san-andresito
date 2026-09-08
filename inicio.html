@@ -46,6 +46,9 @@
     }
   </style>
 
+  <!-- Puente con el panel administrador: entrega el contenido publicado -->
+  <script src="contenido.js"></script>
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script id="tailwind-config">
@@ -138,7 +141,7 @@
     <!-- HERO CON CARRUSEL DE 3 SEGUNDOS -->
     <section class="w-full pt-6 pb-8 px-6 lg:px-10">
       <div class="max-w-[1440px] mx-auto">
-        <div class="relative w-full h-[540px] rounded-xl overflow-hidden shadow-lg bg-[#0D0D0D] border border-[#0D0D0D]/10">
+        <div id="hero-contenedor" class="relative w-full h-[540px] rounded-xl overflow-hidden shadow-lg bg-[#0D0D0D] border border-[#0D0D0D]/10">
           
           <!-- Slide 1: Fachada / Bienvenida -->
           <div class="hero-item absolute inset-0 slide-fade opacity-100 scale-100 z-10" data-idx="0">
@@ -198,7 +201,7 @@
           </div>
 
           <!-- Indicadores de Slide y Temporizador (3 segundos) -->
-          <div class="absolute bottom-6 right-8 md:right-14 z-30 flex items-center gap-2 bg-[#0D0D0D]/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20">
+          <div id="hero-indicadores" class="absolute bottom-6 right-8 md:right-14 z-30 flex items-center gap-2 bg-[#0D0D0D]/60 backdrop-blur-md px-3 py-1.5 rounded-lg border border-white/20">
             <button aria-label="Slide 1" class="bullet-indicator w-8 h-2 rounded bg-[#D97C2B] transition-all duration-300" onclick="setSlide(0)"></button>
             <button aria-label="Slide 2" class="bullet-indicator w-2.5 h-2 rounded bg-white/40 hover:bg-white/70 transition-all duration-300" onclick="setSlide(1)"></button>
             <button aria-label="Slide 3" class="bullet-indicator w-2.5 h-2 rounded bg-white/40 hover:bg-white/70 transition-all duration-300" onclick="setSlide(2)"></button>
@@ -218,6 +221,62 @@
         </div>
       </div>
     </section>
+
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         CONTENIDO PUBLICADO DESDE EL PANEL ADMINISTRADOR
+         Si el administrador publicó diapositivas, se reemplazan aquí antes
+         de que arranque el carrusel. Si no hay nada publicado, el hero de
+         arriba se queda exactamente como está.
+         ══════════════════════════════════════════════════════════════════ -->
+    <script>
+      (function aplicarHeroPublicado() {
+        try {
+          var c = window.CONTENIDO_ADMIN;
+          if (!c || !Array.isArray(c.hero)) return;
+          var slides = c.hero.filter(function (s) { return s && s.activo !== false && s.imagen; });
+          if (!slides.length) return;
+
+          var esc = window.Contenido.esc;
+          var contenedor = document.getElementById('hero-contenedor');
+          var indicadores = document.getElementById('hero-indicadores');
+          if (!contenedor || !indicadores) return;
+
+          var html = slides.map(function (s, i) {
+            var primera = i === 0;
+            return '<div class="hero-item absolute inset-0 slide-fade ' +
+              (primera ? 'opacity-100 scale-100 z-10' : 'opacity-0 scale-105 pointer-events-none z-0') +
+              '" data-idx="' + i + '">' +
+                '<img alt="' + esc(s.titulo) + '" class="w-full h-full object-cover object-center" src="' + esc(s.imagen) + '"/>' +
+                '<div class="absolute inset-0 bg-gradient-to-t from-[#0D0D0D]/90 via-[#0D0D0D]/40 to-black/20"></div>' +
+                '<div class="absolute bottom-12 left-8 md:left-14 right-8 z-20 text-white max-w-2xl">' +
+                  '<' + (primera ? 'h1' : 'h2') + ' class="font-[\'Outfit\',sans-serif] text-3xl md:text-5xl font-extrabold tracking-tight mb-3 leading-tight text-white drop-shadow-md">' +
+                    esc(s.titulo) +
+                  '</' + (primera ? 'h1' : 'h2') + '>' +
+                  '<p class="text-neutral-200 text-base md:text-lg mb-6 line-clamp-2 drop-shadow">' + esc(s.descripcion || '') + '</p>' +
+                  (s.boton ?
+                    '<div class="flex items-center gap-3">' +
+                      '<a class="px-6 py-2.5 rounded-lg bg-[#D97C2B] hover:bg-[#bf681c] text-white font-semibold text-sm transition-all shadow-md flex items-center gap-2" href="' + esc(s.enlace || '#tiendas') + '">' +
+                        '<span class="material-symbols-outlined text-[18px]">' + esc(s.icono || 'storefront') + '</span> ' + esc(s.boton) +
+                      '</a>' +
+                    '</div>' : '') +
+                '</div>' +
+              '</div>';
+          }).join('');
+
+          Array.prototype.forEach.call(contenedor.querySelectorAll('.hero-item'), function (n) { n.remove(); });
+          contenedor.insertAdjacentHTML('afterbegin', html);
+
+          indicadores.innerHTML = slides.map(function (s, i) {
+            return '<button aria-label="Diapositiva ' + (i + 1) + '" class="bullet-indicator ' +
+              (i === 0 ? 'w-8 h-2 rounded-full bg-[#D97C2B]' : 'w-2.5 h-2 rounded-full bg-white/40 hover:bg-white/70') +
+              ' transition-all duration-300" onclick="setSlide(' + i + ')"></button>';
+          }).join('');
+        } catch (e) {
+          // Ante cualquier problema se conserva el contenido original de la página.
+        }
+      })();
+    </script>
 
     <!-- Script del Carrusel cada 3 Segundos -->
     <script>
@@ -288,7 +347,7 @@
             <h3 class="font-['Outfit',sans-serif] text-xl md:text-2xl font-bold text-[#0D0D0D]">Categorías Destacadas</h3>
           </div>
 
-          <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
+          <div id="categorias-grid" class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-3">
             <a class="group flex flex-col items-center text-center py-2 px-2.5 rounded-lg bg-[#F2F2F2] hover:bg-[#D97C2B] hover:text-white transition-all duration-200 border border-[#0D0D0D]/5 shadow-xs" href="comercios.html?categoria=moda">
               <div class="w-8 h-8 rounded-md bg-[#FFFFFF] flex items-center justify-center text-[#D97C2B] group-hover:bg-white/20 group-hover:text-white transition-colors shadow-xs mb-1.5">
                 <span class="material-symbols-outlined text-[18px]">apparel</span>
@@ -353,7 +412,7 @@
           </a>
         </div>
         
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="comercios-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           <!-- Tienda 1 -->
           <div class="flex flex-col bg-[#FFFFFF] rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-[#0D0D0D]/10 relative">
             <div class="relative h-48 overflow-hidden bg-[#e6e1dd]">
@@ -480,6 +539,83 @@
       </div>
     </section>
 
+
+    <!-- ══════════════════════════════════════════════════════════════════
+         CATEGORÍAS Y COMERCIOS PUBLICADOS DESDE EL PANEL
+         ══════════════════════════════════════════════════════════════════ -->
+    <script>
+      (function aplicarTiendasPublicadas() {
+        try {
+          var c = window.CONTENIDO_ADMIN;
+          if (!c) return;
+          var esc = window.Contenido.esc;
+
+          // ── Categorías destacadas ──────────────────────────────────────
+          var rejillaCat = document.getElementById('categorias-grid');
+          if (rejillaCat && Array.isArray(c.categorias)) {
+            var cats = c.categorias.filter(function (k) { return k && k.visible !== false; });
+            if (cats.length) {
+              rejillaCat.innerHTML = cats.map(function (k) {
+                return '<a class="group flex flex-col items-center text-center py-2 px-2.5 rounded-lg bg-[#F2F2F2] hover:bg-[#D97C2B] hover:text-white transition-all duration-200 border border-[#0D0D0D]/5 shadow-xs" href="#tiendas">' +
+                    '<div class="w-8 h-8 rounded-md bg-[#FFFFFF] flex items-center justify-center text-[#D97C2B] group-hover:bg-white/20 group-hover:text-white transition-colors shadow-xs mb-1.5">' +
+                      '<span class="material-symbols-outlined text-[18px]">' + esc(k.icono) + '</span>' +
+                    '</div>' +
+                    '<span class="font-semibold text-[11px] leading-tight group-hover:text-white">' + esc(k.nombre) + '</span>' +
+                  '</a>';
+              }).join('');
+            }
+          }
+
+          // ── Comercios destacados ───────────────────────────────────────
+          var rejillaCom = document.getElementById('comercios-grid');
+          if (rejillaCom && Array.isArray(c.comercios)) {
+            var coms = c.comercios.filter(function (x) { return x && x.activo !== false && x.destacado; });
+            if (coms.length) {
+              rejillaCom.innerHTML = coms.map(function (x) {
+                return '<div class="flex flex-col bg-[#FFFFFF] rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-[#0D0D0D]/10 relative">' +
+                    '<div class="relative h-48 overflow-hidden bg-[#e6e1dd]">' +
+                      '<img alt="' + esc(x.nombre) + '" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="' + esc(x.imagen) + '"/>' +
+                      '<div class="absolute top-0 right-0 bg-[#0D0D0D]/85 backdrop-blur-md text-white px-3.5 py-1.5 rounded-bl-xl border-l border-b border-white/20 shadow-md flex items-center gap-1.5">' +
+                        '<span class="w-2 h-2 rounded-full bg-[#D97C2B]"></span>' +
+                        '<span class="text-xs font-bold tracking-wider uppercase">' + esc(x.categoria) + '</span>' +
+                      '</div>' +
+                    '</div>' +
+                    '<div class="p-5 flex flex-col flex-1 justify-between">' +
+                      '<div>' +
+                        '<div class="mb-3">' +
+                          '<h3 class="font-bold text-lg text-[#0D0D0D] group-hover:text-[#D97C2B] transition-colors">' + esc(x.nombre) + '</h3>' +
+                        '</div>' +
+                        '<div class="flex items-center justify-between gap-3 text-sm py-3 border-y border-[#0D0D0D]/10 mb-5 bg-[#FAFAFA] px-3 rounded-lg">' +
+                          '<div class="flex items-center gap-2 font-bold text-[#0D0D0D] shrink-0 text-sm">' +
+                            '<span class="flex items-center text-[#D97C2B] font-bold">' +
+                              '<span class="material-symbols-outlined text-[22px] leading-none">location_on</span>:' +
+                            '</span>' +
+                            '<span>Local ' + esc(x.local) + '</span>' +
+                            '<span class="w-[1px] h-3.5 bg-[#0D0D0D]/20 inline-block"></span>' +
+                            '<span>' + esc(x.piso) + '</span>' +
+                          '</div>' +
+                          '<div class="flex items-center gap-1.5 text-xs text-[#5a534e] font-medium shrink-0">' +
+                            '<span class="material-symbols-outlined text-[#D97C2B] text-[18px] leading-none">schedule</span>' +
+                            '<span>' + esc(x.horario) + '</span>' +
+                          '</div>' +
+                        '</div>' +
+                      '</div>' +
+                      '<a class="relative w-full py-2.5 rounded-xl bg-[#D97C2B] text-white text-sm text-center font-semibold transition-all duration-300 shadow-md hover:shadow-[0_0_22px_rgba(217,124,43,0.65)] hover:brightness-110 active:scale-[0.99] flex items-center justify-center gap-2 group/btn overflow-hidden" href="' + esc(x.enlace || 'tienda.html') + '">' +
+                        '<span class="relative z-10">Ver Tienda &amp; Catálogo</span>' +
+                        '<span class="material-symbols-outlined text-[18px] relative z-10 group-hover/btn:translate-x-1 transition-transform duration-300">arrow_forward</span>' +
+                        '<span class="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent"></span>' +
+                      '</a>' +
+                    '</div>' +
+                  '</div>';
+              }).join('');
+            }
+          }
+        } catch (e) {
+          // Si algo falla, la página conserva su contenido original.
+        }
+      })();
+    </script>
+
     <!-- ══════════════════════════════════════════════════════════════════════
          SECCIÓN PRÓXIMOS EVENTOS
          Carrusel tipo coverflow. Las tarjetas NO se escriben aquí: se generan
@@ -566,7 +702,10 @@
               categoria    : debe existir en el mapa CATEGORIAS de abajo
               entrada      : texto corto del tipo de acceso
            ──────────────────────────────────────────────────────────────────── */
-        const EVENTOS = [
+        const EVENTOS =
+          (window.CONTENIDO_ADMIN && Array.isArray(window.CONTENIDO_ADMIN.eventos) && window.CONTENIDO_ADMIN.eventos.length)
+            ? window.CONTENIDO_ADMIN.eventos.filter(function (ev) { return ev.activo !== false; })
+            : [
           {
             titulo: 'Expo Tech & Gadgets 2026',
             categoria: 'Tecnología',
@@ -691,7 +830,15 @@
         // Unsplash sirve el tamaño que le pidamos: generamos srcset para no
         // descargar una imagen de 1400px en un teléfono.
         function srcUnsplash(base, ancho) {
+          // Las imágenes subidas desde el panel (data:) o las que ya traen
+          // parámetros se usan tal cual; el recorte solo aplica a Unsplash.
+          if (!base || base.slice(0, 5) === 'data:' || base.indexOf('?') !== -1) return base;
           return base + '?auto=format&fit=crop&w=' + ancho + '&q=80';
+        }
+
+        // Una imagen subida no puede ir en srcset: su texto contiene comas.
+        function esFotoSubida(url) {
+          return !!url && String(url).slice(0, 5) === 'data:';
         }
 
         /* ────────────────────────────────────────────────────────────────────
@@ -733,8 +880,9 @@
             ' data-index="' + idx + '" role="group" aria-roledescription="diapositiva" aria-label="' + (idx + 1) + ' de ' + total + ': ' + esc(ev.titulo) + '">' +
 
               '<img src="' + srcUnsplash(ev.imagen, 1200) + '"' +
-              ' srcset="' + srcUnsplash(ev.imagen, 700) + ' 700w, ' + srcUnsplash(ev.imagen, 1200) + ' 1200w"' +
-              ' sizes="(max-width: 640px) 80vw, (max-width: 1024px) 54vw, 44vw"' +
+              (esFotoSubida(ev.imagen) ? '' :
+                ' srcset="' + srcUnsplash(ev.imagen, 700) + ' 700w, ' + srcUnsplash(ev.imagen, 1200) + ' 1200w"' +
+                ' sizes="(max-width: 640px) 80vw, (max-width: 1024px) 54vw, 44vw"') +
               ' alt="' + esc(ev.titulo) + '" draggable="false" decoding="async"' +
               (idx === 0 ? ' fetchpriority="high"' : ' loading="lazy"') +
               ' class="w-full h-full object-cover pointer-events-none"/>' +

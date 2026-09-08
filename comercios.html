@@ -149,12 +149,6 @@
 
 
         </div>
-
-        <!-- Accesos rápidos por categoría (mismo bloque visual del inicio) -->
-        <div class="mt-8">
-          <h2 class="text-xs font-bold uppercase tracking-wider text-[#5a534e] mb-3">Filtrar por categoría</h2>
-          <div class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-3" id="categoriasQuick"><!-- render JS --></div>
-        </div>
       </div>
     </section>
 
@@ -596,37 +590,7 @@
       </article>`;
     }
 
-    /* ── 7. Render de los accesos rápidos por categoría ──────────────────── */
-    function renderCategoriasQuick() {
-      const activo = 'bg-[#D97C2B] text-white border-[#D97C2B]';
-      const inactivo = 'bg-[#F2F2F2] text-[#0D0D0D] border-[#0D0D0D]/5 hover:bg-[#D97C2B] hover:text-white';
-
-      const chip = (slug, nombre, icono, total) => {
-        const esActivo = estado.categoria === slug;
-        return `
-        <button type="button" data-categoria="${slug}" aria-pressed="${esActivo}"
-                class="cat-chip group flex flex-col items-center text-center py-2 px-2.5 rounded-lg transition-all duration-200 border shadow-xs ${esActivo ? activo : inactivo}">
-          <span class="w-8 h-8 rounded-md flex items-center justify-center transition-colors shadow-xs mb-1.5 ${esActivo ? 'bg-white/20 text-white' : 'bg-[#FFFFFF] text-[#D97C2B] group-hover:bg-white/20 group-hover:text-white'}">
-            <span class="material-symbols-outlined text-[18px]">${icono}</span>
-          </span>
-          <span class="font-semibold text-[11px] leading-tight ${esActivo ? 'text-white' : 'group-hover:text-white'}">${escapar(nombre)}</span>
-          <span class="text-[10px] font-medium ${esActivo ? 'text-white/80' : 'text-[#5a534e] group-hover:text-white/80'}">${total}</span>
-        </button>`;
-      };
-
-      $('#categoriasQuick').innerHTML =
-        chip('todas', 'Todas', 'grid_view', COMERCIOS.length) +
-        CATEGORIAS.map((c) => chip(c.slug, c.nombre, c.icono, contarPorCategoria(c.slug))).join('');
-
-      document.querySelectorAll('.cat-chip').forEach((btn) => {
-        btn.addEventListener('click', () => {
-          estado.categoria = btn.dataset.categoria;
-          aplicarFiltros();
-        });
-      });
-    }
-
-    /* ── 8. Render de la barra lateral de filtros ────────────────────────── */
+    /* ── 7. Render de la barra lateral de filtros ────────────────────────── */
     function renderFiltrosLaterales() {
       const opcion = (grupo, valor, etiqueta, total, marcado) => `
         <label class="flex items-center justify-between text-xs text-[#0D0D0D] cursor-pointer group hover:text-[#D97C2B]">
@@ -653,7 +617,7 @@
       });
     }
 
-    /* ── 9. Resumen de los filtros activos ───────────────────────────────── */
+    /* ── 8. Resumen de los filtros activos ───────────────────────────────── */
     function renderResumen() {
       const activos = [];
       if (estado.categoria !== 'todas') activos.push({ texto: nombreCategoria(estado.categoria), quitar: () => { estado.categoria = 'todas'; } });
@@ -682,7 +646,7 @@
       cont.querySelector('#chipLimpiar').addEventListener('click', limpiarFiltros);
     }
 
-    /* ── 10. Sincronizar la URL para poder compartir el filtro ───────────── */
+    /* ── 9. Sincronizar la URL para poder compartir el filtro ───────────── */
     function sincronizarURL() {
       const params = new URLSearchParams();
       if (estado.categoria !== 'todas') params.set('categoria', estado.categoria);
@@ -703,7 +667,7 @@
       if (params.get('destacados') === '1') estado.destacados = true;
     }
 
-    /* ── 11. Pintar el resultado ─────────────────────────────────────────── */
+    /* ── 10. Pintar el resultado ─────────────────────────────────────────── */
     function aplicarFiltros() {
       const lista = comerciosFiltrados();
 
@@ -711,7 +675,6 @@
       $('#comercioCount').textContent = lista.length;
       $('#sinResultados').style.display = lista.length ? 'none' : 'flex';
 
-      renderCategoriasQuick();
       renderFiltrosLaterales();
       renderResumen();
       sincronizarURL();
@@ -727,7 +690,7 @@
       aplicarFiltros();
     }
 
-    /* ── 12. Arranque ────────────────────────────────────────────────────── */
+    /* ── 11. Arranque ────────────────────────────────────────────────────── */
     (function iniciar() {
       leerURL();
 

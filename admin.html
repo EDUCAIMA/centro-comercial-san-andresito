@@ -362,6 +362,11 @@
           <input class="inp pl-9 bg-[#F7F7F7]" placeholder="Buscar comercios, eventos…" type="search"/>
         </div>
 
+        <span class="hidden xl:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-emerald-50 text-emerald-700 text-[11px] font-bold border border-emerald-200 shrink-0" title="Los cambios se publican solos en la web">
+          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span>
+          <span id="estado-publicacion">Sincronizado</span>
+        </span>
+
         <button class="btn-icon relative" title="Notificaciones" onclick="toast('3 notificaciones sin leer')">
           <span class="material-symbols-outlined">notifications</span>
           <span class="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-[#D97C2B] text-white text-[9px] font-bold flex items-center justify-center border-2 border-white">3</span>
@@ -1722,7 +1727,7 @@
               <div class="card-body space-y-3">
                 <div class="flex items-center justify-between gap-3">
                   <div><p class="text-sm font-semibold">Restablecer contenido de inicio</p><p class="text-xs text-[#8b837d]">Vuelve al hero, categorías y textos originales</p></div>
-                  <button class="btn-danger" onclick="confirmarAccion('¿Restablecer el contenido de inicio?','Se perderán los textos e imágenes personalizados.', () => toast('Contenido restablecido','del'))">Restablecer</button>
+                  <button class="btn-danger" onclick="confirmarAccion('¿Restablecer el contenido de inicio?','La web volverá al hero, categorías, comercios y eventos originales del diseño.', restablecerContenido)">Restablecer</button>
                 </div>
                 <div class="divider !my-0"></div>
                 <div class="flex items-center justify-between gap-3">
@@ -2376,6 +2381,7 @@ function renderHero() {
     </div>`).join('');
   $('#nav-count-hero').textContent = db.hero.length;
   verHero(db.hero[0] ? db.hero[0].id : null);
+  programarPublicacion();
 }
 
 function verHero(id) {
@@ -2406,8 +2412,7 @@ function abrirFormHero(id) {
   $('#hero-boton').value = s ? s.boton : 'Explorar Locales';
   $('#hero-enlace').value = s ? s.enlace : '#tiendas';
   $('#hero-icono').value = s ? s.icono : 'storefront';
-  $('#hero-imagen').value = s ? s.imagen : '';
-  $('#hero-img-preview').src = s ? s.imagen : '';
+  ponerImagen('hero-imagen', 'hero-img-preview', s ? s.imagen : '');
   $('#hero-activo').checked = s ? s.activo : true;
   abrirModal('modal-hero');
 }
@@ -2493,6 +2498,7 @@ function renderComercios() {
   $('#comercios-visibles').textContent = lista.length;
   $('#nav-count-comercios').textContent = db.comercios.length;
   $('#kpi-comercios').textContent = db.comercios.filter(c => c.activo).length;
+  programarPublicacion();
 }
 
 function destacarComercio(id) {
@@ -2522,8 +2528,7 @@ function abrirFormComercio(id) {
   $('#com-horario').value = c ? c.horario : 'Lun - Sáb: 09:30 - 20:00';
   $('#com-descripcion').value = c ? c.descripcion : '';
   $('#com-enlace').value = c ? c.enlace : 'tienda.html';
-  $('#com-imagen').value = c ? c.imagen : '';
-  $('#com-img-preview').src = c ? c.imagen : '';
+  ponerImagen('com-imagen', 'com-img-preview', c ? c.imagen : '');
   $('#com-destacado').checked = c ? c.destacado : false;
   $('#com-activo').checked = c ? c.activo : true;
   abrirModal('modal-comercio');
@@ -2604,6 +2609,7 @@ function renderCategorias() {
   filtro.innerHTML = '<option value="">Todas las categorías</option>' +
     db.categorias.map(c => '<option>' + esc(c.nombre) + '</option>').join('');
   filtro.value = actual;
+  programarPublicacion();
 }
 
 function alternarCategoria(id, valor) {
@@ -2738,6 +2744,7 @@ function renderEventos() {
   const proximos = db.eventos.filter(e => e.activo && new Date(e.fin) >= ahora).length;
   $('#nav-count-eventos').textContent = proximos;
   $('#kpi-eventos').textContent = proximos;
+  programarPublicacion();
 }
 
 function alternarEvento(id, valor) {
@@ -2764,8 +2771,7 @@ function abrirFormEvento(id) {
   $('#ev-fin').value = ev ? ev.fin : '';
   $('#ev-lugar').value = ev ? ev.lugar : '';
   $('#ev-descripcion').value = ev ? ev.descripcion : '';
-  $('#ev-imagen').value = ev ? ev.imagen : '';
-  $('#ev-img-preview').src = ev ? ev.imagen : '';
+  ponerImagen('ev-imagen', 'ev-img-preview', ev ? ev.imagen : '');
   $('#ev-activo').checked = ev ? ev.activo : true;
   abrirModal('modal-evento');
 }
@@ -2827,6 +2833,7 @@ function renderGaleria() {
       </div>
     </div>`).join('');
   $('#kpi-imagenes').textContent = db.galeria.length;
+  programarPublicacion();
 }
 
 function filtrarCarpeta(btn, carpeta) {
@@ -2840,17 +2847,27 @@ function filtrarCarpeta(btn, carpeta) {
 
 function subirImagenes(archivos) {
   if (!archivos || !archivos.length) return;
-  Array.from(archivos).forEach(a => {
-    db.galeria.unshift({
-      id: nuevoId(db.galeria),
-      nombre: a.name,
-      carpeta: carpetaActiva || 'Instalaciones',
-      peso: Math.round(a.size / 1024) + ' KB',
-      url: URL.createObjectURL(a)
+  const total = archivos.length;
+  toast('Optimizando ' + total + ' imagen(es)…');
+  Promise.all(Array.from(archivos).map(a =>
+    Contenido.imagenADato(a, 1000, 0.7)
+      .then(dato => ({ archivo: a, dato: dato }))
+      .catch(() => null)
+  )).then(resultados => {
+    let ok = 0;
+    resultados.filter(Boolean).forEach(r => {
+      db.galeria.unshift({
+        id: nuevoId(db.galeria),
+        nombre: r.archivo.name,
+        carpeta: carpetaActiva || 'Instalaciones',
+        peso: Contenido.pesoDato(r.dato) + ' KB',
+        url: r.dato
+      });
+      ok++;
     });
+    renderGaleria();
+    toast(ok + ' de ' + total + ' imagen(es) guardada(s)', ok ? 'ok' : 'del');
   });
-  renderGaleria();
-  toast(archivos.length + ' imagen(es) subida(s)', 'ok');
   $('#galeria-file').value = '';
 }
 
@@ -2983,11 +3000,13 @@ function activarTab(nombre) {
 function cambiarAvatar(input) {
   const archivo = input.files && input.files[0];
   if (!archivo) return;
-  const url = URL.createObjectURL(archivo);
-  $('#perfil-avatar').src = url;
-  $('#perfil-avatar-mini').src = url;
-  $$('header img[alt="Eduardo Caicedo"], aside img[alt="Eduardo Caicedo"]').forEach(img => { img.src = url; });
-  toast('Foto de perfil actualizada', 'ok');
+  Contenido.imagenADato(archivo, 320, 0.8).then(dato => {
+    $('#perfil-avatar').src = dato;
+    $('#perfil-avatar-mini').src = dato;
+    $$('header img[alt="Eduardo Caicedo"], aside img[alt="Eduardo Caicedo"]').forEach(img => { img.src = dato; });
+    toast('Foto de perfil actualizada', 'ok');
+  }).catch(e => toast(e.message, 'del'));
+  input.value = '';
 }
 
 function medirPassword(valor) {
@@ -3007,7 +3026,24 @@ function medirPassword(valor) {
     : 'Usa mayúsculas, números y un símbolo para una contraseña segura.';
 }
 
-/* ── 11. ARRANQUE ────────────────────────────────────────────────────────── */
+/* ── 11. PUBLICACIÓN EN LA WEB ───────────────────────────────────────────── */
+// Se agrupan los cambios seguidos en una sola escritura.
+let tempPublicar = null;
+function programarPublicacion() {
+  clearTimeout(tempPublicar);
+  tempPublicar = setTimeout(() => publicar(true), 600);
+}
+
+/* ── 12. ARRANQUE ────────────────────────────────────────────────────────── */
+// Si ya se publicó contenido antes, se retoma donde quedó.
+(function cargarPublicado() {
+  const guardado = Contenido.leer();
+  if (!guardado) return;
+  ['hero', 'categorias', 'comercios', 'eventos', 'galeria', 'horarios'].forEach(k => {
+    if (Array.isArray(guardado[k]) && guardado[k].length) db[k] = guardado[k];
+  });
+})();
+
 renderHero();
 renderCategorias();
 renderComercios();
