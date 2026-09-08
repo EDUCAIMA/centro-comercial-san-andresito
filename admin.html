@@ -2484,3 +2484,457 @@ function eliminarComercio(id) {
     toast('Comercio eliminado', 'del');
   });
 }
+
+/* ── 5. CATEGORÍAS ───────────────────────────────────────────────────────── */
+function renderCategorias() {
+  // Vista previa idéntica a la cuadrícula del sitio público
+  $('#categorias-preview').innerHTML = db.categorias.filter(c => c.visible).map(c => `
+    <div class="group flex flex-col items-center text-center py-2 px-2.5 rounded-lg bg-[#F2F2F2] hover:bg-[#D97C2B] hover:text-white transition-all duration-200 border border-[#0D0D0D]/5">
+      <div class="w-8 h-8 rounded-md bg-white flex items-center justify-center text-[#D97C2B] group-hover:bg-white/20 group-hover:text-white transition-colors mb-1.5">
+        <span class="material-symbols-outlined text-[18px]">${esc(c.icono)}</span>
+      </div>
+      <span class="font-semibold text-[11px] leading-tight group-hover:text-white">${esc(c.nombre)}</span>
+    </div>`).join('');
+
+  $('#categorias-list').innerHTML = db.categorias.map((c, i) => {
+    const usos = db.comercios.filter(x => x.categoria === c.nombre).length;
+    return `
+    <div class="flex items-center gap-3 p-3 rounded-xl border border-[#0D0D0D]/8 bg-white ${c.visible ? '' : 'opacity-60'}">
+      <span class="text-[11px] font-bold text-[#a8a09a] w-4">${i + 1}</span>
+      <div class="w-10 h-10 rounded-xl bg-[#D97C2B]/12 text-[#D97C2B] flex items-center justify-center shrink-0">
+        <span class="material-symbols-outlined text-[20px]">${esc(c.icono)}</span>
+      </div>
+      <div class="flex-1 min-w-0">
+        <p class="font-bold text-sm truncate">${esc(c.nombre)}</p>
+        <p class="text-[11px] text-[#8b837d]">${usos} comercio${usos === 1 ? '' : 's'}</p>
+      </div>
+      <label class="switch"><input ${c.visible ? 'checked' : ''} type="checkbox" onchange="alternarCategoria(${c.id}, this.checked)"/><i></i></label>
+      <button class="btn-icon" onclick="moverCategoria(${i},-1)" title="Subir" ${i === 0 ? 'disabled' : ''}><span class="material-symbols-outlined">arrow_upward</span></button>
+      <button class="btn-icon" onclick="moverCategoria(${i},1)" title="Bajar" ${i === db.categorias.length - 1 ? 'disabled' : ''}><span class="material-symbols-outlined">arrow_downward</span></button>
+      <button class="btn-icon" onclick="abrirFormCategoria(${c.id})" title="Editar"><span class="material-symbols-outlined">edit</span></button>
+      <button class="btn-icon danger" onclick="eliminarCategoria(${c.id})" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
+    </div>`;
+  }).join('');
+
+  $('#nav-count-categorias').textContent = db.categorias.length;
+
+  // Mantiene sincronizado el filtro de la vista de comercios
+  const filtro = $('#filtro-comercio-cat');
+  const actual = filtro.value;
+  filtro.innerHTML = '<option value="">Todas las categorías</option>' +
+    db.categorias.map(c => '<option>' + esc(c.nombre) + '</option>').join('');
+  filtro.value = actual;
+}
+
+function alternarCategoria(id, valor) {
+  db.categorias.find(c => c.id === id).visible = valor;
+  renderCategorias();
+}
+
+function moverCategoria(i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= db.categorias.length) return;
+  [db.categorias[i], db.categorias[j]] = [db.categorias[j], db.categorias[i]];
+  renderCategorias();
+}
+
+function abrirFormCategoria(id) {
+  const c = db.categorias.find(x => x.id === id);
+  $('#modal-categoria-titulo').textContent = c ? 'Editar categoría' : 'Nueva categoría';
+  $('#cat-id').value = c ? c.id : '';
+  $('#cat-nombre').value = c ? c.nombre : '';
+  $('#cat-icono').value = c ? c.icono : 'apparel';
+  $('#cat-visible').checked = c ? c.visible : true;
+  renderIconPicker();
+  abrirModal('modal-categoria');
+}
+
+function renderIconPicker() {
+  const sel = $('#cat-icono').value;
+  $('#icon-picker').innerHTML = ICONOS.map(ic => `
+    <button type="button" class="w-9 h-9 rounded-lg flex items-center justify-center transition-all ${ic === sel ? 'bg-[#D97C2B] text-white shadow-md' : 'bg-[#F7F7F7] text-[#5a534e] hover:bg-[#FFF2E6] hover:text-[#D97C2B]'}" onclick="elegirIcono('${ic}')" title="${ic}">
+      <span class="material-symbols-outlined text-[19px]">${ic}</span>
+    </button>`).join('');
+}
+
+function elegirIcono(ic) { $('#cat-icono').value = ic; renderIconPicker(); }
+
+function guardarCategoria(e) {
+  e.preventDefault();
+  const id = $('#cat-id').value;
+  const datos = { nombre: $('#cat-nombre').value, icono: $('#cat-icono').value, visible: $('#cat-visible').checked };
+  if (id) {
+    Object.assign(db.categorias.find(c => c.id === +id), datos);
+    toast('Categoría actualizada', 'ok');
+  } else {
+    db.categorias.push(Object.assign({ id: nuevoId(db.categorias) }, datos));
+    toast('Categoría creada', 'ok');
+  }
+  cerrarModal('modal-categoria');
+  renderCategorias();
+}
+
+function eliminarCategoria(id) {
+  const c = db.categorias.find(x => x.id === id);
+  const usos = db.comercios.filter(x => x.categoria === c.nombre).length;
+  confirmarAccion('¿Eliminar la categoría «' + c.nombre + '»?',
+    usos ? 'Hay ' + usos + ' comercio(s) usando esta categoría; quedarán sin clasificar.' : 'Desaparecerá de la cuadrícula de inicio.',
+    () => { db.categorias = db.categorias.filter(x => x.id !== id); renderCategorias(); toast('Categoría eliminada', 'del'); });
+}
+
+/* ── 6. EVENTOS ──────────────────────────────────────────────────────────── */
+const fMes  = new Intl.DateTimeFormat('es-CO', { month: 'short' });
+const fHora = new Intl.DateTimeFormat('es-CO', { hour: 'numeric', minute: '2-digit', hour12: true });
+const fLarga = new Intl.DateTimeFormat('es-CO', { day: 'numeric', month: 'long', year: 'numeric' });
+
+function renderEventos() {
+  const texto  = ($('#filtro-evento-texto').value || '').toLowerCase();
+  const cat    = $('#filtro-evento-cat').value;
+  const estado = $('#filtro-evento-estado').value;
+  const ahora  = new Date();
+
+  const lista = db.eventos
+    .map(ev => Object.assign({}, ev, { d1: new Date(ev.inicio), d2: new Date(ev.fin) }))
+    .filter(ev => {
+      const pasado = ev.d2 < ahora;
+      const est = !ev.activo ? 'borrador' : (pasado ? 'pasado' : 'proximo');
+      return (!texto  || (ev.titulo + ' ' + ev.lugar).toLowerCase().includes(texto)) &&
+             (!cat    || ev.categoria === cat) &&
+             (!estado || est === estado);
+    })
+    .sort((a, b) => a.d1 - b.d1);
+
+  $('#eventos-vacio').classList.toggle('hidden', lista.length > 0);
+
+  $('#eventos-list').innerHTML = lista.map(ev => {
+    const pasado = ev.d2 < ahora;
+    const dias = Math.round((new Date(ev.d1).setHours(0,0,0,0) - new Date().setHours(0,0,0,0)) / 86400000);
+    let estadoChip;
+    if (!ev.activo)      estadoChip = '<span class="chip chip-warn">Borrador</span>';
+    else if (pasado)     estadoChip = '<span class="chip chip-off">Finalizado</span>';
+    else if (dias <= 0)  estadoChip = '<span class="chip chip-ok">Hoy</span>';
+    else if (dias <= 3)  estadoChip = '<span class="chip chip-ok">En ' + dias + ' días</span>';
+    else                 estadoChip = '<span class="chip chip-primary">Próximo</span>';
+
+    return `
+    <div class="card p-3 flex flex-col lg:flex-row gap-4 items-start ${pasado || !ev.activo ? 'opacity-70' : ''}">
+      <div class="relative shrink-0 w-full lg:w-44">
+        <img alt="${esc(ev.titulo)}" class="w-full h-28 lg:h-24 rounded-lg object-cover bg-[#e6e1dd]" src="${esc(ev.imagen)}"/>
+        <div class="absolute top-2 left-2 bg-white rounded-lg px-2 py-1 text-center shadow-md leading-none">
+          <p class="font-['Outfit',sans-serif] text-base font-extrabold">${ev.d1.getDate()}</p>
+          <p class="text-[9px] font-bold text-[#D97C2B] uppercase tracking-wider">${fMes.format(ev.d1).replace('.','')}</p>
+        </div>
+      </div>
+
+      <div class="flex-1 min-w-0">
+        <div class="flex flex-wrap items-center gap-2 mb-1">
+          <h4 class="font-bold text-sm">${esc(ev.titulo)}</h4>
+          <span class="chip chip-gold">${esc(ev.categoria)}</span>
+          ${estadoChip}
+        </div>
+        <p class="text-xs text-[#8b837d] line-clamp-2 mb-2">${esc(ev.descripcion)}</p>
+        <div class="flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px] text-[#5a534e]">
+          <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[15px] text-[#D97C2B]">event</span>${fLarga.format(ev.d1)}</span>
+          <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[15px] text-[#D97C2B]">schedule</span>${fHora.format(ev.d1)} - ${fHora.format(ev.d2)}</span>
+          <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[15px] text-[#D97C2B]">location_on</span>${esc(ev.lugar)}</span>
+          <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[15px] text-[#D97C2B]">confirmation_number</span>${esc(ev.entrada)}</span>
+        </div>
+      </div>
+
+      <div class="flex lg:flex-col items-center gap-1.5 shrink-0">
+        <label class="switch" title="Publicado"><input ${ev.activo ? 'checked' : ''} type="checkbox" onchange="alternarEvento(${ev.id}, this.checked)"/><i></i></label>
+        <button class="btn-icon" onclick="duplicarEvento(${ev.id})" title="Duplicar"><span class="material-symbols-outlined">content_copy</span></button>
+        <button class="btn-icon" onclick="abrirFormEvento(${ev.id})" title="Editar"><span class="material-symbols-outlined">edit</span></button>
+        <button class="btn-icon danger" onclick="eliminarEvento(${ev.id})" title="Eliminar"><span class="material-symbols-outlined">delete</span></button>
+      </div>
+    </div>`;
+  }).join('');
+
+  const proximos = db.eventos.filter(e => e.activo && new Date(e.fin) >= ahora).length;
+  $('#nav-count-eventos').textContent = proximos;
+  $('#kpi-eventos').textContent = proximos;
+}
+
+function alternarEvento(id, valor) {
+  db.eventos.find(e => e.id === id).activo = valor;
+  toast(valor ? 'Evento publicado' : 'Evento guardado como borrador', valor ? 'ok' : 'del');
+  renderEventos();
+}
+
+function duplicarEvento(id) {
+  const ev = db.eventos.find(e => e.id === id);
+  db.eventos.push(Object.assign({}, ev, { id: nuevoId(db.eventos), titulo: ev.titulo + ' (copia)', activo: false }));
+  renderEventos();
+  toast('Evento duplicado como borrador', 'ok');
+}
+
+function abrirFormEvento(id) {
+  const ev = db.eventos.find(e => e.id === id);
+  $('#modal-evento-titulo').textContent = ev ? 'Editar evento' : 'Nuevo evento';
+  $('#ev-id').value = ev ? ev.id : '';
+  $('#ev-titulo').value = ev ? ev.titulo : '';
+  $('#ev-categoria').value = ev ? ev.categoria : 'Tecnología';
+  $('#ev-entrada').value = ev ? ev.entrada : 'Entrada libre';
+  $('#ev-inicio').value = ev ? ev.inicio : '';
+  $('#ev-fin').value = ev ? ev.fin : '';
+  $('#ev-lugar').value = ev ? ev.lugar : '';
+  $('#ev-descripcion').value = ev ? ev.descripcion : '';
+  $('#ev-imagen').value = ev ? ev.imagen : '';
+  $('#ev-img-preview').src = ev ? ev.imagen : '';
+  $('#ev-activo').checked = ev ? ev.activo : true;
+  abrirModal('modal-evento');
+}
+
+function guardarEvento(e) {
+  e.preventDefault();
+  const id = $('#ev-id').value;
+  const datos = {
+    titulo: $('#ev-titulo').value,
+    categoria: $('#ev-categoria').value,
+    inicio: $('#ev-inicio').value,
+    fin: $('#ev-fin').value,
+    lugar: $('#ev-lugar').value,
+    entrada: $('#ev-entrada').value,
+    descripcion: $('#ev-descripcion').value,
+    imagen: $('#ev-imagen').value || 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?auto=format&fit=crop&w=600&q=70',
+    activo: $('#ev-activo').checked
+  };
+  if (new Date(datos.fin) < new Date(datos.inicio)) { toast('La fecha de finalización debe ser posterior al inicio', 'del'); return; }
+  if (id) {
+    Object.assign(db.eventos.find(x => x.id === +id), datos);
+    toast('Evento actualizado', 'ok');
+  } else {
+    db.eventos.push(Object.assign({ id: nuevoId(db.eventos) }, datos));
+    toast('Evento publicado en el carrusel', 'ok');
+  }
+  cerrarModal('modal-evento');
+  renderEventos();
+}
+
+function eliminarEvento(id) {
+  const ev = db.eventos.find(x => x.id === id);
+  confirmarAccion('¿Eliminar «' + ev.titulo + '»?', 'Se borrará del historial de eventos de forma permanente.', () => {
+    db.eventos = db.eventos.filter(x => x.id !== id);
+    renderEventos();
+    toast('Evento eliminado', 'del');
+  });
+}
+
+/* ── 7. GALERÍA ──────────────────────────────────────────────────────────── */
+let carpetaActiva = '';
+
+function renderGaleria() {
+  const lista = db.galeria.filter(g => !carpetaActiva || g.carpeta === carpetaActiva);
+  $('#galeria-grid').innerHTML = lista.map(g => `
+    <div class="group relative rounded-xl overflow-hidden border border-[#0D0D0D]/10 bg-white">
+      <img alt="${esc(g.nombre)}" class="w-full h-32 object-cover" loading="lazy" src="${esc(g.url)}"/>
+      <div class="absolute inset-0 bg-[#0D0D0D]/70 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+        <button class="w-9 h-9 rounded-lg bg-white/95 text-[#0D0D0D] flex items-center justify-center hover:bg-[#D97C2B] hover:text-white transition-colors" onclick="window.open('${esc(g.url)}','_blank')" title="Ver"><span class="material-symbols-outlined text-[18px]">visibility</span></button>
+        <button class="w-9 h-9 rounded-lg bg-white/95 text-[#0D0D0D] flex items-center justify-center hover:bg-[#D97C2B] hover:text-white transition-colors" onclick="copiarUrl('${esc(g.url)}')" title="Copiar dirección"><span class="material-symbols-outlined text-[18px]">link</span></button>
+        <button class="w-9 h-9 rounded-lg bg-white/95 text-red-600 flex items-center justify-center hover:bg-red-600 hover:text-white transition-colors" onclick="eliminarImagen(${g.id})" title="Eliminar"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+      </div>
+      <div class="p-2.5">
+        <p class="text-[11px] font-bold truncate">${esc(g.nombre)}</p>
+        <div class="flex items-center justify-between mt-1">
+          <span class="chip chip-off !text-[9px] !px-2">${esc(g.carpeta)}</span>
+          <span class="text-[10px] text-[#a8a09a]">${esc(g.peso)}</span>
+        </div>
+      </div>
+    </div>`).join('');
+  $('#kpi-imagenes').textContent = db.galeria.length;
+}
+
+function filtrarCarpeta(btn, carpeta) {
+  carpetaActiva = carpeta;
+  $$('.filtro-carpeta').forEach(b => {
+    b.classList.toggle('chip-primary', b === btn);
+    b.classList.toggle('chip-off', b !== btn);
+  });
+  renderGaleria();
+}
+
+function subirImagenes(archivos) {
+  if (!archivos || !archivos.length) return;
+  Array.from(archivos).forEach(a => {
+    db.galeria.unshift({
+      id: nuevoId(db.galeria),
+      nombre: a.name,
+      carpeta: carpetaActiva || 'Instalaciones',
+      peso: Math.round(a.size / 1024) + ' KB',
+      url: URL.createObjectURL(a)
+    });
+  });
+  renderGaleria();
+  toast(archivos.length + ' imagen(es) subida(s)', 'ok');
+  $('#galeria-file').value = '';
+}
+
+function copiarUrl(url) {
+  if (navigator.clipboard) navigator.clipboard.writeText(url);
+  toast('Dirección copiada al portapapeles', 'ok');
+}
+
+function eliminarImagen(id) {
+  const g = db.galeria.find(x => x.id === id);
+  confirmarAccion('¿Eliminar la imagen?', '«' + g.nombre + '» se borrará. Si está en uso, ese bloque quedará sin foto.', () => {
+    db.galeria = db.galeria.filter(x => x.id !== id);
+    renderGaleria();
+    toast('Imagen eliminada', 'del');
+  });
+}
+
+// Resalta la zona de carga mientras se arrastran archivos encima
+const dz = $('#galeria-dropzone');
+['dragenter','dragover'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.add('dragover'); }));
+['dragleave','drop'].forEach(ev => dz.addEventListener(ev, e => { e.preventDefault(); dz.classList.remove('dragover'); }));
+dz.addEventListener('drop', e => subirImagenes(e.dataTransfer.files));
+
+/* ── 8. HORARIOS ─────────────────────────────────────────────────────────── */
+function renderHorarios() {
+  $('#horarios-list').innerHTML = db.horarios.map((h, i) => `
+    <div class="flex items-center gap-3 p-2.5 rounded-xl border border-[#0D0D0D]/8 ${h.cerrado ? 'bg-[#FAFAFA]' : ''}">
+      <span class="text-sm font-bold w-24 shrink-0">${h.dia}</span>
+      <input class="inp !py-1.5 !text-xs w-28" type="time" value="${h.abre}" ${h.cerrado ? 'disabled' : ''} onchange="db.horarios[${i}].abre=this.value"/>
+      <span class="text-[#a8a09a] text-xs">a</span>
+      <input class="inp !py-1.5 !text-xs w-28" type="time" value="${h.cierra}" ${h.cerrado ? 'disabled' : ''} onchange="db.horarios[${i}].cierra=this.value"/>
+      <label class="ml-auto flex items-center gap-2 text-[11px] text-[#8b837d] cursor-pointer shrink-0">
+        Cerrado
+        <span class="switch !w-9 !h-5"><input ${h.cerrado ? 'checked' : ''} type="checkbox" onchange="db.horarios[${i}].cerrado=this.checked; renderHorarios()"/><i></i></span>
+      </label>
+    </div>`).join('');
+}
+
+/* ── 9. USUARIOS Y PERMISOS ──────────────────────────────────────────────── */
+const ROL_CHIP = {
+  'Super Administrador': 'chip-primary',
+  'Editor': 'chip-gold',
+  'Gestor de comercios': 'chip-off',
+  'Gestor de eventos': 'chip-off'
+};
+
+function renderUsuarios() {
+  $('#usuarios-tbody').innerHTML = db.usuarios.map(u => `
+    <tr>
+      <td>
+        <div class="flex items-center gap-3">
+          <img alt="${esc(u.nombre)}" class="w-9 h-9 rounded-lg object-cover" src="${esc(u.foto)}"/>
+          <div class="min-w-0">
+            <p class="font-bold truncate">${esc(u.nombre)}</p>
+            <p class="text-[11px] text-[#8b837d] truncate">${esc(u.email)}</p>
+          </div>
+        </div>
+      </td>
+      <td><span class="chip ${ROL_CHIP[u.rol] || 'chip-off'}">${esc(u.rol)}</span></td>
+      <td class="text-[11px] text-[#5a534e]">${esc(u.acceso)}</td>
+      <td class="text-center">${u.activo ? '<span class="chip chip-ok">Activo</span>' : '<span class="chip chip-off">Suspendido</span>'}</td>
+      <td>
+        <div class="flex items-center justify-end gap-1.5">
+          <button class="btn-icon" onclick="toast('Se envió un correo de restablecimiento')" title="Restablecer contraseña"><span class="material-symbols-outlined">lock_reset</span></button>
+          <button class="btn-icon" onclick="toast('Edición de usuario')" title="Editar"><span class="material-symbols-outlined">edit</span></button>
+          <button class="btn-icon danger" onclick="eliminarUsuario(${u.id})" title="Quitar acceso"><span class="material-symbols-outlined">person_remove</span></button>
+        </div>
+      </td>
+    </tr>`).join('');
+}
+
+const SECCIONES_PERMISOS = [
+  ['Hero / Carrusel',      1, 1, 0, 0],
+  ['Comercios',            1, 1, 1, 0],
+  ['Categorías',           1, 1, 1, 0],
+  ['Eventos',              1, 1, 0, 1],
+  ['Galería de imágenes',  1, 1, 1, 1],
+  ['Ubicación y horarios', 1, 1, 0, 0],
+  ['Textos y footer',      1, 1, 0, 0],
+  ['Usuarios',             1, 0, 0, 0],
+  ['Ajustes del sitio',    1, 0, 0, 0]
+];
+
+function renderPermisos() {
+  $('#permisos-tbody').innerHTML = SECCIONES_PERMISOS.map(fila => `
+    <tr>
+      <td class="font-semibold">${fila[0]}</td>
+      ${fila.slice(1).map((v, i) => `
+        <td class="text-center">
+          <label class="switch"><input ${v ? 'checked' : ''} ${i === 0 ? 'disabled' : ''} type="checkbox"/><i></i></label>
+        </td>`).join('')}
+    </tr>`).join('');
+}
+
+function abrirFormUsuario() { abrirModal('modal-usuario'); }
+
+function guardarUsuario(e) {
+  e.preventDefault();
+  db.usuarios.push({
+    id: nuevoId(db.usuarios),
+    nombre: $('#usr-nombre').value,
+    email: $('#usr-email').value,
+    rol: $('#usr-rol').value,
+    acceso: 'Invitación pendiente',
+    activo: true,
+    foto: 'https://ui-avatars.com/api/?background=D97C2B&color=fff&name=' + encodeURIComponent($('#usr-nombre').value)
+  });
+  cerrarModal('modal-usuario');
+  renderUsuarios();
+  toast('Invitación enviada a ' + $('#usr-email').value, 'ok');
+  e.target.reset();
+}
+
+function eliminarUsuario(id) {
+  const u = db.usuarios.find(x => x.id === id);
+  confirmarAccion('¿Quitar el acceso de ' + u.nombre + '?', 'No podrá volver a entrar al panel administrador.', () => {
+    db.usuarios = db.usuarios.filter(x => x.id !== id);
+    renderUsuarios();
+    toast('Acceso revocado', 'del');
+  });
+}
+
+/* ── 10. PERFIL ──────────────────────────────────────────────────────────── */
+function activarTab(nombre) {
+  showView('perfil');
+  $$('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === nombre));
+  $$('.tab-pane').forEach(p => p.classList.toggle('active', p.id === 'tab-' + nombre));
+}
+
+function cambiarAvatar(input) {
+  const archivo = input.files && input.files[0];
+  if (!archivo) return;
+  const url = URL.createObjectURL(archivo);
+  $('#perfil-avatar').src = url;
+  $('#perfil-avatar-mini').src = url;
+  $$('header img[alt="Eduardo Caicedo"], aside img[alt="Eduardo Caicedo"]').forEach(img => { img.src = url; });
+  toast('Foto de perfil actualizada', 'ok');
+}
+
+function medirPassword(valor) {
+  let fuerza = 0;
+  if (valor.length >= 8) fuerza++;
+  if (/[A-Z]/.test(valor)) fuerza++;
+  if (/[0-9]/.test(valor)) fuerza++;
+  if (/[^A-Za-z0-9]/.test(valor)) fuerza++;
+  const colores = ['#ef4444', '#f59e0b', '#D99923', '#10b981'];
+  const textos  = ['Muy débil', 'Débil', 'Aceptable', 'Segura'];
+  for (let i = 1; i <= 4; i++) {
+    const barra = document.getElementById('pwd-b' + i);
+    barra.style.background = i <= fuerza ? colores[fuerza - 1] : 'rgba(13,13,13,.10)';
+  }
+  $('#pwd-texto').textContent = valor
+    ? 'Nivel de seguridad: ' + textos[Math.max(0, fuerza - 1)]
+    : 'Usa mayúsculas, números y un símbolo para una contraseña segura.';
+}
+
+/* ── 11. ARRANQUE ────────────────────────────────────────────────────────── */
+renderHero();
+renderCategorias();
+renderComercios();
+renderEventos();
+renderGaleria();
+renderHorarios();
+renderUsuarios();
+renderPermisos();
+
+// Permite abrir una sección directamente con admin.html#eventos
+const inicial = (location.hash || '').replace('#', '');
+if (inicial && TITULOS[inicial]) showView(inicial);
+</script>
+</body>
+</html>

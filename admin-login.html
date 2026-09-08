@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Acceso Administrador · San Andresito del Eje</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    html, body { margin:0; padding:0; }
+    ::-webkit-scrollbar { display:none; }
+    .inp {
+      width:100%; background:#fff; color:#0D0D0D; font-family:inherit; font-size:.9rem;
+      border:1px solid rgba(13,13,13,.14); border-radius:.7rem; padding:.7rem .9rem;
+      transition:border-color .2s, box-shadow .2s; outline:none; box-sizing:border-box;
+    }
+    .inp:focus { border-color:#D97C2B; box-shadow:0 0 0 3px rgba(217,124,43,.15); }
+    .inp::placeholder { color:#a8a09a; }
+    .lbl { display:block; font-size:.6875rem; font-weight:700; text-transform:uppercase; letter-spacing:.08em; color:#5a534e; margin-bottom:.4rem; }
+    .btn-primary {
+      position:relative; display:flex; align-items:center; justify-content:center; gap:.5rem; width:100%;
+      padding:.8rem 1.25rem; border-radius:.75rem; border:0; cursor:pointer;
+      background:#D97C2B; color:#fff; font-weight:700; font-size:.9rem;
+      box-shadow:0 6px 16px -6px rgba(217,124,43,1); overflow:hidden;
+      transition:box-shadow .3s, filter .3s, transform .15s;
+    }
+    .btn-primary:hover { box-shadow:0 0 26px rgba(217,124,43,.65); filter:brightness(1.08); }
+    .btn-primary:active { transform:scale(.985); }
+    .slide-fade { transition:opacity 1s ease-in-out; }
+  </style>
+</head>
+<body class="bg-[#F2F2F2] font-['Hanken_Grotesk',sans-serif] text-[#0D0D0D] antialiased selection:bg-[#D97C2B] selection:text-white">
+
+  <div class="min-h-screen flex">
+
+    <!-- ── Columna izquierda: formulario ─────────────────────────────────── -->
+    <div class="w-full lg:w-[46%] flex flex-col justify-center px-6 sm:px-12 xl:px-20 py-10">
+      <div class="w-full max-w-md mx-auto">
+
+        <a class="inline-flex items-center mb-8" href="inicio.html">
+          <img alt="Centro Comercial San Andresito del Eje" class="h-16 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBg3Vk1lACpJ0yJco0d649B4GyXaWZSXx_g7QYNMZap8QfHkSb93oGCQjJ-CLWsYg4KmEnOMLoAt8xczDOunhLmbjiBcXhusNTdB9OIaeTfRhn8XgGrgyqd59Fw3HR2T_4Rzz9u5rY8RnElvclkucg-HdS-GhsDVPwy_kSTFyZwMK-eGFqq5wr092RTmItbjk5BpM9wyalcTQjhPkBlHke3Xn2_r1gk4PTqk63ewXxxc2sWgnu0cCH-I4fQM59lZ53nRhg"/>
+        </a>
+
+        <span class="text-xs font-bold text-[#D97C2B] uppercase tracking-[.16em] block mb-2">Panel administrador</span>
+        <h1 class="font-['Outfit',sans-serif] text-3xl font-extrabold tracking-tight mb-2">Iniciar sesión</h1>
+        <p class="text-sm text-[#5a534e] mb-8">Ingresa con tu cuenta para administrar el contenido del centro comercial.</p>
+
+        <form onsubmit="entrar(event)">
+          <div class="mb-4">
+            <label class="lbl" for="email">Correo electrónico</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#a8a09a] text-[20px]">mail</span>
+              <input class="inp pl-11" id="email" placeholder="nombre@sanandresitoeje.com" required type="email" value="eduardo.caicedom@gmail.com"/>
+            </div>
+          </div>
+
+          <div class="mb-4">
+            <label class="lbl" for="clave">Contraseña</label>
+            <div class="relative">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#a8a09a] text-[20px]">lock</span>
+              <input class="inp pl-11 pr-11" id="clave" placeholder="••••••••" required type="password" value="administrador"/>
+              <button aria-label="Mostrar contraseña" class="absolute right-3 top-1/2 -translate-y-1/2 text-[#a8a09a] hover:text-[#D97C2B] transition-colors" onclick="verClave(event)" type="button">
+                <span class="material-symbols-outlined text-[20px]" id="ojo">visibility</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between mb-6 text-sm">
+            <label class="flex items-center gap-2 cursor-pointer text-[#5a534e]">
+              <input checked class="accent-[#D97C2B] w-4 h-4" type="checkbox"/> Recordarme
+            </label>
+            <a class="text-[#D97C2B] font-semibold hover:underline" href="#" onclick="event.preventDefault(); alert('Se enviará un enlace de recuperación al correo registrado.')">¿Olvidaste tu contraseña?</a>
+          </div>
+
+          <button class="btn-primary" type="submit">
+            <span class="material-symbols-outlined text-[19px]">login</span> Entrar al panel
+          </button>
+        </form>
+
+        <div class="flex items-center gap-3 my-7">
+          <span class="h-px flex-1 bg-[#0D0D0D]/10"></span>
+          <span class="text-[11px] text-[#a8a09a] uppercase tracking-wider font-bold">Acceso protegido</span>
+          <span class="h-px flex-1 bg-[#0D0D0D]/10"></span>
+        </div>
+
+        <div class="flex items-start gap-3 p-3.5 rounded-xl bg-white border border-[#0D0D0D]/10">
+          <span class="material-symbols-outlined text-emerald-600">shield_lock</span>
+          <p class="text-xs text-[#5a534e] leading-relaxed">
+            Este panel usa <strong class="text-[#0D0D0D]">verificación en dos pasos</strong>. Si entras desde un dispositivo nuevo, se te pedirá un código de 6 dígitos enviado a tu correo.
+          </p>
+        </div>
+
+        <p class="text-xs text-[#8b837d] mt-8 text-center">
+          ¿Solo quieres visitar la web? <a class="text-[#D97C2B] font-semibold hover:underline" href="inicio.html">Ir a la página principal</a>
+        </p>
+      </div>
+    </div>
+
+    <!-- ── Columna derecha: imagen de marca ──────────────────────────────── -->
+    <div class="hidden lg:block flex-1 relative overflow-hidden">
+      <img alt="Centro Comercial San Andresito del Eje" class="absolute inset-0 w-full h-full object-cover slide-fade" id="login-img" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCg0QBksIf-t60frWJd-nO8ciWMsJQ1pz7wMKrQhgo9q-hCD1yecv09gcDtEvXVXt9e1_Gc525lw2R5wWGPhBzoImI5AJ82vTfaVVsyWjz4zX4079I5mlL_9AIAFIKLVOuDWMP3gasoPRWIF0DZTDB1Y-hAigK1sMid0YcfYXPGPUqrsVdggYN5H4d7pKZBwqCZak4c8_vfINcOV53BJX_KIj6fIOz5jJqMmQJMyoBjZtEwTzTC10p4Gg2IX-Sz8Aoc4pc"/>
+      <div class="absolute inset-0 bg-gradient-to-t from-[#0D0D0D]/95 via-[#0D0D0D]/45 to-[#D97C2B]/25"></div>
+
+      <div class="relative z-10 h-full flex flex-col justify-end p-12 xl:p-16 text-white">
+        <span class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/15 backdrop-blur-md border border-white/25 text-xs font-bold w-fit mb-5">
+          <span class="w-2 h-2 rounded-full bg-[#D99923]"></span> Pereira, Risaralda
+        </span>
+        <h2 class="font-['Outfit',sans-serif] text-4xl xl:text-5xl font-extrabold tracking-tight leading-tight mb-4 drop-shadow-md">
+          Administra el corazón<br/>comercial de Pereira
+        </h2>
+        <p class="text-neutral-200 text-base max-w-md mb-8 drop-shadow">
+          Actualiza el carrusel principal, publica eventos, agrega comercios y renueva las fotografías del centro comercial en minutos.
+        </p>
+
+        <div class="grid grid-cols-3 gap-4 max-w-lg">
+          <div class="p-3.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
+            <span class="material-symbols-outlined text-[#D99923] mb-1">view_carousel</span>
+            <p class="text-xs font-bold">Hero y fotos</p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
+            <span class="material-symbols-outlined text-[#D99923] mb-1">storefront</span>
+            <p class="text-xs font-bold">140 comercios</p>
+          </div>
+          <div class="p-3.5 rounded-xl bg-white/10 backdrop-blur-md border border-white/20">
+            <span class="material-symbols-outlined text-[#D99923] mb-1">celebration</span>
+            <p class="text-xs font-bold">Agenda de eventos</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Rotación suave de la imagen de marca, con el mismo ritmo del hero público.
+    const IMAGENES = [
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCg0QBksIf-t60frWJd-nO8ciWMsJQ1pz7wMKrQhgo9q-hCD1yecv09gcDtEvXVXt9e1_Gc525lw2R5wWGPhBzoImI5AJ82vTfaVVsyWjz4zX4079I5mlL_9AIAFIKLVOuDWMP3gasoPRWIF0DZTDB1Y-hAigK1sMid0YcfYXPGPUqrsVdggYN5H4d7pKZBwqCZak4c8_vfINcOV53BJX_KIj6fIOz5jJqMmQJMyoBjZtEwTzTC10p4Gg2IX-Sz8Aoc4pc',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuBmWAb4GYZWhwhS2L4d_ZmpVxxvWHh595f0MB8E0Vpz25GKf6tZDOQzztAm7-DkLHsJtFBtMxJRiRXjCsKLZH08Fn4VcZJIM-HzFavlm3_s5-jHDT93tymZheTuZLT_VU0JsLpDOU4YEhdyoZevsPzWKGI2559HeaPyv5m0veQFvbCGVVY0oHAn2GODLSbN-Q8Zy2At9aIfsd6s-gSmVGFtQmwnqSUnRZHoVbPFZnVZdMU9h_STjORVnA',
+      'https://lh3.googleusercontent.com/aida-public/AB6AXuCuItd6EXWnzKT569V-3mEn-MJtDNPcbb4y-lhwCIm8ROZDq_3Pa1SWzox1_lpqPX8gstUw0oCpr1Gg7dsb_OxvdS_o19nI0a3kQYOzoCh4hxs5CWSRp2rxy2HPCnjO35CtCkSj0ENNwtziKLaOAOqcCkEBdiYVue2DwNtI0AolSRbr_ocwJaQIjT26KfeNuVe___ulQW-o4-BhcWgBUvQjT5qQaqBDVZYu9U3HpKb5-oD0t66kA23PNg'
+    ];
+    let idx = 0;
+    const img = document.getElementById('login-img');
+    if (!window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setInterval(() => {
+        idx = (idx + 1) % IMAGENES.length;
+        img.style.opacity = '0';
+        setTimeout(() => { img.src = IMAGENES[idx]; img.style.opacity = '1'; }, 600);
+      }, 6000);
+    }
+
+    function verClave(e) {
+      e.preventDefault();
+      const campo = document.getElementById('clave');
+      const ojo = document.getElementById('ojo');
+      const oculto = campo.type === 'password';
+      campo.type = oculto ? 'text' : 'password';
+      ojo.textContent = oculto ? 'visibility_off' : 'visibility';
+    }
+
+    // Prototipo de diseño: no valida credenciales, solo entra al panel.
+    function entrar(e) {
+      e.preventDefault();
+      window.location.href = 'admin.html';
+    }
+  </script>
+</body>
+</html>

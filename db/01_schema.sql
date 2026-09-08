@@ -14,6 +14,10 @@ BEGIN;
 -- ("nike ar max" encuentra "Nike Air Max").
 CREATE EXTENSION IF NOT EXISTS pg_trgm;
 
+-- unaccent permite buscar sin tildes, como escribe la mayoría de la gente:
+-- "amortiguacion" debe encontrar "amortiguación".
+CREATE EXTENSION IF NOT EXISTS unaccent;
+
 
 -- ── Tipos enumerados ───────────────────────────────────────────────────────
 -- Envueltos en bloques DO porque PostgreSQL no admite CREATE TYPE IF NOT EXISTS.
@@ -36,6 +40,16 @@ BEGIN
   RETURN NEW;
 END;
 $$;
+
+-- unaccent() no es IMMUTABLE por sí sola porque depende del diccionario activo;
+-- al fijar 'unaccent' de forma explícita el resultado es determinista y la
+-- función puede usarse dentro de columnas generadas e índices.
+CREATE OR REPLACE FUNCTION fn_sin_tildes(texto text)
+RETURNS text
+LANGUAGE sql IMMUTABLE STRICT PARALLEL SAFE
+AS $$ SELECT unaccent('unaccent', texto) $$;
+
+COMMENT ON FUNCTION fn_sin_tildes IS 'Quita tildes para indexar y buscar. Debe aplicarse también al término buscado.';
 
 -- Los slugs se usan en las URLs: minúsculas, números y guiones simples.
 -- Ejemplos válidos: 'nike-store', 'moda', 'expo-tech-gadgets-2026'
@@ -167,7 +181,7 @@ CREATE TABLE IF NOT EXISTS tiendas (
 
   -- Índice de búsqueda: se recalcula solo cuando cambian nombre o descripción
   busqueda tsvector GENERATED ALWAYS AS (
-    to_tsvector('spanish', coalesce(nombre, '') || ' ' || coalesce(descripcion, ''))
+    to_tsvector('spanish', fn_sin_tildes(coalesce(nombre, '') || ' ' || coalesce(descripcion, '')))
   ) STORED
 );
 
@@ -261,7 +275,7 @@ CREATE TABLE IF NOT EXISTS productos (
   actualizado_en        timestamptz   NOT NULL DEFAULT now(),
 
   busqueda tsvector GENERATED ALWAYS AS (
-    to_tsvector('spanish', coalesce(nombre, '') || ' ' || coalesce(descripcion, '') || ' ' || coalesce(linea, ''))
+    to_tsvector('spanish', fn_sin_tildes(coalesce(nombre, '') || ' ' || coalesce(descripcion, '') || ' ' || coalesce(linea, '')))
   ) STORED,
 
   -- El slug identifica al producto dentro de su tienda, no en todo el sitio:
@@ -396,3 +410,18 @@ WHERE t.activa
 COMMENT ON VIEW vw_tiendas_abiertas IS 'Alimenta el distintivo "Abierto ahora". Se evalúa en hora de Colombia, no en UTC.';
 
 COMMIT;
+
+-- ═══════════════════════════════════════════════════════════════════════════
+--  NOTA DE USO — Búsqueda
+--  El índice guarda el texto sin tildes, así que el término buscado debe
+--  pasar por la misma función. De lo contrario "café" no encontraría nada:
+--
+--    SELECT * FROM productos
+--    WHERE busqueda @@ plainto_tsquery('spanish', fn_sin_tildes('amortiguacion aire'));
+--
+--  Para búsqueda tolerante a erratas en el nombre, usar el operador % de pg_trgm:
+--
+--    SELECT * FROM productos
+--    WHERE nombre % 'nike ar max'
+--    ORDER BY similarity(nombre, 'nike ar max') DESC;
+-- ═══════════════════════════════════════════════════════════════════════════
