@@ -6,7 +6,7 @@
   <title>Panel Administrador · San Andresito del Eje</title>
 
   <!-- Fonts & Icons (mismos de la web pública) -->
-  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com" rel="preconnect"/>
   <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
   <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -416,7 +416,7 @@
               <h2 class="font-['Outfit',sans-serif] text-2xl md:text-3xl font-extrabold tracking-tight mb-2">Hola, Eduardo 👋</h2>
               <p class="text-sm text-white/90 max-w-lg">Desde aquí controlas todo lo que ven los visitantes: el carrusel principal, los comercios del directorio, la agenda de eventos y las fotografías del centro comercial.</p>
             </div>
-            <div class="flex flex-wrap gap-2">
+            <div class="flex flex-wrap gap-2 lg:justify-end">
               <button class="px-4 py-2.5 rounded-xl bg-white text-[#D97C2B] font-bold text-xs flex items-center gap-2 hover:bg-neutral-100 transition-colors shadow-md" onclick="abrirFormEvento()">
                 <span class="material-symbols-outlined text-[18px]">add_circle</span> Nuevo evento
               </button>
@@ -708,7 +708,7 @@
               <option>Piso 2</option>
               <option>Piso 3</option>
             </select>
-            <select class="sel lg:w-36" id="filtro-comercio-estado" onchange="renderComercios()">
+            <select class="sel lg:w-40" id="filtro-comercio-estado" onchange="renderComercios()">
               <option value="">Todos los estados</option>
               <option value="1">Publicados</option>
               <option value="0">Ocultos</option>
@@ -2270,9 +2270,9 @@ function previsualizar(input, idImagen, idCampo) {
 function renderHero() {
   const cont = $('#hero-list');
   cont.innerHTML = db.hero.map((s, i) => `
-    <div class="card p-3 flex flex-col sm:flex-row gap-3 items-start ${s.activo ? '' : 'opacity-60'}">
+    <div class="card p-3 flex flex-col sm:flex-row gap-3 sm:items-center ${s.activo ? '' : 'opacity-60'}">
       <div class="relative shrink-0">
-        <img alt="${esc(s.titulo)}" class="w-full sm:w-40 h-24 rounded-lg object-cover bg-[#e6e1dd]" src="${esc(s.imagen)}"/>
+        <img alt="${esc(s.titulo)}" class="w-full sm:w-44 h-28 rounded-lg object-cover bg-[#e6e1dd]" src="${esc(s.imagen)}"/>
         <span class="absolute top-1.5 left-1.5 w-6 h-6 rounded-md bg-[#0D0D0D]/75 text-white text-[11px] font-bold flex items-center justify-center backdrop-blur-sm">${i + 1}</span>
       </div>
       <div class="flex-1 min-w-0">
@@ -2286,7 +2286,7 @@ function renderHero() {
           <span class="inline-flex items-center gap-1"><span class="material-symbols-outlined text-[14px]">link</span>${esc(s.enlace)}</span>
         </div>
       </div>
-      <div class="flex sm:flex-col gap-1.5 shrink-0">
+      <div class="flex gap-1.5 shrink-0">
         <button class="btn-icon" onclick="moverHero(${i},-1)" title="Subir" ${i === 0 ? 'disabled' : ''}><span class="material-symbols-outlined">arrow_upward</span></button>
         <button class="btn-icon" onclick="moverHero(${i},1)" title="Bajar" ${i === db.hero.length - 1 ? 'disabled' : ''}><span class="material-symbols-outlined">arrow_downward</span></button>
         <button class="btn-icon" onclick="verHero(${s.id})" title="Previsualizar"><span class="material-symbols-outlined">visibility</span></button>
@@ -2602,7 +2602,12 @@ function renderEventos() {
              (!cat    || ev.categoria === cat) &&
              (!estado || est === estado);
     })
-    .sort((a, b) => a.d1 - b.d1);
+    .sort((a, b) => {
+      // Primero lo que está por venir (más cercano arriba); al final, lo ya finalizado.
+      const pa = a.d2 < ahora, pb = b.d2 < ahora;
+      if (pa !== pb) return pa ? 1 : -1;
+      return pa ? b.d1 - a.d1 : a.d1 - b.d1;
+    });
 
   $('#eventos-vacio').classList.toggle('hidden', lista.length > 0);
 
@@ -2617,7 +2622,7 @@ function renderEventos() {
     else                 estadoChip = '<span class="chip chip-primary">Próximo</span>';
 
     return `
-    <div class="card p-3 flex flex-col lg:flex-row gap-4 items-start ${pasado || !ev.activo ? 'opacity-70' : ''}">
+    <div class="card p-3 flex flex-col lg:flex-row gap-4 lg:items-center ${pasado || !ev.activo ? 'opacity-70' : ''}">
       <div class="relative shrink-0 w-full lg:w-44">
         <img alt="${esc(ev.titulo)}" class="w-full h-28 lg:h-24 rounded-lg object-cover bg-[#e6e1dd]" src="${esc(ev.imagen)}"/>
         <div class="absolute top-2 left-2 bg-white rounded-lg px-2 py-1 text-center shadow-md leading-none">
@@ -2641,7 +2646,7 @@ function renderEventos() {
         </div>
       </div>
 
-      <div class="flex lg:flex-col items-center gap-1.5 shrink-0">
+      <div class="flex items-center gap-1.5 shrink-0">
         <label class="switch" title="Publicado"><input ${ev.activo ? 'checked' : ''} type="checkbox" onchange="alternarEvento(${ev.id}, this.checked)"/><i></i></label>
         <button class="btn-icon" onclick="duplicarEvento(${ev.id})" title="Duplicar"><span class="material-symbols-outlined">content_copy</span></button>
         <button class="btn-icon" onclick="abrirFormEvento(${ev.id})" title="Editar"><span class="material-symbols-outlined">edit</span></button>

@@ -1,0 +1,767 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Directorio de Comercios - San Andresito del Eje</title>
+  <meta name="description" content="Directorio completo de los comercios del Centro Comercial San Andresito del Eje en Pereira. Filtra por categoría, piso y encuentra el local que buscas."/>
+
+  <!-- Fonts & Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com" rel="preconnect"/>
+  <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+  <link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&family=Outfit:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+
+  <style>
+    @layer base {
+      html, body { margin: 0; padding: 0; }
+      body { overscroll-behavior: none; }
+    }
+    ::-webkit-scrollbar { display: none; }
+    /* Recorte de la descripción a dos líneas (por si el plugin line-clamp no carga). */
+    .desc-2 {
+      display: -webkit-box;
+      -webkit-line-clamp: 2;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    /* Aparición suave de las tarjetas al filtrar. */
+    .comercio-card { animation: card-in 0.35s ease both; }
+    @keyframes card-in {
+      from { opacity: 0; transform: translateY(8px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .comercio-card { animation: none; }
+    }
+  </style>
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+  <script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#D97C2B",
+            "primary-hover": "#bf681c",
+            "secondary": "#D99923",
+            "background": "#F2F2F2",
+            "surface": "#F2F2F2",
+            "onyx": "#0D0D0D",
+            "on-surface": "#0D0D0D"
+          },
+          fontFamily: {
+            "outfit": ["Outfit", "sans-serif"],
+            "grotesk": ["Hanken Grotesk", "sans-serif"]
+          }
+        }
+      }
+    };
+  </script>
+</head>
+<body class="bg-[#F2F2F2] font-['Hanken_Grotesk',sans-serif] text-[#0D0D0D] antialiased selection:bg-[#D97C2B] selection:text-white">
+
+  <!-- Header / Barra de Navegación -->
+  <header class="fixed top-0 left-0 right-0 w-full z-50 bg-[#FFFFFF]/95 backdrop-blur-xl border-b border-[#0D0D0D]/10 shadow-[0_2px_12px_rgba(13,13,13,0.04)]">
+    <div class="max-w-[1440px] mx-auto px-6 lg:px-10 flex items-center justify-between py-2 gap-4">
+      <a class="inline-flex items-center" href="inicio.html" aria-label="Inicio">
+        <img alt="Centro Comercial San Andresito del Eje" class="w-auto object-contain h-16 md:h-20 transition-transform hover:scale-105" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBg3Vk1lACpJ0yJco0d649B4GyXaWZSXx_g7QYNMZap8QfHkSb93oGCQjJ-CLWsYg4KmEnOMLoAt8xczDOunhLmbjiBcXhusNTdB9OIaeTfRhn8XgGrgyqd59Fw3HR2T_4Rzz9u5rY8RnElvclkucg-HdS-GhsDVPwy_kSTFyZwMK-eGFqq5wr092RTmItbjk5BpM9wyalcTQjhPkBlHke3Xn2_r1gk4PTqk63ewXxxc2sWgnu0cCH-I4fQM59lZ53nRhg"/>
+      </a>
+
+      <!-- Columna con Redes Sociales + Horario encima y Menú de Enlaces debajo expandido a lo ancho -->
+      <div class="flex-1 flex flex-col items-end gap-2 max-w-full">
+        <!-- Barra superior: Dirección, Teléfono, Horario y Redes Sociales distribuidos equilibradamente a lo ancho -->
+        <div class="w-full flex items-center justify-between gap-2 text-xs text-[#5a534e] pb-0.5 border-b border-[#0D0D0D]/5">
+          <!-- 1. Dirección -->
+          <a class="inline-flex items-center gap-1.5 hover:text-[#D97C2B] transition-colors truncate" href="inicio.html#mapa" title="Ver ubicación en mapa">
+            <span class="material-symbols-outlined text-[16px] text-[#D97C2B] shrink-0">location_on</span>
+            <span class="font-medium hidden sm:inline truncate">Cra. 8 entre Cll. 30 y 31, Pereira</span>
+            <span class="font-medium sm:hidden">Cra. 8, Pereira</span>
+          </a>
+
+          <!-- 2. Teléfono -->
+          <a class="inline-flex items-center gap-1.5 hover:text-[#D97C2B] transition-colors font-medium shrink-0" href="tel:+5763350000" title="Llamar a recepción">
+            <span class="material-symbols-outlined text-[16px] text-[#D97C2B] shrink-0">call</span>
+            <span class="hidden md:inline text-neutral-400 font-normal">Recepción:</span>
+            <span>(606) 335-0000</span>
+          </a>
+
+          <!-- 3. Horario -->
+          <div class="hidden lg:flex items-center gap-1.5 font-medium bg-[#F2F2F2] px-3 py-0.5 rounded-full border border-[#0D0D0D]/5 shrink-0">
+            <span class="material-symbols-outlined text-[14px] text-[#D97C2B]">schedule</span>
+            <span>Abierto hoy: 10:00 - 21:00</span>
+          </div>
+
+          <!-- 4. Redes Sociales -->
+          <div class="flex items-center gap-1.5 shrink-0">
+            <a class="w-6 h-6 rounded-full bg-[#D97C2B]/10 text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors border border-[#D97C2B]/20" href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Síguenos en Instagram" aria-label="Instagram">
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </a>
+            <a class="w-6 h-6 rounded-full bg-[#D97C2B]/10 text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors border border-[#D97C2B]/20" href="https://facebook.com" target="_blank" rel="noopener noreferrer" title="Síguenos en Facebook" aria-label="Facebook">
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.7 5H18V0h-3.808C10.595 0 9 1.583 9 4.615V8z"/></svg>
+            </a>
+            <a class="w-6 h-6 rounded-full bg-[#D97C2B]/10 text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors border border-[#D97C2B]/20" href="https://tiktok.com" target="_blank" rel="noopener noreferrer" title="Síguenos en TikTok" aria-label="TikTok">
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.47 6.27 6.27 0 0 0 1.95-4.52V8.04a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.95-.47z"/></svg>
+            </a>
+            <a class="w-6 h-6 rounded-full bg-[#D97C2B]/10 text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors border border-[#D97C2B]/20" href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer" title="WhatsApp" aria-label="WhatsApp">
+              <svg class="w-3 h-3 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+            </a>
+          </div>
+        </div>
+
+        <!-- Menú de Enlaces enfocado a Centro Comercial -->
+        <nav class="w-full flex items-center justify-end gap-2 text-sm font-semibold overflow-x-auto py-0.5">
+          <a class="px-3.5 py-1.5 text-[#5a534e] hover:text-[#0D0D0D] hover:bg-[#F2F2F2] rounded-full transition-colors whitespace-nowrap text-center shrink-0" href="inicio.html">Inicio</a>
+          <a class="px-3.5 py-1.5 text-[#5a534e] hover:text-[#0D0D0D] hover:bg-[#F2F2F2] rounded-full transition-colors whitespace-nowrap text-center shrink-0" href="inicio.html#categorias">Categorías</a>
+          <a class="px-4 py-1.5 bg-[#D97C2B] text-white rounded-full shadow-sm text-center shrink-0 whitespace-nowrap" href="comercios.html" aria-current="page">Comercios</a>
+          <a class="px-3.5 py-1.5 text-[#5a534e] hover:text-[#0D0D0D] hover:bg-[#F2F2F2] rounded-full transition-colors whitespace-nowrap text-center shrink-0" href="inicio.html#eventos">Eventos</a>
+          <a class="px-3.5 py-1.5 text-[#5a534e] hover:text-[#0D0D0D] hover:bg-[#F2F2F2] rounded-full transition-colors whitespace-nowrap text-center shrink-0" href="inicio.html#mapa">Ubicación &amp; Mapa</a>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  <!-- Contenido Principal -->
+  <main class="w-full bg-[#F2F2F2] min-h-screen pt-24">
+
+    <!-- Encabezado de la Página -->
+    <section class="w-full bg-[#FFFFFF] border-b border-[#0D0D0D]/10">
+      <div class="max-w-[1440px] mx-auto px-6 lg:px-10 pt-5 pb-8">
+
+        <!-- Breadcrumbs -->
+        <nav class="flex items-center gap-2 text-xs text-[#5a534e] mb-4" aria-label="Ruta de navegación">
+          <a class="hover:text-[#D97C2B] transition-colors" href="inicio.html">Inicio</a>
+          <span>/</span>
+          <span class="text-[#0D0D0D] font-semibold">Comercios</span>
+        </nav>
+
+        <div class="flex flex-col lg:flex-row lg:items-end justify-between gap-6">
+          <div>
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#D97C2B]/10 text-[#D97C2B] text-[11px] font-bold uppercase tracking-wider mb-3">
+              <span class="material-symbols-outlined text-[15px]">storefront</span> Directorio completo
+            </span>
+            <h1 class="font-['Outfit',sans-serif] text-3xl md:text-4xl font-extrabold text-[#0D0D0D] leading-tight">
+              Todos Nuestros Comercios
+            </h1>
+            <p class="text-sm text-[#5a534e] mt-2 max-w-2xl">
+              Explora los locales del centro comercial y filtra por categoría, piso o nombre para llegar directo a lo que buscas.
+            </p>
+          </div>
+
+          <!-- Resumen del directorio -->
+          <div class="flex items-center gap-3 shrink-0">
+            <div class="px-4 py-3 rounded-xl bg-[#F2F2F2] border border-[#0D0D0D]/5 text-center min-w-[92px]">
+              <span class="block font-['Outfit',sans-serif] text-2xl font-extrabold text-[#D97C2B]" id="statComercios">0</span>
+              <span class="block text-[11px] font-semibold uppercase tracking-wider text-[#5a534e]">Comercios</span>
+            </div>
+            <div class="px-4 py-3 rounded-xl bg-[#F2F2F2] border border-[#0D0D0D]/5 text-center min-w-[92px]">
+              <span class="block font-['Outfit',sans-serif] text-2xl font-extrabold text-[#D97C2B]" id="statCategorias">0</span>
+              <span class="block text-[11px] font-semibold uppercase tracking-wider text-[#5a534e]">Categorías</span>
+            </div>
+            <div class="px-4 py-3 rounded-xl bg-[#F2F2F2] border border-[#0D0D0D]/5 text-center min-w-[92px]">
+              <span class="block font-['Outfit',sans-serif] text-2xl font-extrabold text-[#D97C2B]">3</span>
+              <span class="block text-[11px] font-semibold uppercase tracking-wider text-[#5a534e]">Pisos</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Accesos rápidos por categoría (mismo bloque visual del inicio) -->
+        <div class="mt-8">
+          <h2 class="text-xs font-bold uppercase tracking-wider text-[#5a534e] mb-3">Filtrar por categoría</h2>
+          <div class="grid grid-cols-3 sm:grid-cols-5 lg:grid-cols-9 gap-3" id="categoriasQuick"><!-- render JS --></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Directorio con Filtro Lateral -->
+    <section class="w-full px-6 lg:px-10 py-8">
+      <div class="max-w-[1440px] mx-auto">
+
+        <!-- Barra de herramientas: búsqueda, orden y contador -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+          <div class="flex items-center gap-3 flex-1">
+            <div class="relative flex-1 md:max-w-md">
+              <span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-[#5a534e] text-[18px]">search</span>
+              <input id="comercioSearch" type="search" autocomplete="off" placeholder="Buscar comercio, local o categoría..." aria-label="Buscar comercio"
+                     class="w-full pl-9 pr-4 py-2.5 rounded-xl bg-white border border-[#0D0D0D]/10 text-xs text-[#0D0D0D] focus:outline-none focus:border-[#D97C2B] transition-colors shadow-xs"/>
+            </div>
+            <!-- Botón de filtros solo en móvil -->
+            <button type="button" id="toggleFiltros"
+                    class="lg:hidden inline-flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white border border-[#0D0D0D]/10 text-xs font-semibold text-[#0D0D0D] shadow-xs">
+              <span class="material-symbols-outlined text-[18px] text-[#D97C2B]">tune</span> Filtros
+            </button>
+          </div>
+
+          <div class="flex items-center gap-3">
+            <label class="text-xs text-[#5a534e] font-semibold whitespace-nowrap" for="ordenSelect">Ordenar:</label>
+            <select id="ordenSelect" class="py-2 pl-3 pr-8 rounded-xl bg-white border border-[#0D0D0D]/10 text-xs font-semibold text-[#0D0D0D] focus:outline-none focus:border-[#D97C2B] transition-colors shadow-xs">
+              <option value="destacados">Destacados primero</option>
+              <option value="nombre">Nombre (A - Z)</option>
+              <option value="piso">Piso y local</option>
+            </select>
+            <span class="text-xs text-[#5a534e] font-semibold whitespace-nowrap">
+              <span id="comercioCount" class="text-[#D97C2B] font-bold">0</span> comercios
+            </span>
+          </div>
+        </div>
+
+        <div class="flex flex-col lg:flex-row items-start gap-8">
+
+          <!-- FILTRO LATERAL (SIDEBAR) -->
+          <aside id="panelFiltros" class="hidden lg:block w-full lg:w-64 shrink-0 bg-white rounded-xl border border-[#0D0D0D]/10 p-5 shadow-xs lg:sticky lg:top-28">
+            <div class="flex items-center justify-between pb-3.5 mb-4 border-b border-[#0D0D0D]/10">
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-[#D97C2B] text-[20px]">tune</span>
+                <h3 class="font-['Outfit',sans-serif] text-sm font-bold text-[#0D0D0D]">Filtros</h3>
+              </div>
+              <button type="button" id="btnLimpiar" class="text-[11px] font-semibold text-[#D97C2B] hover:underline">Limpiar</button>
+            </div>
+
+            <!-- Grupo 1: Categoría -->
+            <div class="mb-5 pb-5 border-b border-[#0D0D0D]/10">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-[#5a534e] mb-3">Categoría</h4>
+              <div class="space-y-2" id="filtroCategorias"><!-- render JS --></div>
+            </div>
+
+            <!-- Grupo 2: Piso -->
+            <div class="mb-5 pb-5 border-b border-[#0D0D0D]/10">
+              <h4 class="text-xs font-bold uppercase tracking-wider text-[#5a534e] mb-3">Piso</h4>
+              <div class="space-y-2" id="filtroPisos"><!-- render JS --></div>
+            </div>
+
+            <!-- Grupo 3: Destacados -->
+            <div>
+              <h4 class="text-xs font-bold uppercase tracking-wider text-[#5a534e] mb-3">Preferencias</h4>
+              <label class="flex items-center gap-2 text-xs text-[#0D0D0D] cursor-pointer hover:text-[#D97C2B]">
+                <input type="checkbox" id="soloDestacados" class="accent-[#D97C2B] w-3.5 h-3.5 rounded"/>
+                <span>Solo comercios destacados</span>
+              </label>
+            </div>
+          </aside>
+
+          <!-- LISTADO DE COMERCIOS -->
+          <div class="flex-1 w-full">
+            <!-- Resumen del filtro activo -->
+            <div id="resumenFiltro" class="hidden items-center flex-wrap gap-2 mb-5 text-xs text-[#5a534e]"></div>
+
+            <div id="comerciosGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6"><!-- render JS --></div>
+
+            <!-- Estado sin resultados -->
+            <div id="sinResultados" class="hidden flex-col items-center justify-center py-16 text-center bg-white rounded-xl border border-[#0D0D0D]/10">
+              <span class="material-symbols-outlined text-[#5a534e] text-5xl mb-2">search_off</span>
+              <h4 class="font-bold text-base text-[#0D0D0D] mb-1">No encontramos comercios con esos filtros</h4>
+              <p class="text-xs text-[#5a534e] mb-4">Prueba con otra categoría, otro piso o un término de búsqueda distinto.</p>
+              <button type="button" onclick="limpiarFiltros()" class="px-4 py-2 rounded-lg bg-[#D97C2B] text-white text-xs font-semibold">Restablecer filtros</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Banner: ¿Quieres tu local aquí? -->
+    <section class="w-full px-6 lg:px-10 pb-14">
+      <div class="max-w-[1440px] mx-auto bg-[#0D0D0D] rounded-xl p-8 lg:p-10 text-white flex flex-col md:flex-row items-center justify-between gap-6 border border-[#D97C2B]/30 shadow-xl">
+        <div>
+          <span class="text-xs uppercase text-[#D99923] font-bold tracking-wider">Locales disponibles</span>
+          <h3 class="font-['Outfit',sans-serif] text-2xl md:text-3xl font-bold mt-1 mb-2">¿Quieres que tu negocio aparezca en este directorio?</h3>
+          <p class="text-neutral-300 text-sm max-w-xl">
+            Tenemos locales disponibles en los tres pisos del centro comercial. Escríbenos y te contamos las condiciones de arriendo y los beneficios de estar en San Andresito del Eje.
+          </p>
+        </div>
+        <div class="flex flex-wrap items-center gap-4">
+          <a class="px-6 py-3 rounded-lg bg-[#25D366] hover:bg-[#1EBE5D] text-white font-bold text-sm transition-all shadow-md flex items-center gap-2" href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer">
+            <span class="material-symbols-outlined text-[20px]">chat</span> Escribir por WhatsApp
+          </a>
+          <a class="px-5 py-3 rounded-lg bg-white/10 hover:bg-white/20 text-white font-bold text-sm transition-all border border-white/20" href="tel:+5763350000">
+            Llamar a Recepción
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- Footer con Transición Curva Suave e Información Completa -->
+    <footer class="w-full bg-[#D97C2B] text-white relative mt-6 overflow-hidden">
+      <!-- Transición Curva Orgánica Superior (SVG Wave) -->
+      <div class="w-full overflow-hidden leading-none -mb-1">
+        <svg class="relative block w-full h-12 md:h-20 text-[#F2F2F2]" viewBox="0 0 1200 120" preserveAspectRatio="none">
+          <path d="M0,0 C150,90 350,-40 500,45 C650,130 900,10 1200,60 L1200,0 L0,0 Z" fill="currentColor"></path>
+        </svg>
+      </div>
+
+      <!-- Franja Horizontal Minimalista de Atributos (Sin tarjetas gruesas) -->
+      <div class="max-w-[1440px] mx-auto px-6 lg:px-10 pt-2 pb-8">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6 py-6 border-b border-white/20">
+          <!-- Item 1 -->
+          <div class="flex items-center gap-3">
+            <span class="material-symbols-outlined text-white text-3xl opacity-90 shrink-0">location_on</span>
+            <div>
+              <h5 class="text-xs font-bold uppercase tracking-wider text-white leading-tight">Ubicación Central</h5>
+              <p class="text-[11px] text-white/80 mt-0.5">Cra. 8 # 30 - 25, Pereira</p>
+            </div>
+          </div>
+
+          <!-- Item 2 -->
+          <div class="flex items-center gap-3 md:border-l md:border-white/20 md:pl-6">
+            <span class="material-symbols-outlined text-white text-3xl opacity-90 shrink-0">local_parking</span>
+            <div>
+              <h5 class="text-xs font-bold uppercase tracking-wider text-white leading-tight">Parqueadero</h5>
+              <p class="text-[11px] text-white/80 mt-0.5">Acceso vigilado 24/7</p>
+            </div>
+          </div>
+
+          <!-- Item 3 -->
+          <div class="flex items-center gap-3 lg:border-l lg:border-white/20 lg:pl-6">
+            <span class="material-symbols-outlined text-white text-3xl opacity-90 shrink-0">wifi</span>
+            <div>
+              <h5 class="text-xs font-bold uppercase tracking-wider text-white leading-tight">Zona Wi-Fi Gratis</h5>
+              <p class="text-[11px] text-white/80 mt-0.5">Conexión en todos los pisos</p>
+            </div>
+          </div>
+
+          <!-- Item 4 -->
+          <div class="flex items-center gap-3 md:border-l md:border-white/20 md:pl-6">
+            <span class="material-symbols-outlined text-white text-3xl opacity-90 shrink-0">verified_user</span>
+            <div>
+              <h5 class="text-xs font-bold uppercase tracking-wider text-white leading-tight">Compra Segura</h5>
+              <p class="text-[11px] text-white/80 mt-0.5">Comercio 100% certificado</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contenido Principal Multicolumna del Footer -->
+      <div class="max-w-[1440px] mx-auto px-6 lg:px-10 py-10 border-t border-white/20">
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8">
+          <!-- Columna 1 & 2: Identidad & Descripción -->
+          <div class="lg:col-span-2 space-y-4">
+            <div class="inline-flex items-center bg-white p-3 rounded-xl shadow-md">
+              <img alt="San Andresito del Eje" class="h-12 w-auto object-contain" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCy0L1kLrBICOrhVJ-sS-_hiPgGogyKQdWTFQRR9jaUvPLWn2CLbF6dfPjiLctJJVRhyqDWHat94yFFXytSqkW7THcgWGCPqqefcB77AV4pJZpmHH1j1ipxbD5LTWz5vXQ9f9GKy6i0DW6NEXHDz8ND3YohCzCOwR4r958HydxoJfnAu-tO3ohrZ2qJhAuHWRNZshJX-VkvR08WAbhJXOuLLnRZ9jXxcZA6r8B5p4GkmL4xcB0tQhRtLBUwYDPNenJbpko"/>
+            </div>
+            <p class="text-xs text-white/90 leading-relaxed max-w-sm">
+              El Centro Comercial San Andresito del Eje es el punto de encuentro comercial tradicional por excelencia en Pereira. Más de 140 locales dedicados a tecnología, calzado, moda, gastronomía y servicios financieros con la mejor calidez del Eje Cafetero.
+            </p>
+            <div class="flex items-center gap-2 pt-2">
+              <span class="text-xs font-bold uppercase tracking-wider text-white/80">Síguenos:</span>
+              <div class="flex items-center gap-1.5">
+                <a class="w-7 h-7 rounded-full bg-white/15 hover:bg-white hover:text-[#D97C2B] text-white flex items-center justify-center transition-colors shadow-sm" href="https://instagram.com" target="_blank" rel="noopener noreferrer" title="Instagram">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+                </a>
+                <a class="w-7 h-7 rounded-full bg-white/15 hover:bg-white hover:text-[#D97C2B] text-white flex items-center justify-center transition-colors shadow-sm" href="https://facebook.com" target="_blank" rel="noopener noreferrer" title="Facebook">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M9 8H6v4h3v12h5V12h3.642L18 8h-4V6.333C14 5.374 14.5 5 15.7 5H18V0h-3.808C10.595 0 9 1.583 9 4.615V8z"/></svg>
+                </a>
+                <a class="w-7 h-7 rounded-full bg-white/15 hover:bg-white hover:text-[#D97C2B] text-white flex items-center justify-center transition-colors shadow-sm" href="https://tiktok.com" target="_blank" rel="noopener noreferrer" title="TikTok">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.298-.002.595.042.88.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 3 15.66a6.34 6.34 0 0 0 10.82 4.47 6.27 6.27 0 0 0 1.95-4.52V8.04a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-.95-.47z"/></svg>
+                </a>
+                <a class="w-7 h-7 rounded-full bg-white/15 hover:bg-white hover:text-emerald-600 text-white flex items-center justify-center transition-colors shadow-sm" href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer" title="WhatsApp">
+                  <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Columna 3: Explorar Navegación -->
+          <div>
+            <h4 class="text-sm font-bold uppercase tracking-wider text-white mb-4 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-white"></span> Navegación
+            </h4>
+            <ul class="space-y-2 text-xs text-white/85">
+              <li><a class="hover:text-white hover:underline transition-colors" href="inicio.html">Inicio</a></li>
+              <li><a class="hover:text-white hover:underline transition-colors" href="comercios.html">Nuestros Comercios</a></li>
+
+              <li><a class="hover:text-white hover:underline transition-colors" href="inicio.html#eventos">Próximos Eventos</a></li>
+              <li><a class="hover:text-white hover:underline transition-colors" href="inicio.html#mapa">Ubicación & Google Maps</a></li>
+
+            </ul>
+          </div>
+
+          <!-- Columna 4: Servicios al Cliente -->
+          <div>
+            <h4 class="text-sm font-bold uppercase tracking-wider text-white mb-4 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-white"></span> Servicios
+            </h4>
+            <ul class="space-y-2 text-xs text-white/85">
+              <li><span class="text-white/70">Atención al Visitante</span></li>
+              <li><span class="text-white/70">Parqueadero de Carros y Motos</span></li>
+              <li><span class="text-white/70">Cajeros Automáticos (Piso 1)</span></li>
+              <li><span class="text-white/70">Punto de Información Central</span></li>
+              <li><span class="text-white/70">Zona de Comidas y Café</span></li>
+              <li><span class="text-white/70">Seguridad & Monitoreo 24/7</span></li>
+            </ul>
+          </div>
+
+          <!-- Columna 5: Contacto Directo -->
+          <div>
+            <h4 class="text-sm font-bold uppercase tracking-wider text-white mb-4 flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-white"></span> Contáctanos
+            </h4>
+            <div class="space-y-3 text-xs text-white/85">
+              <div class="flex items-start gap-2">
+                <span class="material-symbols-outlined text-white text-[18px] shrink-0 mt-0.5">location_on</span>
+                <span>Cra. 8 entre Cll. 30 y 31, Pereira, Risaralda</span>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-white text-[18px] shrink-0">call</span>
+                <a class="hover:underline font-semibold text-white" href="tel:+5763350000">(606) 335-0000</a>
+              </div>
+              <div class="flex items-center gap-2">
+                <span class="material-symbols-outlined text-white text-[18px] shrink-0">mail</span>
+                <span class="text-white/90">contacto@sanandresitoeje.com</span>
+              </div>
+              <div class="pt-2">
+                <a class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white text-[#D97C2B] font-bold text-xs hover:bg-neutral-100 transition-colors shadow-sm" href="https://wa.me/573000000000" target="_blank" rel="noopener noreferrer">
+                  <span class="material-symbols-outlined text-[16px]">chat</span> Chat de Atención
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Barra Inferior de Derechos y Créditos -->
+      <div class="w-full border-t border-white/20 bg-black/10 py-5">
+        <div class="max-w-[1440px] mx-auto px-6 lg:px-10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-white/80">
+          <p>© 2025 Centro Comercial San Andresito del Eje. Todos los derechos reservados.</p>
+          <div class="flex items-center gap-4 text-white/70">
+            <a class="hover:text-white transition-colors" href="terminos.html">Términos y Condiciones</a>
+            <span>•</span>
+            <a class="hover:text-white transition-colors" href="privacidad.html">Política de Privacidad</a>
+            <span>•</span>
+            <span class="text-white/90 font-medium">Pereira, Colombia</span>
+          </div>
+        </div>
+      </div>
+    </footer>
+  </main>
+
+  <!-- ══════════════════════════════════════════════════════════════════════
+       DIRECTORIO DE COMERCIOS — datos y lógica de filtrado
+       Los comercios viven en el arreglo `COMERCIOS` (mismo modelo que usa el
+       panel de administración y la tabla `tiendas` de la base de datos).
+       Cuando se conecte el backend, basta con reemplazar ese arreglo por la
+       respuesta de la API: el resto del archivo no cambia.
+       ══════════════════════════════════════════════════════════════════════ -->
+  <script>
+    'use strict';
+
+    /* ── 1. Categorías (mismas 8 del inicio y del panel admin) ───────────── */
+    const CATEGORIAS = [
+      { slug: 'moda',         nombre: 'Moda',          icono: 'apparel' },
+      { slug: 'tecnologia',   nombre: 'Tecnología',    icono: 'devices' },
+      { slug: 'hogar',        nombre: 'Hogar',         icono: 'chair' },
+      { slug: 'belleza',      nombre: 'Belleza',       icono: 'spa' },
+      { slug: 'restaurantes', nombre: 'Restaurantes',  icono: 'restaurant' },
+      { slug: 'ocio',         nombre: 'Ocio & Cine',   icono: 'theater_comedy' },
+      { slug: 'salud',        nombre: 'Salud & Fit',   icono: 'fitness_center' },
+      { slug: 'servicios',    nombre: 'Servicios',     icono: 'account_balance' }
+    ];
+
+    /* ── 2. Imágenes de referencia ───────────────────────────────────────── */
+    const F = '?auto=format&fit=crop&w=600&q=80';
+    const IMG = {
+      calzado:  'https://images.unsplash.com/photo-1542291026-7eec264c27ff' + F,
+      sneakers: 'https://images.unsplash.com/photo-1552346154-21d32810aba3' + F,
+      running:  'https://images.unsplash.com/photo-1608231387042-66d1773070a5' + F,
+      ropa:     'https://images.unsplash.com/photo-1556905055-8f358a7a47b2' + F,
+      vitrina:  'https://images.unsplash.com/photo-1441986300917-64674bd600d8' + F,
+      tech:     'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9' + F,
+      gadgets:  'https://images.unsplash.com/photo-1519389950473-47ba0277781c' + F,
+      hogar:    'https://images.unsplash.com/photo-1555041469-a586c61ea9bc' + F,
+      belleza:  'https://images.unsplash.com/photo-1523293182086-7651a899d37f' + F,
+      cafe:     'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4' + F,
+      comidas:  'https://images.unsplash.com/photo-1555396273-367ea4eb4db5' + F,
+      gym:      'https://images.unsplash.com/photo-1534438327276-14e5300c3a48' + F,
+      arcade:   'https://images.unsplash.com/photo-1492684223066-81342ee5ff30' + F,
+      papeleria:'https://images.unsplash.com/photo-1503676260728-1c00da094a0b' + F,
+      musica:   'https://images.unsplash.com/photo-1470229722913-7c0e2dbbafd3' + F,
+      parqueo:  'https://images.unsplash.com/photo-1506521781263-d8422e82f27a' + F
+    };
+
+    /* ── 3. Comercios del centro comercial ───────────────────────────────
+       `enlace` apunta a la ficha propia del comercio cuando ya existe;
+       los que aún no tienen ficha quedan en '#', igual que en inicio.html. */
+    const COMERCIOS = [
+      /* Moda */
+      { id: 1,  nombre: 'Nike Store',                    cat: 'moda',         etiqueta: 'Calzado',          local: '215', piso: 2, horario: 'Lun - Sáb: 09:30 - 20:00', telefono: '+576063350012', descripcion: 'Calzado deportivo, moda streetwear y líneas Jordan originales con asesoría personalizada.', imagen: IMG.calzado,  destacado: true,  enlace: 'tienda.html' },
+      { id: 2,  nombre: 'Calzado Urbano Pereira',        cat: 'moda',         etiqueta: 'Calzado',          local: '208', piso: 2, horario: 'Lun - Sáb: 09:30 - 20:00', telefono: '+576063350013', descripcion: 'Zapatillas urbanas, botas y calzado formal para hombre y mujer a precio de San Andresito.', imagen: IMG.sneakers, destacado: false, enlace: '#' },
+      { id: 3,  nombre: 'Moda Cafetera Boutique',        cat: 'moda',         etiqueta: 'Ropa',             local: '221', piso: 2, horario: 'Lun - Sáb: 10:00 - 20:00', telefono: '+576063350014', descripcion: 'Colecciones de temporada en ropa femenina, vestidos y accesorios de diseño local.',        imagen: IMG.vitrina,  destacado: false, enlace: '#' },
+      { id: 4,  nombre: 'Jeans & Denim del Eje',         cat: 'moda',         etiqueta: 'Ropa',             local: '230', piso: 2, horario: 'Lun - Sáb: 09:30 - 20:00', telefono: '+576063350015', descripcion: 'Jeans colombianos al por mayor y al detal, con arreglos de sastrería el mismo día.',       imagen: IMG.ropa,     destacado: false, enlace: '#' },
+      { id: 5,  nombre: 'Deportivos Total Sport',        cat: 'moda',         etiqueta: 'Deportes',         local: '205', piso: 2, horario: 'Lun - Dom: 10:00 - 20:00', telefono: '+576063350016', descripcion: 'Uniformes, guayos, ropa deportiva y accesorios de running para toda la familia.',        imagen: IMG.running,  destacado: false, enlace: '#' },
+
+      /* Tecnología */
+      { id: 6,  nombre: 'Electro & Celulares Eje',       cat: 'tecnologia',   etiqueta: 'Telefonía',        local: '104', piso: 1, horario: 'Lun - Dom: 10:00 - 20:30', telefono: '+576063350044', descripcion: 'Telefonía, accesorios y reparación técnica con garantía escrita sobre cada equipo.',      imagen: IMG.tech,     destacado: true,  enlace: '#' },
+      { id: 7,  nombre: 'TecnoRepuestos Pereira',        cat: 'tecnologia',   etiqueta: 'Accesorios',       local: '118', piso: 1, horario: 'Lun - Sáb: 09:00 - 19:30', telefono: '+576063350045', descripcion: 'Repuestos, pantallas, baterías y accesorios para las principales marcas del mercado.',    imagen: IMG.gadgets,  destacado: false, enlace: '#' },
+      { id: 8,  nombre: 'Gamer Zone Eje',                cat: 'tecnologia',   etiqueta: 'Videojuegos',      local: '126', piso: 1, horario: 'Lun - Dom: 11:00 - 21:00', telefono: '+576063350046', descripcion: 'Consolas, videojuegos, sillas y periféricos gamer con zona de prueba en el local.',       imagen: IMG.gadgets,  destacado: false, enlace: '#' },
+      { id: 9,  nombre: 'Servitec Reparaciones',         cat: 'tecnologia',   etiqueta: 'Servicio técnico', local: '111', piso: 1, horario: 'Lun - Sáb: 08:30 - 19:00', telefono: '+576063350047', descripcion: 'Mantenimiento de computadores, portátiles e impresoras con diagnóstico sin costo.',       imagen: IMG.tech,     destacado: false, enlace: '#' },
+
+      /* Hogar */
+      { id: 10, nombre: 'Muebles Casa Viva',             cat: 'hogar',        etiqueta: 'Muebles',          local: '228', piso: 2, horario: 'Lun - Sáb: 10:00 - 19:00', telefono: '+576063350033', descripcion: 'Muebles, decoración y textiles para el hogar con despacho en Pereira y Dosquebradas.',   imagen: IMG.hogar,    destacado: false, enlace: '#' },
+      { id: 11, nombre: 'Cortinas & Textiles del Eje',   cat: 'hogar',        etiqueta: 'Decoración',       local: '234', piso: 2, horario: 'Lun - Sáb: 09:30 - 19:00', telefono: '+576063350034', descripcion: 'Cortinas a la medida, lencería de cama y tapicería con instalación a domicilio.',        imagen: IMG.hogar,    destacado: false, enlace: '#' },
+      { id: 12, nombre: 'Electrodomésticos La Ganga',    cat: 'hogar',        etiqueta: 'Electrodomésticos',local: '129', piso: 1, horario: 'Lun - Dom: 09:30 - 20:00', telefono: '+576063350035', descripcion: 'Línea blanca, pequeños electrodomésticos y planes de separado sin cuota inicial.',       imagen: IMG.gadgets,  destacado: false, enlace: '#' },
+
+      /* Belleza */
+      { id: 13, nombre: 'Perfumes & Estilo',             cat: 'belleza',      etiqueta: 'Belleza',          local: '132', piso: 1, horario: 'Lun - Sáb: 09:30 - 20:00', telefono: '+576063350077', descripcion: 'Perfumería importada, cosmética y set de regalo con asesoría en fragancias.',            imagen: IMG.belleza,  destacado: true,  enlace: '#' },
+      { id: 14, nombre: 'Salón Glamour Pereira',         cat: 'belleza',      etiqueta: 'Peluquería',       local: '137', piso: 1, horario: 'Mar - Dom: 09:00 - 19:00', telefono: '+576063350078', descripcion: 'Corte, color, keratina y manicure con cita previa o por orden de llegada.',              imagen: IMG.belleza,  destacado: false, enlace: '#' },
+      { id: 15, nombre: 'Cosmética Natural Eje',         cat: 'belleza',      etiqueta: 'Cosmética',        local: '141', piso: 1, horario: 'Lun - Sáb: 10:00 - 19:30', telefono: '+576063350079', descripcion: 'Cuidado facial y capilar con productos naturales elaborados en el Eje Cafetero.',        imagen: IMG.belleza,  destacado: false, enlace: '#' },
+
+      /* Restaurantes */
+      { id: 16, nombre: 'Café del Eje',                  cat: 'restaurantes', etiqueta: 'Cafetería',        local: '301', piso: 3, horario: 'Lun - Dom: 08:00 - 21:00', telefono: '+576063350090', descripcion: 'Café de origen del Eje Cafetero, repostería artesanal y desayunos todo el día.',         imagen: IMG.cafe,     destacado: true,  enlace: '#' },
+      { id: 17, nombre: 'El Buen Sabor',                 cat: 'restaurantes', etiqueta: 'Comidas rápidas',  local: '305', piso: 3, horario: 'Lun - Dom: 11:00 - 21:00', telefono: '+576063350091', descripcion: 'Hamburguesas, perros y salchipapas en la plazoleta de comidas del tercer piso.',         imagen: IMG.comidas,  destacado: false, enlace: '#' },
+      { id: 18, nombre: 'Almuerzos Doña Clara',          cat: 'restaurantes', etiqueta: 'Restaurante',      local: '308', piso: 3, horario: 'Lun - Sáb: 11:00 - 16:00', telefono: '+576063350092', descripcion: 'Corrientazo casero, bandeja paisa y sancocho de la casa a precio justo.',                imagen: IMG.comidas,  destacado: false, enlace: '#' },
+      { id: 19, nombre: 'Heladería Nieve Tropical',      cat: 'restaurantes', etiqueta: 'Postres',          local: '312', piso: 3, horario: 'Lun - Dom: 10:00 - 21:00', telefono: '+576063350093', descripcion: 'Helados artesanales, malteadas y postres de frutas de la región.',                       imagen: IMG.cafe,     destacado: false, enlace: '#' },
+
+      /* Ocio & Cine */
+      { id: 20, nombre: 'Arcade Zona Eje',               cat: 'ocio',         etiqueta: 'Arcade',           local: '316', piso: 3, horario: 'Lun - Dom: 11:00 - 21:00', telefono: '+576063350061', descripcion: 'Máquinas arcade, aire hockey y zona infantil supervisada para toda la familia.',        imagen: IMG.arcade,   destacado: false, enlace: '#' },
+      { id: 21, nombre: 'Discotienda Sonido Cafetero',   cat: 'ocio',         etiqueta: 'Música',           local: '320', piso: 3, horario: 'Lun - Sáb: 10:00 - 20:00', telefono: '+576063350062', descripcion: 'Instrumentos, sonido profesional, vinilos y accesorios para músicos de la región.',      imagen: IMG.musica,   destacado: false, enlace: '#' },
+
+      /* Salud & Fit */
+      { id: 22, nombre: 'Gimnasio Power Fit',            cat: 'salud',        etiqueta: 'Gimnasio',         local: '310', piso: 3, horario: 'Lun - Sáb: 05:00 - 22:00', telefono: '+576063350055', descripcion: 'Zona de máquinas, clases grupales y entrenamiento personalizado con planes mensuales.',  imagen: IMG.gym,      destacado: false, enlace: '#' },
+      { id: 23, nombre: 'Droguería San Andrés',          cat: 'salud',        etiqueta: 'Droguería',        local: '108', piso: 1, horario: 'Lun - Dom: 07:00 - 21:00', telefono: '+576063350056', descripcion: 'Medicamentos, cuidado personal y toma de tensión gratuita en el punto.',                 imagen: IMG.belleza,  destacado: false, enlace: '#' },
+      { id: 24, nombre: 'Óptica Visión Clara',           cat: 'salud',        etiqueta: 'Óptica',           local: '122', piso: 1, horario: 'Lun - Sáb: 09:00 - 19:00', telefono: '+576063350057', descripcion: 'Examen visual sin costo, monturas de marca y lentes listos en 24 horas.',                imagen: IMG.vitrina,  destacado: false, enlace: '#' },
+
+      /* Servicios */
+      { id: 25, nombre: 'Cambios y Giros del Eje',       cat: 'servicios',    etiqueta: 'Giros y divisas',  local: '102', piso: 1, horario: 'Lun - Sáb: 08:00 - 19:00', telefono: '+576063350021', descripcion: 'Giros nacionales e internacionales, cambio de divisas y recargas en un solo punto.',    imagen: IMG.gadgets,  destacado: false, enlace: '#' },
+      { id: 26, nombre: 'Papelería Central',             cat: 'servicios',    etiqueta: 'Papelería',        local: '115', piso: 1, horario: 'Lun - Sáb: 08:00 - 19:30', telefono: '+576063350022', descripcion: 'Fotocopias, impresión, plastificado y útiles escolares durante todo el año.',           imagen: IMG.papeleria,destacado: false, enlace: '#' },
+      { id: 27, nombre: 'Sastrería Don José',            cat: 'servicios',    etiqueta: 'Sastrería',        local: '224', piso: 2, horario: 'Lun - Sáb: 09:00 - 18:30', telefono: '+576063350023', descripcion: 'Arreglos de ropa, confección a la medida y bordados con entrega en 48 horas.',           imagen: IMG.ropa,     destacado: false, enlace: '#' },
+      { id: 28, nombre: 'Parqueadero San Andresito',     cat: 'servicios',    etiqueta: 'Parqueadero',      local: 'Zona P', piso: 1, horario: 'Lun - Dom: 06:00 - 22:00', telefono: '+576063350000', descripcion: 'Parqueadero vigilado para carros y motos con acceso directo por la Carrera 8.',       imagen: IMG.parqueo,  destacado: false, enlace: '#' }
+    ];
+
+    /* ── 4. Estado de los filtros ────────────────────────────────────────── */
+    const estado = { q: '', categoria: 'todas', piso: 'todos', orden: 'destacados', destacados: false };
+
+    const $ = (sel) => document.querySelector(sel);
+    const normalizar = (txt) => (txt || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
+    const escapar = (txt) => (txt || '').toString().replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+    const nombreCategoria = (slug) => (CATEGORIAS.find((c) => c.slug === slug) || {}).nombre || slug;
+    const contarPorCategoria = (slug) => COMERCIOS.filter((c) => c.cat === slug).length;
+    const contarPorPiso = (piso) => COMERCIOS.filter((c) => c.piso === piso).length;
+
+    /* ── 5. Filtrado y orden ─────────────────────────────────────────────── */
+    function comerciosFiltrados() {
+      const q = normalizar(estado.q).trim();
+
+      const lista = COMERCIOS.filter((c) => {
+        const coincideCategoria = estado.categoria === 'todas' || c.cat === estado.categoria;
+        const coincidePiso = estado.piso === 'todos' || c.piso === Number(estado.piso);
+        const coincideDestacado = !estado.destacados || c.destacado;
+        const texto = normalizar([c.nombre, c.etiqueta, nombreCategoria(c.cat), 'local ' + c.local, 'piso ' + c.piso, c.descripcion].join(' '));
+        const coincideBusqueda = !q || q.split(/\s+/).every((termino) => texto.includes(termino));
+        return coincideCategoria && coincidePiso && coincideDestacado && coincideBusqueda;
+      });
+
+      const porNombre = (a, b) => a.nombre.localeCompare(b.nombre, 'es');
+      if (estado.orden === 'nombre') return lista.sort(porNombre);
+      if (estado.orden === 'piso') return lista.sort((a, b) => (a.piso - b.piso) || a.local.localeCompare(b.local, 'es', { numeric: true }));
+      return lista.sort((a, b) => (Number(b.destacado) - Number(a.destacado)) || porNombre(a, b));
+    }
+
+    /* ── 6. Plantilla de la tarjeta (misma de inicio.html) ───────────────── */
+    function tarjetaComercio(c) {
+      const sinFicha = !c.enlace || c.enlace === '#';
+      return `
+      <article class="comercio-card flex flex-col bg-[#FFFFFF] rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 group border border-[#0D0D0D]/10 relative">
+        <div class="relative h-48 overflow-hidden bg-[#e6e1dd]">
+          <img alt="${escapar(c.nombre)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${c.imagen}"/>
+
+          <!-- Tarjeta de Categoría pegada al margen derecho -->
+          <div class="absolute top-0 right-0 bg-[#0D0D0D]/85 backdrop-blur-md text-white px-3.5 py-1.5 rounded-bl-xl border-l border-b border-white/20 shadow-md flex items-center gap-1.5">
+            <span class="w-2 h-2 rounded-full bg-[#D97C2B]"></span>
+            <span class="text-xs font-bold tracking-wider uppercase">${escapar(c.etiqueta)}</span>
+          </div>
+
+          ${c.destacado ? '<span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-[#D97C2B] text-white text-[11px] font-bold shadow-md">Destacado</span>' : ''}
+        </div>
+
+        <div class="p-5 flex flex-col flex-1 justify-between">
+          <div>
+            <div class="mb-2">
+              <h3 class="font-bold text-lg text-[#0D0D0D] group-hover:text-[#D97C2B] transition-colors">${escapar(c.nombre)}</h3>
+            </div>
+            <p class="text-xs text-[#5a534e] leading-relaxed mb-4 desc-2">${escapar(c.descripcion)}</p>
+
+            <!-- Ubicación y Horario en la misma línea con separador -->
+            <div class="flex flex-wrap items-center justify-between gap-3 text-sm py-3 border-y border-[#0D0D0D]/10 mb-5 bg-[#FAFAFA] px-3 rounded-lg">
+              <div class="flex items-center gap-2 font-bold text-[#0D0D0D] shrink-0 text-sm">
+                <span class="flex items-center text-[#D97C2B] font-bold">
+                  <span class="material-symbols-outlined text-[22px] leading-none">location_on</span>:
+                </span>
+                <span>Local ${escapar(c.local)}</span>
+                <span class="w-[1px] h-3.5 bg-[#0D0D0D]/20 inline-block"></span>
+                <span>Piso ${c.piso}</span>
+              </div>
+              <div class="flex items-center gap-1.5 text-xs text-[#5a534e] font-medium shrink-0">
+                <span class="material-symbols-outlined text-[#D97C2B] text-[18px] leading-none">schedule</span>
+                <span>${escapar(c.horario)}</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <a class="relative flex-1 py-2.5 rounded-xl bg-[#D97C2B] text-white text-sm text-center font-semibold transition-all duration-300 shadow-md hover:shadow-[0_0_22px_rgba(217,124,43,0.65)] hover:brightness-110 active:scale-[0.99] flex items-center justify-center gap-2 group/btn overflow-hidden"
+               href="${c.enlace || '#'}"${sinFicha ? ' title="Ficha en construcción"' : ''}>
+              <span class="relative z-10">Ver Tienda &amp; Catálogo</span>
+              <span class="material-symbols-outlined text-[18px] relative z-10 group-hover/btn:translate-x-1 transition-transform duration-300">arrow_forward</span>
+              <span class="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent"></span>
+            </a>
+            <a class="w-11 h-11 shrink-0 rounded-xl border border-[#0D0D0D]/10 bg-white text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors shadow-xs"
+               href="tel:${escapar(c.telefono)}" title="Llamar a ${escapar(c.nombre)}" aria-label="Llamar a ${escapar(c.nombre)}">
+              <span class="material-symbols-outlined text-[20px]">call</span>
+            </a>
+          </div>
+        </div>
+      </article>`;
+    }
+
+    /* ── 7. Render de los accesos rápidos por categoría ──────────────────── */
+    function renderCategoriasQuick() {
+      const activo = 'bg-[#D97C2B] text-white border-[#D97C2B]';
+      const inactivo = 'bg-[#F2F2F2] text-[#0D0D0D] border-[#0D0D0D]/5 hover:bg-[#D97C2B] hover:text-white';
+
+      const chip = (slug, nombre, icono, total) => {
+        const esActivo = estado.categoria === slug;
+        return `
+        <button type="button" data-categoria="${slug}" aria-pressed="${esActivo}"
+                class="cat-chip group flex flex-col items-center text-center py-2 px-2.5 rounded-lg transition-all duration-200 border shadow-xs ${esActivo ? activo : inactivo}">
+          <span class="w-8 h-8 rounded-md flex items-center justify-center transition-colors shadow-xs mb-1.5 ${esActivo ? 'bg-white/20 text-white' : 'bg-[#FFFFFF] text-[#D97C2B] group-hover:bg-white/20 group-hover:text-white'}">
+            <span class="material-symbols-outlined text-[18px]">${icono}</span>
+          </span>
+          <span class="font-semibold text-[11px] leading-tight ${esActivo ? 'text-white' : 'group-hover:text-white'}">${escapar(nombre)}</span>
+          <span class="text-[10px] font-medium ${esActivo ? 'text-white/80' : 'text-[#5a534e] group-hover:text-white/80'}">${total}</span>
+        </button>`;
+      };
+
+      $('#categoriasQuick').innerHTML =
+        chip('todas', 'Todas', 'grid_view', COMERCIOS.length) +
+        CATEGORIAS.map((c) => chip(c.slug, c.nombre, c.icono, contarPorCategoria(c.slug))).join('');
+
+      document.querySelectorAll('.cat-chip').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          estado.categoria = btn.dataset.categoria;
+          aplicarFiltros();
+        });
+      });
+    }
+
+    /* ── 8. Render de la barra lateral de filtros ────────────────────────── */
+    function renderFiltrosLaterales() {
+      const opcion = (grupo, valor, etiqueta, total, marcado) => `
+        <label class="flex items-center justify-between text-xs text-[#0D0D0D] cursor-pointer group hover:text-[#D97C2B]">
+          <span class="flex items-center gap-2">
+            <input type="radio" name="${grupo}" value="${valor}" ${marcado ? 'checked' : ''} class="accent-[#D97C2B] w-3.5 h-3.5"/>
+            <span>${escapar(etiqueta)}</span>
+          </span>
+          <span class="text-[11px] text-[#5a534e]">${total}</span>
+        </label>`;
+
+      $('#filtroCategorias').innerHTML =
+        opcion('catFiltro', 'todas', 'Todas las categorías', COMERCIOS.length, estado.categoria === 'todas') +
+        CATEGORIAS.map((c) => opcion('catFiltro', c.slug, c.nombre, contarPorCategoria(c.slug), estado.categoria === c.slug)).join('');
+
+      $('#filtroPisos').innerHTML =
+        opcion('pisoFiltro', 'todos', 'Todos los pisos', COMERCIOS.length, estado.piso === 'todos') +
+        [1, 2, 3].map((p) => opcion('pisoFiltro', String(p), 'Piso ' + p, contarPorPiso(p), String(estado.piso) === String(p))).join('');
+
+      document.querySelectorAll('input[name="catFiltro"]').forEach((input) => {
+        input.addEventListener('change', () => { estado.categoria = input.value; aplicarFiltros(); });
+      });
+      document.querySelectorAll('input[name="pisoFiltro"]').forEach((input) => {
+        input.addEventListener('change', () => { estado.piso = input.value; aplicarFiltros(); });
+      });
+    }
+
+    /* ── 9. Resumen de los filtros activos ───────────────────────────────── */
+    function renderResumen() {
+      const activos = [];
+      if (estado.categoria !== 'todas') activos.push({ texto: nombreCategoria(estado.categoria), quitar: () => { estado.categoria = 'todas'; } });
+      if (estado.piso !== 'todos') activos.push({ texto: 'Piso ' + estado.piso, quitar: () => { estado.piso = 'todos'; } });
+      if (estado.destacados) activos.push({ texto: 'Solo destacados', quitar: () => { estado.destacados = false; } });
+      if (estado.q.trim()) activos.push({ texto: '“' + estado.q.trim() + '”', quitar: () => { estado.q = ''; } });
+
+      const cont = $('#resumenFiltro');
+      if (!activos.length) {
+        cont.className = 'hidden';
+        cont.innerHTML = '';
+        return;
+      }
+
+      cont.className = 'flex items-center flex-wrap gap-2 mb-5 text-xs text-[#5a534e]';
+      cont.innerHTML = '<span class="font-semibold">Filtros activos:</span>' +
+        activos.map((a, i) => `
+          <button type="button" data-idx="${i}" class="chip-quitar inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white border border-[#0D0D0D]/10 font-semibold text-[#0D0D0D] hover:border-[#D97C2B] hover:text-[#D97C2B] transition-colors">
+            ${escapar(a.texto)}<span class="material-symbols-outlined text-[14px]">close</span>
+          </button>`).join('') +
+        '<button type="button" id="chipLimpiar" class="text-[11px] font-semibold text-[#D97C2B] hover:underline ml-1">Limpiar todo</button>';
+
+      cont.querySelectorAll('.chip-quitar').forEach((btn) => {
+        btn.addEventListener('click', () => { activos[Number(btn.dataset.idx)].quitar(); aplicarFiltros(); });
+      });
+      cont.querySelector('#chipLimpiar').addEventListener('click', limpiarFiltros);
+    }
+
+    /* ── 10. Sincronizar la URL para poder compartir el filtro ───────────── */
+    function sincronizarURL() {
+      const params = new URLSearchParams();
+      if (estado.categoria !== 'todas') params.set('categoria', estado.categoria);
+      if (estado.piso !== 'todos') params.set('piso', estado.piso);
+      if (estado.q.trim()) params.set('q', estado.q.trim());
+      if (estado.destacados) params.set('destacados', '1');
+      const query = params.toString();
+      history.replaceState(null, '', query ? '?' + query : location.pathname);
+    }
+
+    function leerURL() {
+      const params = new URLSearchParams(location.search);
+      const categoria = params.get('categoria');
+      const piso = params.get('piso');
+      if (categoria && CATEGORIAS.some((c) => c.slug === categoria)) estado.categoria = categoria;
+      if (['1', '2', '3'].includes(piso)) estado.piso = piso;
+      if (params.get('q')) estado.q = params.get('q');
+      if (params.get('destacados') === '1') estado.destacados = true;
+    }
+
+    /* ── 11. Pintar el resultado ─────────────────────────────────────────── */
+    function aplicarFiltros() {
+      const lista = comerciosFiltrados();
+
+      $('#comerciosGrid').innerHTML = lista.map(tarjetaComercio).join('');
+      $('#comercioCount').textContent = lista.length;
+      $('#sinResultados').style.display = lista.length ? 'none' : 'flex';
+
+      renderCategoriasQuick();
+      renderFiltrosLaterales();
+      renderResumen();
+      sincronizarURL();
+    }
+
+    function limpiarFiltros() {
+      estado.q = '';
+      estado.categoria = 'todas';
+      estado.piso = 'todos';
+      estado.destacados = false;
+      $('#comercioSearch').value = '';
+      $('#soloDestacados').checked = false;
+      aplicarFiltros();
+    }
+
+    /* ── 12. Arranque ────────────────────────────────────────────────────── */
+    (function iniciar() {
+      leerURL();
+
+      $('#statComercios').textContent = COMERCIOS.length;
+      $('#statCategorias').textContent = CATEGORIAS.length;
+      $('#comercioSearch').value = estado.q;
+      $('#soloDestacados').checked = estado.destacados;
+
+      $('#comercioSearch').addEventListener('input', (e) => { estado.q = e.target.value; aplicarFiltros(); });
+      $('#ordenSelect').addEventListener('change', (e) => { estado.orden = e.target.value; aplicarFiltros(); });
+      $('#soloDestacados').addEventListener('change', (e) => { estado.destacados = e.target.checked; aplicarFiltros(); });
+      $('#btnLimpiar').addEventListener('click', limpiarFiltros);
+      $('#toggleFiltros').addEventListener('click', () => { $('#panelFiltros').classList.toggle('hidden'); });
+
+      aplicarFiltros();
+    })();
+  </script>
+
+</body>
+</html>
