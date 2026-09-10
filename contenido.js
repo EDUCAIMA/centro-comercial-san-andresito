@@ -33,22 +33,35 @@
         return res.json();
       })
       .then(function (respuesta) {
-        if (respuesta && respuesta.ok && respuesta.data) {
+        if (respuesta && respuesta.ok) {
           var remoto = respuesta.data;
           var local = leer();
-          // Si el remoto es más reciente o el local no existe, actualizar local
+
+          // Caso 1: El servidor remoto aún está vacío (null/undefined) pero este navegador tiene datos editados
+          if (!remoto || (typeof remoto === 'object' && Object.keys(remoto).length === 0)) {
+            if (local && Object.keys(local).length > 0) {
+              // Subir automáticamente el contenido local a la nube de Railway
+              guardarEnServidor(local);
+              return { ok: true, datos: local, actualizado: false };
+            }
+            return { ok: true, datos: null, actualizado: false };
+          }
+
+          // Caso 2: Hay datos en el servidor remoto
           var remotoTime = remoto.actualizado ? new Date(remoto.actualizado).getTime() : 1;
           var localTime = (local && local.actualizado) ? new Date(local.actualizado).getTime() : 0;
 
-          if (remotoTime >= localTime) {
+          if (remotoTime >= localTime || !local) {
+            // El servidor tiene datos más recientes (o este navegador estaba limpio)
             try {
               global.localStorage.setItem(CLAVE, JSON.stringify(remoto));
             } catch (e) {}
             global.CONTENIDO_ADMIN = remoto;
             return { ok: true, datos: remoto, actualizado: true };
-          } else if (local && (!remoto || localTime > remotoTime)) {
-            // Caso donde el local tiene cambios que no habían subido a la nube: subirlos automáticamente
+          } else if (local && localTime > remotoTime) {
+            // El navegador local tiene una edición más reciente que aún no subió
             guardarEnServidor(local);
+            return { ok: true, datos: local, actualizado: false };
           }
         }
         return { ok: true, datos: leer(), actualizado: false };
