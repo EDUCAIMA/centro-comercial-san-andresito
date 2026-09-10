@@ -1,0 +1,13 @@
+{
+  "name": "centro-comercial-san-andresito",
+  "version": "1.0.0",
+  "description": "Plataforma web y API para Centro Comercial San Andresito del Eje",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.21.2"
+  }
+}

@@ -36,6 +36,9 @@
     }
   </style>
 
+  <!-- Puente con el panel administrador: entrega el contenido publicado -->
+  <script src="contenido.js"></script>
+
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
   <script id="tailwind-config">
@@ -504,21 +507,43 @@
       { id: 28, nombre: 'Parqueadero San Andresito',     cat: 'servicios',    etiqueta: 'Parqueadero',      local: 'Zona P', piso: 1, horario: 'Lun - Dom: 06:00 - 22:00', telefono: '+576063350000', descripcion: 'Parqueadero vigilado para carros y motos con acceso directo por la Carrera 8.',       imagen: IMG.parqueo,  destacado: false, enlace: '#' }
     ];
 
-    /* ── 4. Estado de los filtros ────────────────────────────────────────── */
+    // Obtener lista activa considerando modificaciones del panel
+    function obtenerComerciosActivos() {
+      if (window.CONTENIDO_ADMIN && Array.isArray(window.CONTENIDO_ADMIN.comercios) && window.CONTENIDO_ADMIN.comercios.length) {
+        return window.CONTENIDO_ADMIN.comercios.filter(c => c && c.activo !== false).map(c => {
+          return {
+            id: c.id,
+            nombre: c.nombre,
+            cat: (c.categoria || '').toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, ''),
+            etiqueta: c.etiqueta || c.categoria || '',
+            local: String(c.local || ''),
+            piso: Number(String(c.piso || '').replace(/\D/g, '')) || 1,
+            horario: c.horario || '',
+            telefono: c.telefono || '',
+            descripcion: c.descripcion || '',
+            imagen: c.imagen || IMG.vitrina,
+            destacado: !!c.destacado,
+            enlace: c.enlace || (c.nombre === 'Nike Store' ? 'tienda.html' : '#')
+          };
+        });
+      }
+      return COMERCIOS;
+    }
+
     const estado = { q: '', categoria: 'todas', piso: 'todos', orden: 'destacados', destacados: false };
 
     const $ = (sel) => document.querySelector(sel);
     const normalizar = (txt) => (txt || '').toString().toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '');
     const escapar = (txt) => (txt || '').toString().replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
     const nombreCategoria = (slug) => (CATEGORIAS.find((c) => c.slug === slug) || {}).nombre || slug;
-    const contarPorCategoria = (slug) => COMERCIOS.filter((c) => c.cat === slug).length;
-    const contarPorPiso = (piso) => COMERCIOS.filter((c) => c.piso === piso).length;
+    const contarPorCategoria = (slug) => obtenerComerciosActivos().filter((c) => c.cat === slug).length;
+    const contarPorPiso = (piso) => obtenerComerciosActivos().filter((c) => c.piso === piso).length;
 
-    /* ── 5. Filtrado y orden ─────────────────────────────────────────────── */
     function comerciosFiltrados() {
       const q = normalizar(estado.q).trim();
+      const activos = obtenerComerciosActivos();
 
-      const lista = COMERCIOS.filter((c) => {
+      const lista = activos.filter((c) => {
         const coincideCategoria = estado.categoria === 'todas' || c.cat === estado.categoria;
         const coincidePiso = estado.piso === 'todos' || c.piso === Number(estado.piso);
         const coincideDestacado = !estado.destacados || c.destacado;
@@ -533,7 +558,6 @@
       return lista.sort((a, b) => (Number(b.destacado) - Number(a.destacado)) || porNombre(a, b));
     }
 
-    /* ── 6. Plantilla de la tarjeta (misma de inicio.html) ───────────────── */
     function tarjetaComercio(c) {
       const sinFicha = !c.enlace || c.enlace === '#';
       return `
@@ -541,24 +565,18 @@
         <div class="relative h-48 overflow-hidden bg-[#e6e1dd]">
           <img alt="${escapar(c.nombre)}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="${c.imagen}"/>
 
-          <!-- Tarjeta de Categoría pegada al margen derecho -->
           <div class="absolute top-0 right-0 bg-[#0D0D0D]/85 backdrop-blur-md text-white px-3.5 py-1.5 rounded-bl-xl border-l border-b border-white/20 shadow-md flex items-center gap-1.5">
             <span class="w-2 h-2 rounded-full bg-[#D97C2B]"></span>
             <span class="text-xs font-bold tracking-wider uppercase">${escapar(c.etiqueta)}</span>
           </div>
-
           ${c.destacado ? '<span class="absolute top-3 left-3 px-2.5 py-1 rounded-lg bg-[#D97C2B] text-white text-[11px] font-bold shadow-md">Destacado</span>' : ''}
         </div>
-
         <div class="p-5 flex flex-col flex-1 justify-between">
           <div>
-            <div class="mb-2">
+            <div class="mb-3">
               <h3 class="font-bold text-lg text-[#0D0D0D] group-hover:text-[#D97C2B] transition-colors">${escapar(c.nombre)}</h3>
             </div>
-            <p class="text-xs text-[#5a534e] leading-relaxed mb-4 desc-2">${escapar(c.descripcion)}</p>
-
-            <!-- Ubicación y Horario en la misma línea con separador -->
-            <div class="flex flex-wrap items-center justify-between gap-3 text-sm py-3 border-y border-[#0D0D0D]/10 mb-5 bg-[#FAFAFA] px-3 rounded-lg">
+            <div class="flex items-center justify-between gap-3 text-sm py-3 border-y border-[#0D0D0D]/10 mb-4 bg-[#FAFAFA] px-3 rounded-lg">
               <div class="flex items-center gap-2 font-bold text-[#0D0D0D] shrink-0 text-sm">
                 <span class="flex items-center text-[#D97C2B] font-bold">
                   <span class="material-symbols-outlined text-[22px] leading-none">location_on</span>:
@@ -572,26 +590,26 @@
                 <span>${escapar(c.horario)}</span>
               </div>
             </div>
+            <p class="text-[#5a534e] text-sm leading-relaxed mb-4 desc-2">${escapar(c.descripcion)}</p>
           </div>
-
-          <div class="flex items-center gap-2">
-            <a class="relative flex-1 py-2.5 rounded-xl bg-[#D97C2B] text-white text-sm text-center font-semibold transition-all duration-300 shadow-md hover:shadow-[0_0_22px_rgba(217,124,43,0.65)] hover:brightness-110 active:scale-[0.99] flex items-center justify-center gap-2 group/btn overflow-hidden"
-               href="${c.enlace || '#'}"${sinFicha ? ' title="Ficha en construcción"' : ''}>
-              <span class="relative z-10">Ver Tienda &amp; Catálogo</span>
-              <span class="material-symbols-outlined text-[18px] relative z-10 group-hover/btn:translate-x-1 transition-transform duration-300">arrow_forward</span>
-              <span class="absolute inset-0 -translate-x-full group-hover/btn:translate-x-full transition-transform duration-700 bg-gradient-to-r from-transparent via-white/30 to-transparent"></span>
-            </a>
-            <a class="w-11 h-11 shrink-0 rounded-xl border border-[#0D0D0D]/10 bg-white text-[#D97C2B] hover:bg-[#D97C2B] hover:text-white flex items-center justify-center transition-colors shadow-xs"
-               href="tel:${escapar(c.telefono)}" title="Llamar a ${escapar(c.nombre)}" aria-label="Llamar a ${escapar(c.nombre)}">
-              <span class="material-symbols-outlined text-[20px]">call</span>
-            </a>
+          <div>
+            ${sinFicha ? `
+              <span class="inline-flex items-center justify-center w-full py-2.5 px-4 rounded-lg bg-[#F2F2F2] text-[#5a534e] text-xs font-semibold">
+                Próximamente
+              </span>
+            ` : `
+              <a class="inline-flex items-center justify-center gap-2 w-full py-2.5 px-4 rounded-lg bg-[#0D0D0D] text-white hover:bg-[#D97C2B] text-xs font-bold transition-all shadow-sm" href="${c.enlace}">
+                <span>Ver Tienda</span>
+                <span class="material-symbols-outlined text-[16px]">arrow_forward</span>
+              </a>
+            `}
           </div>
         </div>
       </article>`;
     }
 
-    /* ── 7. Render de la barra lateral de filtros ────────────────────────── */
     function renderFiltrosLaterales() {
+      const listaActiva = obtenerComerciosActivos();
       const opcion = (grupo, valor, etiqueta, total, marcado) => `
         <label class="flex items-center justify-between text-xs text-[#0D0D0D] cursor-pointer group hover:text-[#D97C2B]">
           <span class="flex items-center gap-2">
@@ -602,11 +620,11 @@
         </label>`;
 
       $('#filtroCategorias').innerHTML =
-        opcion('catFiltro', 'todas', 'Todas las categorías', COMERCIOS.length, estado.categoria === 'todas') +
+        opcion('catFiltro', 'todas', 'Todas las categorías', listaActiva.length, estado.categoria === 'todas') +
         CATEGORIAS.map((c) => opcion('catFiltro', c.slug, c.nombre, contarPorCategoria(c.slug), estado.categoria === c.slug)).join('');
 
       $('#filtroPisos').innerHTML =
-        opcion('pisoFiltro', 'todos', 'Todos los pisos', COMERCIOS.length, estado.piso === 'todos') +
+        opcion('pisoFiltro', 'todos', 'Todos los pisos', listaActiva.length, estado.piso === 'todos') +
         [1, 2, 3].map((p) => opcion('pisoFiltro', String(p), 'Piso ' + p, contarPorPiso(p), String(estado.piso) === String(p))).join('');
 
       document.querySelectorAll('input[name="catFiltro"]').forEach((input) => {
@@ -705,6 +723,11 @@
       $('#toggleFiltros').addEventListener('click', () => { $('#panelFiltros').classList.toggle('hidden'); });
 
       aplicarFiltros();
+
+      // Si llegan datos nuevos de la nube, actualizar filtros y listado
+      window.alActualizarContenidoNube = function () {
+        aplicarFiltros();
+      };
     })();
   </script>
 

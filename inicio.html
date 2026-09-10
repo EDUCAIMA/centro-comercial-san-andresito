@@ -1418,5 +1418,13 @@
       </div>
     </footer>
   </main>
+
+  <script>
+    // Si la API en la nube entrega datos que el navegador no tenía en caché local,
+    // recargar suavemente para mostrar las imágenes y tiendas recién actualizadas.
+    window.alActualizarContenidoNube = function () {
+      location.reload();
+    };
+  </script>
 </body>
 </html>

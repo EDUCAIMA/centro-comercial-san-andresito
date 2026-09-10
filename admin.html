@@ -2347,7 +2347,17 @@ function publicar(silencioso) {
   });
   if (!r.ok) { toast(r.mensaje, 'del'); return false; }
   actualizarEstadoPublicacion();
-  if (!silencioso) toast('Cambios publicados en la web', 'ok');
+  if (r.cloud) {
+    r.cloud.then(res => {
+      if (res && res.ok) {
+        if (!silencioso) toast('Publicado en la nube y visible para todos', 'ok');
+      } else {
+        if (!silencioso) toast('Guardado localmente. Pendiente sincronizar con la nube.', 'ok');
+      }
+    });
+  } else {
+    if (!silencioso) toast('Cambios publicados', 'ok');
+  }
   return true;
 }
 
@@ -2355,7 +2365,7 @@ function actualizarEstadoPublicacion() {
   const el = document.getElementById('estado-publicacion');
   if (!el) return;
   const kb = Contenido.espacioUsado();
-  el.textContent = kb ? ('Publicado · ' + kb + ' KB') : 'Sin cambios publicados';
+  el.textContent = kb ? ('Publicado · ' + kb + ' KB (Sincronizado)') : 'Sin cambios publicados';
 }
 
 function restablecerContenido() {
@@ -3071,6 +3081,21 @@ renderPermisos();
 
 arrancando = false;                 // a partir de aquí, cada cambio se publica
 actualizarEstadoPublicacion();
+
+// Si el servidor en la nube tenía datos más recientes, refrescar interfaz
+window.alActualizarContenidoNube = function (datosNube) {
+  if (!datosNube) return;
+  ['hero', 'categorias', 'comercios', 'eventos', 'galeria', 'horarios'].forEach(k => {
+    if (Array.isArray(datosNube[k]) && datosNube[k].length) db[k] = datosNube[k];
+  });
+  renderHero();
+  renderCategorias();
+  renderComercios();
+  renderEventos();
+  renderGaleria();
+  renderHorarios();
+  actualizarEstadoPublicacion();
+};
 
 // Permite abrir una sección directamente con admin.html#eventos
 const inicial = (location.hash || '').replace('#', '');

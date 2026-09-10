@@ -1,8 +1,13 @@
-FROM caddy:2-alpine
+FROM node:22-alpine
 
 WORKDIR /app
-COPY . /app
 
+COPY package*.json ./
+RUN npm install --omit=dev
+
+COPY . .
+
+ENV PORT=8080
 EXPOSE 8080
 
-CMD ["caddy", "run", "--config", "/app/Caddyfile", "--adapter", "caddyfile"]
+CMD ["node", "server.js"]

@@ -1,54 +1,111 @@
 /* ══════════════════════════════════════════════════════════════════════════
-   PUENTE DE CONTENIDO
-   Conecta el panel administrador con la web pública.
+   PUENTE DE CONTENIDO - CONEXIÓN CON SERVIDOR Y API CLOUD
+   Conecta el panel administrador con la web pública y el servidor en Railway.
 
    Cómo funciona:
-   · El panel (admin.html) guarda lo que editas en el almacenamiento del
-     navegador con la clave "sae_contenido_v1".
-   · La web (inicio.html / index.html) lee ese contenido al cargar y, si
-     existe, reemplaza el hero, las categorías, los comercios destacados y
-     los eventos. Si no existe, la página se ve exactamente igual que
-     siempre: el contenido original del HTML nunca se toca.
-
-   Limitación importante: el almacenamiento del navegador es local, así que
-   los cambios se ven en el mismo computador y navegador donde se hicieron.
-   Para que los vea todo el mundo hace falta un servidor con base de datos;
-   este archivo es el único que habría que reemplazar ese día.
+   · Si hay conexión con el servidor (/api/contenido), sincroniza y lee el
+     contenido persistido en la base de datos de la nube.
+   · Si se edita en el panel (admin.html), se envía mediante POST a la nube
+     para que cualquier visitante en cualquier dispositivo lo vea.
+   · Mantiene localStorage como fallback instantáneo y respaldo offline.
    ══════════════════════════════════════════════════════════════════════════ */
 (function (global) {
   'use strict';
 
   var CLAVE = 'sae_contenido_v1';
+  var API_URL = '/api/contenido';
 
-  /* ── Lectura y escritura ─────────────────────────────────────────────── */
+  /* ── Lectura sincrónica (desde cache/localStorage) ──────────────────── */
   function leer() {
     try {
       var texto = global.localStorage.getItem(CLAVE);
       return texto ? JSON.parse(texto) : null;
     } catch (e) {
-      return null;   // navegador sin almacenamiento o datos corruptos
+      return null;
     }
+  }
+
+  /* ── Sincronización asincrónica con la API en la nube ───────────────── */
+  function sincronizarConServidor() {
+    return fetch(API_URL)
+      .then(function (res) {
+        if (!res.ok) throw new Error('Error al consultar API: ' + res.status);
+        return res.json();
+      })
+      .then(function (respuesta) {
+        if (respuesta && respuesta.ok && respuesta.data) {
+          var remoto = respuesta.data;
+          var local = leer();
+          // Si el remoto es más reciente o el local no existe, actualizar local
+          var remotoTime = remoto.actualizado ? new Date(remoto.actualizado).getTime() : 1;
+          var localTime = (local && local.actualizado) ? new Date(local.actualizado).getTime() : 0;
+
+          if (remotoTime >= localTime) {
+            try {
+              global.localStorage.setItem(CLAVE, JSON.stringify(remoto));
+            } catch (e) {}
+            global.CONTENIDO_ADMIN = remoto;
+            return { ok: true, datos: remoto, actualizado: true };
+          } else if (local && (!remoto || localTime > remotoTime)) {
+            // Caso donde el local tiene cambios que no habían subido a la nube: subirlos automáticamente
+            guardarEnServidor(local);
+          }
+        }
+        return { ok: true, datos: leer(), actualizado: false };
+      })
+      .catch(function (err) {
+        // Fallback silencioso en caso de no haber red o estar en ambiente estático
+        return { ok: false, error: err, datos: leer() };
+      });
+  }
+
+  /* ── Guardar tanto en servidor remoto como en local ─────────────────── */
+  function guardarEnServidor(datos) {
+    return fetch(API_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(datos)
+    })
+    .then(function (res) { return res.json(); })
+    .catch(function (err) {
+      console.warn('No se pudo guardar en la nube (offline o error):', err);
+      return { ok: false, error: err };
+    });
   }
 
   function guardar(datos) {
     try {
       datos.actualizado = new Date().toISOString();
       global.localStorage.setItem(CLAVE, JSON.stringify(datos));
-      return { ok: true };
+      global.CONTENIDO_ADMIN = datos;
+
+      // Disparar envío a la nube de inmediato
+      var promesaCloud = guardarEnServidor(datos);
+
+      return {
+        ok: true,
+        cloud: promesaCloud
+      };
     } catch (e) {
       var lleno = e && (e.name === 'QuotaExceededError' || e.code === 22);
       return {
         ok: false,
         lleno: lleno,
         mensaje: lleno
-          ? 'No hay espacio para más imágenes. Elimina algunas de la galería o usa direcciones web (URL) en vez de subir archivos.'
-          : 'No se pudo guardar el contenido en este navegador.'
+          ? 'No hay espacio para más imágenes en el navegador. Reduce la resolución o usa URLs directas.'
+          : 'No se pudo guardar el contenido.'
       };
     }
   }
 
   function borrar() {
-    try { global.localStorage.removeItem(CLAVE); return true; } catch (e) { return false; }
+    try {
+      global.localStorage.removeItem(CLAVE);
+      guardarEnServidor({});
+      return true;
+    } catch (e) {
+      return false;
+    }
   }
 
   /* ── Espacio ocupado, en KB ──────────────────────────────────────────── */
@@ -59,9 +116,7 @@
     } catch (e) { return 0; }
   }
 
-  /* ── Conversión de archivos a imágenes guardables ────────────────────
-     Una foto de cámara pesa varios MB: se reduce de tamaño y se convierte
-     a texto (data URL) para poder guardarla y mostrarla sin servidor.     */
+  /* ── Conversión de archivos a imágenes guardables ──────────────────── */
   function imagenADato(archivo, anchoMax, calidad) {
     return new Promise(function (resolver, rechazar) {
       if (!archivo || !/^image\//.test(archivo.type)) {
@@ -81,7 +136,7 @@
           lienzo.width = ancho;
           lienzo.height = alto;
           var ctx = lienzo.getContext('2d');
-          ctx.fillStyle = '#ffffff';            // fondo para PNG con transparencia
+          ctx.fillStyle = '#ffffff';
           ctx.fillRect(0, 0, ancho, alto);
           ctx.drawImage(img, 0, 0, ancho, alto);
           resolver(lienzo.toDataURL('image/jpeg', calidad || 0.72));
@@ -92,12 +147,10 @@
     });
   }
 
-  // Peso aproximado en KB de una imagen ya convertida a data URL
   function pesoDato(dato) {
     return Math.round(String(dato || '').length * 0.75 / 1024);
   }
 
-  // Escape de texto antes de insertarlo como HTML
   function esc(t) {
     return String(t == null ? '' : t)
       .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
@@ -108,6 +161,8 @@
     CLAVE: CLAVE,
     leer: leer,
     guardar: guardar,
+    guardarEnServidor: guardarEnServidor,
+    sincronizarConServidor: sincronizarConServidor,
     borrar: borrar,
     espacioUsado: espacioUsado,
     imagenADato: imagenADato,
@@ -115,6 +170,18 @@
     esc: esc
   };
 
-  // Disponible de inmediato para las páginas públicas, sin esperar eventos.
+  // Inicializar contenido local de inmediato para el renderizado
   global.CONTENIDO_ADMIN = leer();
+
+  // Y sincronizar asincrónicamente con la nube si hay conexión
+  if (typeof fetch === 'function') {
+    sincronizarConServidor().then(function (res) {
+      if (res && res.actualizado) {
+        // Si hay contenido nuevo traído de la nube y la página tiene funciones de refresco, invocarlas
+        if (typeof global.alActualizarContenidoNube === 'function') {
+          global.alActualizarContenidoNube(res.datos);
+        }
+      }
+    });
+  }
 })(window);
