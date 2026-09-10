@@ -231,14 +231,14 @@
          arriba se queda exactamente como está.
          ══════════════════════════════════════════════════════════════════ -->
     <script>
-      (function aplicarHeroPublicado() {
+      function aplicarHeroPublicado(datosHero) {
         try {
-          var c = window.CONTENIDO_ADMIN;
+          var c = datosHero || window.CONTENIDO_ADMIN;
           if (!c || !Array.isArray(c.hero)) return;
           var slides = c.hero.filter(function (s) { return s && s.activo !== false && s.imagen; });
           if (!slides.length) return;
 
-          var esc = window.Contenido.esc;
+          var esc = (window.Contenido && window.Contenido.esc) ? window.Contenido.esc : function(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
           var contenedor = document.getElementById('hero-contenedor');
           var indicadores = document.getElementById('hero-indicadores');
           if (!contenedor || !indicadores) return;
@@ -273,18 +273,30 @@
               (i === 0 ? 'w-8 h-2 rounded-full bg-[#D97C2B]' : 'w-2.5 h-2 rounded-full bg-white/40 hover:bg-white/70') +
               ' transition-all duration-300" onclick="setSlide(' + i + ')"></button>';
           }).join('');
+
+          if (typeof reiniciarCarruselHero === 'function') {
+            reiniciarCarruselHero();
+          }
         } catch (e) {
           // Ante cualquier problema se conserva el contenido original de la página.
         }
-      })();
+      }
+      aplicarHeroPublicado();
     </script>
 
     <!-- Script del Carrusel cada 3 Segundos -->
     <script>
       let activeIdx = 0;
-      const allSlides = document.querySelectorAll('.hero-item');
-      const allBullets = document.querySelectorAll('.bullet-indicator');
+      let allSlides = document.querySelectorAll('.hero-item');
+      let allBullets = document.querySelectorAll('.bullet-indicator');
       let timer = null;
+
+      function reiniciarCarruselHero() {
+        allSlides = document.querySelectorAll('.hero-item');
+        allBullets = document.querySelectorAll('.bullet-indicator');
+        renderSlide(0);
+        resetAutoPlay();
+      }
 
       function renderSlide(idx) {
         if (!allSlides.length) return;
@@ -545,11 +557,11 @@
          CATEGORÍAS Y COMERCIOS PUBLICADOS DESDE EL PANEL
          ══════════════════════════════════════════════════════════════════ -->
     <script>
-      (function aplicarTiendasPublicadas() {
+      function aplicarTiendasPublicadas(datosContenido) {
         try {
-          var c = window.CONTENIDO_ADMIN;
+          var c = datosContenido || window.CONTENIDO_ADMIN;
           if (!c) return;
-          var esc = window.Contenido.esc;
+          var esc = (window.Contenido && window.Contenido.esc) ? window.Contenido.esc : function(t){return String(t==null?'':t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');};
 
           // ── Categorías destacadas ──────────────────────────────────────
           var rejillaCat = document.getElementById('categorias-grid');
@@ -614,7 +626,8 @@
         } catch (e) {
           // Si algo falla, la página conserva su contenido original.
         }
-      })();
+      }
+      aplicarTiendasPublicadas();
     </script>
 
     <!-- ══════════════════════════════════════════════════════════════════════
@@ -1420,11 +1433,21 @@
   </main>
 
   <script>
-    // Si la API en la nube entrega datos nuevos, actualizar dinámicamente sin recargar la página en bucle
-    window.alActualizarContenidoNube = function (datos) {
-      if (typeof window.aplicarContenidoDinamico === 'function') {
-        window.aplicarContenidoDinamico(datos);
+    // Función global unificada para actualizar el contenido dinámico en pantalla
+    window.aplicarContenidoDinamico = function (datos) {
+      if (!datos) return;
+      window.CONTENIDO_ADMIN = datos;
+      if (typeof aplicarHeroPublicado === 'function') {
+        aplicarHeroPublicado(datos);
       }
+      if (typeof aplicarTiendasPublicadas === 'function') {
+        aplicarTiendasPublicadas(datos);
+      }
+    };
+
+    // Si la API en la nube entrega datos nuevos o iniciales, actualizar dinámicamente sin recargar la página en bucle
+    window.alActualizarContenidoNube = function (datos) {
+      window.aplicarContenidoDinamico(datos);
     };
   </script>
 </body>

@@ -192,8 +192,8 @@
   // Y sincronizar asincrónicamente con la nube si hay conexión
   if (typeof fetch === 'function') {
     sincronizarConServidor().then(function (res) {
-      if (res && res.actualizado) {
-        // Si hay contenido nuevo traído de la nube y la página tiene funciones de refresco, invocarlas
+      if (res && res.datos) {
+        // Notificar a la interfaz si hay función registrada (tanto si se actualizó como si ya estaban cargados)
         if (typeof global.alActualizarContenidoNube === 'function') {
           global.alActualizarContenidoNube(res.datos);
         }
