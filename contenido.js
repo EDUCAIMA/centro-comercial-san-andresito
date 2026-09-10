@@ -51,17 +51,20 @@
           var remotoTime = remoto.actualizado ? new Date(remoto.actualizado).getTime() : 1;
           var localTime = (local && local.actualizado) ? new Date(local.actualizado).getTime() : 0;
 
-          if (remotoTime >= localTime || !local) {
-            // El servidor tiene datos más recientes (o este navegador estaba limpio)
+          if (!local || remotoTime > localTime) {
+            // El servidor tiene datos nuevos y más recientes (o este navegador estaba limpio)
             try {
               global.localStorage.setItem(CLAVE, JSON.stringify(remoto));
             } catch (e) {}
             global.CONTENIDO_ADMIN = remoto;
             return { ok: true, datos: remoto, actualizado: true };
-          } else if (local && localTime > remotoTime) {
+          } else if (remotoTime < localTime) {
             // El navegador local tiene una edición más reciente que aún no subió
             guardarEnServidor(local);
             return { ok: true, datos: local, actualizado: false };
+          } else {
+            // Datos sincronizados (remotoTime === localTime)
+            return { ok: true, datos: remoto, actualizado: false };
           }
         }
         return { ok: true, datos: leer(), actualizado: false };

@@ -1420,10 +1420,11 @@
   </main>
 
   <script>
-    // Si la API en la nube entrega datos que el navegador no tenía en caché local,
-    // recargar suavemente para mostrar las imágenes y tiendas recién actualizadas.
-    window.alActualizarContenidoNube = function () {
-      location.reload();
+    // Si la API en la nube entrega datos nuevos, actualizar dinámicamente sin recargar la página en bucle
+    window.alActualizarContenidoNube = function (datos) {
+      if (typeof window.aplicarContenidoDinamico === 'function') {
+        window.aplicarContenidoDinamico(datos);
+      }
     };
   </script>
 </body>
