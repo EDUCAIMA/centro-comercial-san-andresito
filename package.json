@@ -4,10 +4,20 @@
   "description": "Plataforma web y API para Centro Comercial San Andresito del Eje",
   "main": "server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node server.js",
+    "build:css": "npm run build:css:public && npm run build:css:admin",
+    "build:css:public": "tailwindcss -c tailwind.public.config.js -i styles/tailwind.css -o assets/tailwind-public.css --minify",
+    "build:css:admin": "tailwindcss -c tailwind.admin.config.js -i styles/tailwind.css -o assets/tailwind-admin.css --minify",
+    "watch:css:public": "tailwindcss -c tailwind.public.config.js -i styles/tailwind.css -o assets/tailwind-public.css --watch",
+    "watch:css:admin": "tailwindcss -c tailwind.admin.config.js -i styles/tailwind.css -o assets/tailwind-admin.css --watch"
   },
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.21.2"
+    "express": "^4.21.2",
+    "pg": "^8.23.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/forms": "^0.5.10",
+    "tailwindcss": "^3.4.17"
   }
 }

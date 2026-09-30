@@ -49,31 +49,8 @@
   <!-- Puente con el panel administrador: entrega el contenido publicado -->
   <script src="contenido.js"></script>
 
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
-  <script id="tailwind-config">
-    window.tailwind = window.tailwind || {};
-    tailwind.config = {
-      darkMode: "class",
-      theme: {
-        extend: {
-          colors: {
-            "primary": "#D97C2B",
-            "primary-hover": "#bf681c",
-            "secondary": "#D99923",
-            "background": "#F2F2F2",
-            "surface": "#F2F2F2",
-            "onyx": "#0D0D0D",
-            "on-surface": "#0D0D0D"
-          },
-          fontFamily: {
-            "outfit": ["Outfit", "sans-serif"],
-            "grotesk": ["Hanken Grotesk", "sans-serif"]
-          }
-        }
-      }
-    };
-  </script>
+  <!-- Tailwind CSS compilado y servido localmente -->
+  <link href="assets/tailwind-public.css" rel="stylesheet"/>
 </head>
 <body class="bg-[#F2F2F2] font-['Hanken_Grotesk',sans-serif] text-[#0D0D0D] antialiased selection:bg-[#D97C2B] selection:text-white">
 
